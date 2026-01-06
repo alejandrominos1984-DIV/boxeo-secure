@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Clase Élite</title>
+    <title>Divélun | Material de Clase</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -11,13 +11,12 @@
         :root {
             --bg: #000000;
             --accent: #ff3b30;
-            --gold: #D4AF37;
         }
 
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
-        .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
+        .title { font-size: 2rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
 
         /* CONTENEDOR DE VIDEO */
         .video-box {
@@ -30,56 +29,55 @@
             z-index: 0;
         }
 
-        /* BANNER PREMIUM (BOTÓN PDF) */
+        /* BANNER MATERIAL (BLANCO + ICONO) */
         .premium-banner {
             position: absolute;
             bottom: 12px;
             right: 12px;
-            width: 100px;
-            height: 42px;
-            background: #000;
+            width: auto; /* Ancho adaptable */
+            padding: 0 14px; /* Espacio interno */
+            height: 38px;
+            background: #ffffff; /* FONDO BLANCO */
+            color: #000000; /* TEXTO NEGRO */
             z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 4px;
+            gap: 8px; /* Espacio entre icono y texto */
+            border-radius: 6px; /* Bordes ligeramente redondeados para estética moderna */
             text-decoration: none;
-            /* Lógica de visibilidad corregida */
-            opacity: 1; 
-            transition: opacity 0.3s ease, transform 0.2s;
+            
+            /* ESTADO VISIBLE (Aparición rápida) */
+            opacity: 1;
+            transition: opacity 0.2s ease, transform 0.1s;
         }
 
         .premium-banner span {
-            font-size: 0.6rem;
-            font-weight: 900;
-            color: var(--gold);
-            letter-spacing: 2px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
 
-        .premium-banner:active { transform: scale(0.95); }
+        .premium-banner:active { transform: scale(0.97); background: #f0f0f0; }
 
-        /* --- ALINEACIÓN PERFECTA DE CONTROLES --- */
-        .plyr__controls {
-            display: flex !important;
-            align-items: center !important; /* Centra verticalmente botón y barra */
-            justify-content: center !important;
-            padding: 20px 15px !important;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
-        }
-
-        .plyr__control--overlaid { background: var(--accent) !important; }
-
-        .plyr__progress {
-            flex: 1 !important; /* Toma el espacio disponible */
-            max-width: 55% !important; /* Barra menos larga para estética pro */
-            margin: 0 15px !important; /* Espacio entre play y tiempo */
-        }
-
-        /* Ocultar banner cuando Plyr oculta controles */
+        /* SOLUCIÓN AL PARPADEO: Retraso en la desaparición */
         .plyr--hide-controls .premium-banner {
             opacity: 0;
             pointer-events: none;
+            /* Espera 0.4s antes de empezar a desvanecerse, y tarda 0.5s en hacerlo */
+            transition: opacity 0.5s ease 0.4s; 
         }
+
+        /* --- ALINEACIÓN DE CONTROLES --- */
+        .plyr__controls {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 15px !important;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+        }
+        .plyr__progress { flex: 1 !important; max-width: 55% !important; margin: 0 15px !important; }
+
 
         /* POPUP BRAVE */
         #bravePopup {
@@ -94,16 +92,18 @@
             display: flex; align-items: center; gap: 10px; text-decoration: none;
             color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid #333; flex: 1;
         }
+        .close-btn { position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 class="title">Clase Maestra</h1>
+        <h1 class="title">Material de Clase</h1>
 
         <div class="video-box" id="mainContainer">
-            <a href="clase-cross.pdf" download class="premium-banner" id="bannerBtn">
-                <span>PREMIUM</span>
+            <a href="recursos-clase.pdf" download class="premium-banner" id="bannerBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>MATERIAL</span>
             </a>
             
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
@@ -111,6 +111,7 @@
     </div>
 
     <div id="bravePopup">
+        <span class="close-btn" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22" alt="Brave">
             <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MODO SIN ANUNCIOS</span>
@@ -131,17 +132,15 @@
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
-        // Sincronización forzada del banner con los controles de Plyr
+        // Sincronización JS como respaldo
         const banner = document.getElementById('bannerBtn');
-        
         player.on('controlsshown', () => {
             banner.style.opacity = "1";
             banner.style.pointerEvents = "all";
         });
-
+        // Dejamos que CSS maneje la desaparición retardada
         player.on('controlshidden', () => {
-            banner.style.opacity = "0";
-            banner.style.pointerEvents = "none";
+           // No forzamos opacity 0 aquí, dejamos que la clase CSS haga el trabajo con retraso
         });
 
         async function checkBrave() {
