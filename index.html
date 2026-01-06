@@ -3,38 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Interfaz Premium Total</title>
+    <title>Divélun | Clase de Idiomas</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg: #000000;
-            --accent: #ff3b30;
+            /* NUEVA PALETA DE COLORES LUMINOSA */
+            --bg-page: #F5F7FA;     /* Fondo gris azulado muy claro */
+            --bg-card: #FFFFFF;     /* Blanco puro para tarjetas */
+            --brand-blue: #0066FF;  /* Azul vibrante principal */
+            --text-dark: #2D3748;   /* Texto principal oscuro */
+            --text-light: #718096;  /* Texto secundario */
+            
+            /* Variables de Plyr redefinidas para el nuevo tema */
+            --plyr-color-main: var(--brand-blue); /* Color de la barra y botón play */
+            --plyr-control-icon-size: 18px;
         }
 
-        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow: hidden; }
-        .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        body {
+            margin: 0;
+            background: var(--bg-page); /* Fondo claro */
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Centrado vertical en PC */
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+        }
 
-        .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
+        /* Contenedor principal estilo "Tarjeta" */
+        .lesson-card {
+            width: 100%;
+            max-width: 480px;
+            background: var(--bg-card);
+            padding: 25px;
+            border-radius: 24px;
+            /* Sombra suave azulada para dar efecto de elevación alegre */
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.08);
+            border-top: 4px solid var(--brand-blue); /* Adorno azul superior */
+        }
 
+        .title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            color: var(--text-dark);
+            text-align: center;
+        }
+        .title span { color: var(--brand-blue); } /* Acento azul en el título */
+
+        /* CONTENEDOR DE VIDEO (El interior sigue oscuro para el video) */
         .video-box {
             position: relative;
-            border-radius: 28px;
+            border-radius: 20px;
             overflow: hidden;
-            background: #000;
-            border: 1px solid #222;
+            background: #000; /* El fondo del video DEBE ser negro */
             line-height: 0;
             z-index: 0;
             -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation; 
+            touch-action: manipulation;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Sombra sutil al video */
         }
 
         /* CAPAS DOBLE TOQUE */
         .tap-overlay {
             position: absolute; top: 0; height: 100%; width: 50%;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none;
+            background: rgba(0,0,0,0.3); opacity: 0; pointer-events: none;
             z-index: 5; transition: opacity 0.2s ease;
         }
         .tap-overlay.left { left: 0; justify-content: flex-start; padding-left: 30px; }
@@ -43,78 +82,98 @@
         .tap-icon svg { width: 40px; height: 40px; fill: white; }
         .tap-overlay.animate { opacity: 1; }
 
-        /* BANNER MATERIAL BLANCO (PROTECTOR DE LOGO) */
+        /* BANNER MATERIAL (AHORA AZUL CON TEXTO BLANCO) */
         .premium-banner {
-            position: absolute; bottom: 12px; right: 12px; background: #ffffff; color: #000000;
-            padding: 8px 15px; display: flex; align-items: center; gap: 8px; text-decoration: none;
-            z-index: 10; border-radius: 4px; opacity: 1; transition: opacity 0.5s ease;
+            position: absolute; bottom: 12px; right: 12px;
+            background: var(--brand-blue); /* Fondo Azul */
+            color: #ffffff; /* Texto Blanco */
+            padding: 8px 14px; display: flex; align-items: center; gap: 6px;
+            text-decoration: none; z-index: 10; border-radius: 8px;
+            opacity: 1; transition: opacity 0.5s ease, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.3); /* Sombra azul brillante */
         }
+        .premium-banner:active { transform: scale(0.96); }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
-        .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
+        .premium-banner span { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; }
+        .premium-banner svg { width: 14px; height: 14px; stroke: #ffffff; }
 
-        /* --- SOLUCIÓN DEFINITIVA DE VISIBILIDAD DE TIEMPO --- */
+        /* --- CONTROLES DE VIDEO --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important; 
             justify-content: flex-start !important; 
             padding: 10px 15px !important;
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            min-height: 60px !important;
+            /* Gradiente oscuro transparente para contraste sobre el video */
+            background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
         }
 
-        /* BARRA DE PROGRESO CORTA */
+        /* BARRA DE PROGRESO */
         .plyr__progress {
             flex: 0 0 auto !important;
             width: 80px !important;
-            margin-left: 8px !important;
+            margin-left: 10px !important;
             margin-right: 15px !important;
         }
         
-        /* FORZAR VISIBILIDAD DEL TIEMPO EN CUALQUIER DISPOSITIVO */
+        /* DURACIÓN */
         .plyr__time {
-            display: inline-block !important; /* Evita el ocultado automático de Plyr */
-            visibility: visible !important;
-            font-size: 0.75rem !important;
-            font-weight: 700 !important;
-            color: #ffffff !important;
-            opacity: 1 !important;
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-
-        /* Aseguramos que la duración específica se vea */
-        .plyr__time--duration {
             display: inline-block !important;
             visibility: visible !important;
+            font-size: 0.75rem !important;
+            font-weight: 600 !important;
+            color: #ffffff !important; /* Texto blanco sobre fondo oscuro */
+            opacity: 1 !important;
         }
-
-        /* Ocultamos el tiempo actual para mantener el look minimalista solicitado */
         .plyr__time--current { display: none !important; }
 
-        .plyr__control { color: #fff !important; padding: 5px !important; }
-
-        /* POPUP BRAVE */
-        #bravePopup {
-            display: none; position: fixed; bottom: 10px; left: 50%;
-            transform: translateX(-50%); width: 92%; max-width: 440px;
-            background: #121212; padding: 18px; border-radius: 24px;
-            border: 1px solid #282828; z-index: 10000; text-align: center;
+        /* Botones de control (Play, Pantalla completa) */
+        .plyr__control {
+            color: #ffffff !important; /* Iconos blancos */
+            padding: 5px !important;
         }
+        /* El botón de play grande central usará el color principal (azul) */
+        .plyr--video .plyr__control.plyr__tab-focus,
+        .plyr--video .plyr__control:hover,
+        .plyr--video .plyr__control[aria-expanded=true] {
+            background: var(--brand-blue) !important;
+        }
+
+        /* POPUP BRAVE REDISEÑADO (Luminoso y Azul) */
+        #bravePopup {
+            display: none; position: fixed; bottom: 15px; left: 50%;
+            transform: translateX(-50%); width: 90%; max-width: 420px;
+            background: #ffffff; /* Fondo blanco */
+            padding: 20px; border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            z-index: 10000; text-align: center;
+            border: 1px solid #edf2f7;
+        }
+        .brave-title { color: var(--brand-blue); font-weight: 800; font-size: 0.9rem; }
+        .brave-text { font-size: 0.85rem; color: var(--text-light); margin: 10px 0 15px 0; line-height: 1.5; }
+        
+        .store-button {
+            background: var(--brand-blue); /* Botones azules */
+            color: white; text-decoration:none; padding: 12px; border-radius: 12px;
+            flex: 1; font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 102, 255, 0.2);
+            transition: transform 0.1s;
+        }
+        .store-button:active { transform: translateY(2px); }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 class="title">Clase Maestra</h1>
+    <div class="lesson-card">
+        <h1 class="title">Lección 1: <span>Introducción</span></h1>
 
         <div class="video-box" id="videoWrapper">
-            <div class="tap-overlay left" id="tapLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg><span>10s</span></div></div>
-            <div class="tap-overlay right" id="tapRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg><span>10s</span></div></div>
+            <div class="tap-overlay left" id="tapLeft"><div class="tap-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg></div></div>
+            <div class="tap-overlay right" id="tapRight"><div class="tap-icon"><svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></div></div>
 
             <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>MATERIAL</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span>RECURSOS</span>
             </a>
             
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
@@ -122,18 +181,21 @@
     </div>
 
     <div id="bravePopup">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
-            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22"><span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="24">
+            <span class="brave-title">APRENDIZAJE SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999;">Usa <b>Brave</b> para estudiar sin publicidad.</p>
+        <p class="brave-text">Usa el navegador <b>Brave</b> para concentrarte en tu clase sin interrupciones publicitarias.</p>
+        <div style="display: flex; gap: 10px;">
+            <a href="#" class="store-button">Android</a>
+            <a href="#" class="store-button">iPhone</a>
+        </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         const player = new Plyr('#player', {
-            // MODIFICACIÓN: Se agregaron 'current-time', 'mute', 'volume' y 'duration' para mostrar la duración
-            controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'duration'], 
-            fullscreen: { enabled: false },
+            controls: ['play', 'progress', 'duration', 'fullscreen'], 
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
@@ -142,7 +204,7 @@
         player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
         player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 800); });
 
-        // DOBLE TOQUE
+        // DOBLE TOQUE (Sin iconos de texto para ser más limpio)
         let lastTapTime = 0;
         const tapOverlayLeft = document.getElementById('tapLeft');
         const tapOverlayRight = document.getElementById('tapRight');
