@@ -37,18 +37,12 @@
         }
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
-        /* BANNER PROTECTOR ROBUSTO (Corregido para cobertura total) */
+        /* BANNER PROTECTOR ROBUSTO */
         .premium-banner {
-            position: absolute; 
-            bottom: 10px; /* Más pegado abajo */
-            right: 10px; /* Más pegado a la derecha */
+            position: absolute; bottom: 10px; right: 10px;
             background: var(--brand-blue); color: #ffffff;
-            /* Padding más generoso para hacer el botón más grande */
-            padding: 12px 20px; 
-            display: flex; align-items: center; gap: 8px;
-            text-decoration: none; z-index: 15; 
-            /* Bordes menos redondeados para asegurar cobertura en esquinas */
-            border-radius: 6px; 
+            padding: 12px 20px; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; z-index: 15; border-radius: 6px; 
             opacity: 1; transition: opacity 0.6s ease;
             box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
             font-weight: 800; font-size: 0.75rem;
@@ -56,7 +50,7 @@
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
         .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
 
-        /* CONTROLES: TIEMPO MOVIDO MÁS A LA IZQUIERDA */
+        /* CONTROLES */
         .plyr__controls {
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
             padding: 10px 15px !important;
@@ -72,15 +66,15 @@
             margin-left: 10px !important;
         }
         
-        /* ESTILO PARA MOVER EL TIEMPO MÁS A LA IZQUIERDA */
+        /* AJUSTE FINAL DE POSICIÓN DEL TIEMPO */
         .plyr__time--duration {
             display: block !important;
             visibility: visible !important;
             font-size: 0.75rem !important;
             font-weight: 700 !important;
             margin-left: auto !important; 
-            /* AUMENTADO: Empuja los números mucho más a la izquierda del banner */
-            margin-right: 185px !important; 
+            /* Reducido de 185px a 160px para moverlo un poco a la derecha */
+            margin-right: 160px !important; 
         }
         .plyr__time--current { display: none !important; }
 
