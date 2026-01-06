@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Interfaz Élite Final</title>
+    <title>Divélun | Interfaz Élite Definitiva</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -29,7 +29,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* BANNER MATERIAL FLOTANTE */
+        /* BANNER MATERIAL BLANCO */
         .premium-banner {
             position: absolute;
             bottom: 12px;
@@ -44,7 +44,6 @@
             z-index: 10;
             border-radius: 4px;
             opacity: 1; 
-            pointer-events: all;
             transition: opacity 0.5s ease;
         }
 
@@ -52,29 +51,34 @@
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- CONTROLES: ALINEACIÓN Y BARRA OPTIMIZADA --- */
+        /* --- CONTROLES: ALINEACIÓN QUIRÚRGICA --- */
         .plyr__controls {
             display: flex !important;
-            align-items: center !important; /* Alineación vertical perfecta */
-            justify-content: flex-start !important; /* Alineado a la izquierda */
+            align-items: center !important; 
+            justify-content: flex-start !important; 
             padding: 15px 20px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            gap: 0px; /* Controlamos el espacio con márgenes */
+            gap: 0 !important; /* Controlamos todo con márgenes manuales */
         }
 
+        /* Botón Play */
+        .plyr__control--overlaid { background: var(--accent) !important; }
+        .plyr__control { padding: 5px !important; }
+
+        /* BARRA DE PROGRESO CORTA Y CERCANA */
         .plyr__progress {
             flex: 0 0 auto !important;
-            width: 100px !important; /* Ancho ajustado según referencia */
-            max-width: 100px !important;
-            margin: 0 15px !important; /* Espacio equilibrado entre play y duración */
+            width: 90px !important; /* Ancho optimizado */
+            margin-left: 8px !important; /* PEQUEÑO ESPACIO AL PLAY */
+            margin-right: 12px !important; /* ESPACIO AL TIEMPO DURACIÓN */
         }
         
-        /* Ajuste del tiempo (Duración) */
+        /* DURACIÓN DEL VIDEO */
         .plyr__time--duration {
             font-size: 0.75rem;
-            opacity: 0.8;
+            opacity: 0.9;
             font-weight: 700;
-            margin-left: -5px; /* Acerca el tiempo a la barra */
+            margin-bottom: 2px; /* Ajuste fino de altura */
         }
 
         .plyr__control { color: #fff !important; }
@@ -107,7 +111,7 @@
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22">
             <span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar sin publicidad.</p>
+        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Estudia con <b>Brave</b> para evitar publicidad.</p>
         <div style="display: flex; gap: 10px;">
             <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">Android</a>
             <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">iPhone</a>
@@ -116,7 +120,6 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CAMBIO: Se usa 'duration' en lugar de 'current-time'
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
