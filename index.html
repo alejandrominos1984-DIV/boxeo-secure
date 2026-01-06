@@ -18,41 +18,23 @@
 
         body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
 
+        /* VIDEO HERO SUPERIOR (ANCHO COMPLETO) */
         .hero-video-section { width: 100%; background: #000; position: relative; }
         .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-        /* --- PANTALLA DE INICIO CON BOTÓN ESTÉTICO SIN ESQUINAS --- */
+        /* PANTALLA DE INICIO CON BOTÓN CURVO */
         .start-screen-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 20; 
-            cursor: pointer;
-            transition: opacity 0.5s ease, visibility 0.5s;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: transparent; display: flex; align-items: center; justify-content: center;
+            z-index: 20; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s;
         }
-        
         .start-screen-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-        /* BOTÓN RECTANGULAR REDONDEADO (ESTILO YOUTUBE PREMIUM) */
         .big-play-btn {
-            width: 88px; 
-            height: 62px;
-            background: var(--brand-blue);
-            /* Curvatura pronunciada para eliminar esquinas filosas */
-            border-radius: 18px; 
+            width: 88px; height: 62px; background: var(--brand-blue); border-radius: 18px; 
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid rgba(255, 255, 255, 0.1);
         }
-
-        .start-screen-overlay:hover .big-play-btn { 
-            transform: scale(1.08); 
-            background: #0056D6;
-            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.5);
-        }
-
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
         /* BANNER PROTECTOR (2 SEGUNDOS DE SEGURIDAD) */
@@ -63,23 +45,45 @@
             text-decoration: none; z-index: 15; border-radius: 10px;
             opacity: 1; transition: opacity 0.6s ease;
             box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-            font-weight: 700; font-size: 0.75rem; letter-spacing: 0.5px;
+            font-weight: 700; font-size: 0.75rem;
         }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner svg { width: 16px; height: 16px; stroke: #ffffff; }
 
-        /* CONTROLES ALINEADOS */
-        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; justify-content: flex-start !important; gap: 0 !important; }
-        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; margin-right: 12px !important; }
-        .plyr__time--duration { display: block !important; visibility: visible !important; font-size: 0.75rem !important; font-weight: 700 !important; }
+        /* --- CONTROLES: TIEMPO EN EL MEDIO (IZQUIERDA DEL BANNER) --- */
+        .plyr__controls {
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+            padding: 10px 15px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 0 !important;
+        }
+
+        .plyr__progress {
+            flex: 0 0 auto !important;
+            width: 80px !important;
+            margin-left: 10px !important;
+        }
+        
+        /* ESTILO PARA MOVER EL TIEMPO AL MEDIO/DERECHA (IZQUIERDA DEL BANNER) */
+        .plyr__time--duration {
+            display: block !important;
+            visibility: visible !important;
+            font-size: 0.75rem !important;
+            font-weight: 700 !important;
+            /* Empuja el tiempo hacia el centro/derecha */
+            margin-left: auto !important; 
+            /* Espacio exacto para no chocar con el banner de recursos */
+            margin-right: 145px !important; 
+        }
         .plyr__time--current { display: none !important; }
 
-        /* DISEÑO DE PÁGINA */
+        /* CONTENIDO DE LA PÁGINA */
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
         .lesson-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
         .module-tag { color: var(--brand-blue); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
         .lesson-title { font-size: 1.8rem; font-weight: 800; margin: 10px 0; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; box-shadow: 0 8px 20px rgba(0, 102, 255, 0.2); }
+        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
     </style>
 </head>
 <body>
@@ -93,7 +97,7 @@
             </div>
 
             <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>RECURSOS</span>
             </a>
             
@@ -106,7 +110,7 @@
             <span class="module-tag">Módulo 1</span>
             <h1 class="lesson-title">Estrategias Avanzadas de Comunicación</h1>
         </div>
-        <p style="line-height: 1.7; color: #4A5568;">Dominar el tono adecuado es la clave del éxito internacional. Haz clic en el botón de reproducción para comenzar tu formación hoy mismo.</p>
+        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Toca el botón de reproducción para comenzar.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
@@ -123,15 +127,10 @@
         let hideTimer;
         let hasStarted = false;
 
-        startScreen.addEventListener('click', () => {
-            if (!hasStarted) { player.play(); }
-        });
+        startScreen.addEventListener('click', () => { if (!hasStarted) { player.play(); } });
 
         player.on('playing', () => {
-            if (!hasStarted) {
-                startScreen.classList.add('hidden');
-                hasStarted = true;
-            }
+            if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; }
         });
 
         player.on('controlsshown', () => {
