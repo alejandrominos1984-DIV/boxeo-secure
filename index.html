@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Material de Clase</title>
+    <title>Divélun | Recursos de Clase</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -13,7 +13,7 @@
             --accent: #ff3b30;
         }
 
-        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow: hidden; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
         .title { font-size: 2rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
@@ -26,30 +26,34 @@
             background: #000;
             border: 1px solid #222;
             line-height: 0;
-            z-index: 0;
         }
 
-        /* BANNER MATERIAL (BLANCO + ICONO) */
+        /* BANNER MATERIAL (BLANCO + FLOTANTE) */
         .premium-banner {
             position: absolute;
             bottom: 12px;
             right: 12px;
-            width: auto; /* Ancho adaptable */
-            padding: 0 14px; /* Espacio interno */
-            height: 38px;
-            background: #ffffff; /* FONDO BLANCO */
-            color: #000000; /* TEXTO NEGRO */
-            z-index: 10;
+            background: #ffffff; /* Blanco sólido */
+            color: #000000;      /* Texto negro */
+            padding: 8px 15px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px; /* Espacio entre icono y texto */
-            border-radius: 6px; /* Bordes ligeramente redondeados para estética moderna */
+            gap: 8px;
             text-decoration: none;
+            z-index: 10;
+            border-radius: 4px; /* Rectángulo con mínima curvatura */
             
-            /* ESTADO VISIBLE (Aparición rápida) */
+            /* ESTADO INICIAL: OCULTO */
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease; /* Desvanecimiento suave */
+        }
+
+        /* CLASE ACTIVA (Controlada por JS) */
+        .premium-banner.is-active {
             opacity: 1;
-            transition: opacity 0.2s ease, transform 0.1s;
+            pointer-events: all;
+            transition: opacity 0.2s ease; /* Aparición rápida */
         }
 
         .premium-banner span {
@@ -58,15 +62,7 @@
             letter-spacing: 1px;
         }
 
-        .premium-banner:active { transform: scale(0.97); background: #f0f0f0; }
-
-        /* SOLUCIÓN AL PARPADEO: Retraso en la desaparición */
-        .plyr--hide-controls .premium-banner {
-            opacity: 0;
-            pointer-events: none;
-            /* Espera 0.4s antes de empezar a desvanecerse, y tarda 0.5s en hacerlo */
-            transition: opacity 0.5s ease 0.4s; 
-        }
+        .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
         /* --- ALINEACIÓN DE CONTROLES --- */
         .plyr__controls {
@@ -76,9 +72,13 @@
             padding: 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
         }
-        .plyr__progress { flex: 1 !important; max-width: 55% !important; margin: 0 15px !important; }
 
-
+        /* BARRA DE PROGRESO CORTA Y CENTRADA */
+        .plyr__progress {
+            flex: 0 1 55% !important; 
+            margin: 0 15px !important;
+        }
+        
         /* POPUP BRAVE */
         #bravePopup {
             display: none; position: fixed; bottom: 10px; left: 50%;
@@ -86,23 +86,16 @@
             background: #121212; padding: 18px; border-radius: 24px;
             border: 1px solid #282828; z-index: 10000; text-align: center;
         }
-        .store-grid { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
-        .store-button {
-            background: #1e1e1e; padding: 10px 16px; border-radius: 14px;
-            display: flex; align-items: center; gap: 10px; text-decoration: none;
-            color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid #333; flex: 1;
-        }
-        .close-btn { position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 class="title">Material de Clase</h1>
+        <h1 class="title">Clase Maestra</h1>
 
-        <div class="video-box" id="mainContainer">
-            <a href="recursos-clase.pdf" download class="premium-banner" id="bannerBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        <div class="video-box">
+            <a href="material-clase.pdf" download class="premium-banner" id="bannerMaterial">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>MATERIAL</span>
             </a>
             
@@ -111,17 +104,14 @@
     </div>
 
     <div id="bravePopup">
-        <span class="close-btn" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
-            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22" alt="Brave">
-            <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MODO SIN ANUNCIOS</span>
+            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22">
+            <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999; margin: 0 10px; line-height: 1.4;">
-            Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones publicitarias.
-        </p>
-        <div class="store-grid">
-            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-button">Google Play</a>
-            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" class="store-button">App Store</a>
+        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar con máxima velocidad y cero publicidad.</p>
+        <div style="display: flex; gap: 10px;">
+            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333;">Play Store</a>
+            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333;">App Store</a>
         </div>
     </div>
 
@@ -132,15 +122,19 @@
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
-        // Sincronización JS como respaldo
-        const banner = document.getElementById('bannerBtn');
+        const banner = document.getElementById('bannerMaterial');
+
+        // LÓGICA DE VISIBILIDAD CON RETRASO (Delay)
         player.on('controlsshown', () => {
-            banner.style.opacity = "1";
-            banner.style.pointerEvents = "all";
+            banner.classList.add('is-active');
         });
-        // Dejamos que CSS maneje la desaparición retardada
+
         player.on('controlshidden', () => {
-           // No forzamos opacity 0 aquí, dejamos que la clase CSS haga el trabajo con retraso
+            // El banner espera 800ms antes de empezar a desaparecer
+            // Esto asegura que el logo de YouTube ya se haya ido
+            setTimeout(() => {
+                banner.classList.remove('is-active');
+            }, 800); 
         });
 
         async function checkBrave() {
