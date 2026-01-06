@@ -57,21 +57,21 @@
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- BARRA DE PROGRESO ULTRA-CORTA --- */
+        /* --- BARRA DE PROGRESO ULTRA-CORTA Y CENTRADA --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important;
             justify-content: center !important; /* Centrado absoluto */
             padding: 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            gap: 8px;
+            gap: 5px;
         }
 
         .plyr__progress {
-            /* REDUCIDA AL 25% PARA MÁXIMO MINIMALISMO */
-            flex: 0 1 25% !important; 
-            margin: 0 12px !important;
-            min-width: 80px; /* Evita que desaparezca en pantallas muy pequeñas */
+            /* REDUCIDA DRÁSTICAMENTE AL 15% */
+            flex: 0 1 15% !important; 
+            /* Margen aumentado para separar más */
+            margin: 0 25px !important;
         }
 
         .plyr__time { font-size: 0.7rem; opacity: 0.6; font-weight: 700; }
@@ -115,7 +115,6 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: Sin pantalla completa para proteger el banner
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'current-time'], 
             fullscreen: { enabled: false },
