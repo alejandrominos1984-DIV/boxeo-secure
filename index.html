@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Interfaz Élite Final</title>
+    <title>Divélun | Interfaz Premium Total</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -30,7 +30,7 @@
             touch-action: manipulation; 
         }
 
-        /* --- CAPAS DOBLE TOQUE --- */
+        /* CAPAS DOBLE TOQUE */
         .tap-overlay {
             position: absolute; top: 0; height: 100%; width: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -39,12 +39,11 @@
         }
         .tap-overlay.left { left: 0; justify-content: flex-start; padding-left: 30px; }
         .tap-overlay.right { right: 0; justify-content: flex-end; padding-right: 30px; }
-        .tap-icon { color: white; display: flex; flex-direction: column; align-items: center; transform: scale(0.8); }
+        .tap-icon { color: white; display: flex; flex-direction: column; align-items: center; }
         .tap-icon svg { width: 40px; height: 40px; fill: white; }
         .tap-overlay.animate { opacity: 1; }
-        /* ------------------------- */
 
-        /* BANNER MATERIAL BLANCO */
+        /* BANNER MATERIAL BLANCO (PROTECTOR DE LOGO) */
         .premium-banner {
             position: absolute; bottom: 12px; right: 12px; background: #ffffff; color: #000000;
             padding: 8px 15px; display: flex; align-items: center; gap: 8px; text-decoration: none;
@@ -54,34 +53,43 @@
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- SOLUCIÓN VISIBILIDAD TIEMPO EN MÓVIL --- */
+        /* --- SOLUCIÓN DEFINITIVA DE VISIBILIDAD DE TIEMPO --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important; 
             justify-content: flex-start !important; 
-            padding: 10px 15px !important; /* Más compacto */
+            padding: 10px 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+            min-height: 60px !important;
         }
 
+        /* BARRA DE PROGRESO CORTA */
         .plyr__progress {
             flex: 0 0 auto !important;
-            width: 80px !important; /* Un toque más corta para asegurar espacio */
+            width: 80px !important;
             margin-left: 8px !important;
-            margin-right: 12px !important;
+            margin-right: 15px !important;
         }
         
-        /* FORZAR DURACIÓN SIEMPRE VISIBLE */
-        .plyr__time--duration {
-            display: block !important; /* Evita que Plyr lo oculte */
+        /* FORZAR VISIBILIDAD DEL TIEMPO EN CUALQUIER DISPOSITIVO */
+        .plyr__time {
+            display: inline-block !important; /* Evita el ocultado automático de Plyr */
             visibility: visible !important;
             font-size: 0.75rem !important;
             font-weight: 700 !important;
+            color: #ffffff !important;
             opacity: 1 !important;
-            color: #fff !important;
-            white-space: nowrap !important;
+            padding: 0 !important;
+            margin: 0 !important;
         }
 
-        /* Ocultar el tiempo actual para dejar solo la duración (estética limpia) */
+        /* Aseguramos que la duración específica se vea */
+        .plyr__time--duration {
+            display: inline-block !important;
+            visibility: visible !important;
+        }
+
+        /* Ocultamos el tiempo actual para mantener el look minimalista solicitado */
         .plyr__time--current { display: none !important; }
 
         .plyr__control { color: #fff !important; padding: 5px !important; }
@@ -117,12 +125,13 @@
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22"><span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999;">Usa <b>Brave</b> para evitar publicidad.</p>
+        <p style="font-size: 0.8rem; color: #999;">Usa <b>Brave</b> para estudiar sin publicidad.</p>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         const player = new Plyr('#player', {
+            // Se asegura que 'duration' esté presente en los controles
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
