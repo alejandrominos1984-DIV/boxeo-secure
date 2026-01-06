@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Entrenamiento Premium</title>
+    <title>Divélun | Clase Premium</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" rel="stylesheet">
     
@@ -13,12 +13,15 @@
             --accent: #ff3b30;
         }
 
-        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 500px; padding: 20px; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
-        /* CONTENEDOR MAESTRO */
+        .info { padding-bottom: 20px; }
+        .title { font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
+
+        /* CONTENEDOR DEL VIDEO */
         .video-box {
-            position: relative; /* Necesario para el escudo */
+            position: relative; /* Vital para que el escudo se posicione dentro */
             border-radius: 25px;
             overflow: hidden;
             box-shadow: 0 20px 60px rgba(0,0,0,0.9);
@@ -26,40 +29,41 @@
             border: 1px solid #222;
         }
 
-        /* ESCUDO ANTI-LOGO YOUTUBE */
+        /* ESCUDO CORREGIDO (Esquina Inferior Derecha) */
         .player-shield {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 80px; /* Tamaño para cubrir el logo */
-            height: 40px;
-            background: rgba(0, 0, 0, 0.01); /* Casi invisible pero bloquea clics */
-            z-index: 10;
-            pointer-events: all; /* Bloquea que toquen el logo de abajo */
+            bottom: 0;   /* Pegado abajo */
+            right: 0;    /* Pegado a la derecha */
+            width: 130px; /* Ancho suficiente para cubrir el logo de YT */
+            height: 70px; /* Alto suficiente */
+            background: rgba(0, 0, 0, 0.01); /* Capa transparente anti-clic */
+            z-index: 20; /* Por encima de todo */
+            pointer-events: all; /* Captura los clics */
+            
+            /* Alineación del texto PREMIUM */
             display: flex;
-            align-items: center;
-            justify-content: center;
+            justify-content: flex-end; /* Texto a la derecha */
+            align-items: flex-end;     /* Texto abajo */
+            padding: 15px;             /* Margen interno para que no quede pegado al borde */
         }
 
-        /* SELLO OPCIONAL: Puedes poner tu logo aquí */
+        /* MARCA DE AGUA "PREMIUM" */
         .player-shield::after {
-            content: 'DIVÉLUN';
-            font-size: 0.6rem;
+            content: 'PREMIUM';
+            font-size: 0.7rem;
             font-weight: 800;
-            color: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.5); /* Blanco semitransparente elegante */
             letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
-
-        .info { padding: 20px 5px; }
-        .title { font-size: 1.8rem; font-weight: 800; margin: 0; }
 
         /* POPUP BRAVE */
         #braveAlert {
-            display: none; position: fixed; bottom: 25px; left: 50%;
+            display: none; position: fixed; bottom: 30px; left: 50%;
             transform: translateX(-50%); width: 85%; max-width: 400px;
             background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(20px);
             padding: 25px; border-radius: 30px; border: 1px solid var(--accent);
-            z-index: 10000; text-align: center;
+            z-index: 10000; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,1);
         }
     </style>
 </head>
@@ -78,9 +82,9 @@
     </div>
 
     <div id="braveAlert">
-        <h3 style="color: var(--accent); font-weight: 800; margin-top: 0;">SIN ANUNCIOS 🚀</h3>
-        <p style="font-size: 0.8rem; color: #aaa;">Usa <b>Brave</b> para una experiencia de élite. Bloqueo total de publicidad garantizado.</p>
-        <a href="https://brave.com/" target="_blank" style="background:var(--accent); color:white; text-decoration:none; padding:12px 25px; border-radius:50px; font-weight:800; display:inline-block; font-size:0.8rem;">DESCARGAR BRAVE</a>
+        <h3 style="color: var(--accent); font-weight: 800; margin-top: 0; font-size: 1.2rem;">SIN ANUNCIOS 🚀</h3>
+        <p style="font-size: 0.9rem; color: #ccc; line-height: 1.5;">Usa el navegador <b>Brave</b> para una experiencia de clase premium. Bloqueo total de publicidad garantizado.</p>
+        <a href="https://brave.com/" target="_blank" style="background:var(--accent); color:white; text-decoration:none; padding:15px 30px; border-radius:50px; font-weight:800; display:inline-block; font-size:0.9rem; margin-top: 15px;">DESCARGAR BRAVE</a>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
