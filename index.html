@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Interfaz Minimalista</title>
+    <title>Divélun | Interfaz Élite Final</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -13,12 +13,11 @@
             --accent: #ff3b30;
         }
 
-        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow: hidden; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
         .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
 
-        /* CONTENEDOR DE VIDEO */
         .video-box {
             position: relative;
             border-radius: 28px;
@@ -30,7 +29,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* BANNER MATERIAL (BLANCO) - PROTECTOR DE LOGO */
+        /* BANNER MATERIAL FLOTANTE */
         .premium-banner {
             position: absolute;
             bottom: 12px;
@@ -44,45 +43,40 @@
             text-decoration: none;
             z-index: 10;
             border-radius: 4px;
-            opacity: 1; /* Visible al cargar */
+            opacity: 1; 
             pointer-events: all;
             transition: opacity 0.5s ease;
         }
 
-        .premium-banner.force-hide {
-            opacity: 0;
-            pointer-events: none;
-        }
-
+        .premium-banner.force-hide { opacity: 0; pointer-events: none; }
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- BARRA DE PROGRESO FIJA Y ULTRA-CORTA --- */
+        /* --- CONTROLES: ALINEACIÓN Y BARRA OPTIMIZADA --- */
         .plyr__controls {
             display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 15px !important;
+            align-items: center !important; /* Alineación vertical perfecta */
+            justify-content: flex-start !important; /* Alineado a la izquierda */
+            padding: 15px 20px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            gap: 10px; /* Espacio reducido entre elementos */
+            gap: 0px; /* Controlamos el espacio con márgenes */
         }
 
         .plyr__progress {
-            /* NO CRECER, NO ENCOGER, BASE AUTOMÁTICA */
             flex: 0 0 auto !important;
-            /* ANCHO MÁXIMO FIJO EN PIXELES (La clave del éxito) */
-            width: 60px !important;
-            max-width: 60px !important;
-            /* Márgenes para centrar */
-            margin: 0 15px !important;
+            width: 100px !important; /* Ancho ajustado según referencia */
+            max-width: 100px !important;
+            margin: 0 15px !important; /* Espacio equilibrado entre play y duración */
         }
         
-        /* Asegurar que el input interno respete el ancho */
-        .plyr__progress input[type=range] {
-             max-width: 100% !important;
+        /* Ajuste del tiempo (Duración) */
+        .plyr__time--duration {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            font-weight: 700;
+            margin-left: -5px; /* Acerca el tiempo a la barra */
         }
 
-        .plyr__time { font-size: 0.7rem; opacity: 0.6; font-weight: 700; }
         .plyr__control { color: #fff !important; }
 
         /* POPUP BRAVE */
@@ -100,11 +94,10 @@
         <h1 class="title">Clase Maestra</h1>
 
         <div class="video-box" id="videoWrapper">
-            <a href="guia-clase.pdf" download class="premium-banner" id="bannerMaterial">
+            <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>MATERIAL</span>
             </a>
-            
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
         </div>
     </div>
@@ -114,7 +107,7 @@
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22">
             <span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Estudia con <b>Brave</b> para evitar publicidad.</p>
+        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar sin publicidad.</p>
         <div style="display: flex; gap: 10px;">
             <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">Android</a>
             <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">iPhone</a>
@@ -123,8 +116,9 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
+        // CAMBIO: Se usa 'duration' en lugar de 'current-time'
         const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'current-time'], 
+            controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
@@ -145,8 +139,7 @@
         });
 
         wrapper.addEventListener('dblclick', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            e.preventDefault(); e.stopPropagation();
         }, true);
 
         async function checkBrave() {
