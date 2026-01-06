@@ -37,19 +37,26 @@
         }
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
-        /* BANNER PROTECTOR (2 SEGUNDOS DE SEGURIDAD) */
+        /* BANNER PROTECTOR ROBUSTO (Corregido para cobertura total) */
         .premium-banner {
-            position: absolute; bottom: 15px; right: 15px;
+            position: absolute; 
+            bottom: 10px; /* Más pegado abajo */
+            right: 10px; /* Más pegado a la derecha */
             background: var(--brand-blue); color: #ffffff;
-            padding: 10px 18px; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; z-index: 15; border-radius: 10px;
+            /* Padding más generoso para hacer el botón más grande */
+            padding: 12px 20px; 
+            display: flex; align-items: center; gap: 8px;
+            text-decoration: none; z-index: 15; 
+            /* Bordes menos redondeados para asegurar cobertura en esquinas */
+            border-radius: 6px; 
             opacity: 1; transition: opacity 0.6s ease;
-            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
-            font-weight: 700; font-size: 0.75rem;
+            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
+            font-weight: 800; font-size: 0.75rem;
         }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
+        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
 
-        /* --- CONTROLES: TIEMPO EN EL MEDIO (IZQUIERDA DEL BANNER) --- */
+        /* CONTROLES: TIEMPO MOVIDO MÁS A LA IZQUIERDA */
         .plyr__controls {
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
             padding: 10px 15px !important;
@@ -65,16 +72,15 @@
             margin-left: 10px !important;
         }
         
-        /* ESTILO PARA MOVER EL TIEMPO AL MEDIO/DERECHA (IZQUIERDA DEL BANNER) */
+        /* ESTILO PARA MOVER EL TIEMPO MÁS A LA IZQUIERDA */
         .plyr__time--duration {
             display: block !important;
             visibility: visible !important;
             font-size: 0.75rem !important;
             font-weight: 700 !important;
-            /* Empuja el tiempo hacia el centro/derecha */
             margin-left: auto !important; 
-            /* Espacio exacto para no chocar con el banner de recursos */
-            margin-right: 145px !important; 
+            /* AUMENTADO: Empuja los números mucho más a la izquierda del banner */
+            margin-right: 185px !important; 
         }
         .plyr__time--current { display: none !important; }
 
