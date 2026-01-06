@@ -3,180 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Academy Pro</title>
+    <title>Divélun | Academy Pro - Capítulos</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --brand-blue: #0066FF;
             --brand-dark: #1A202C;
             --brand-gray: #718096;
+            --bg-page: #F7FAFC;
             --border-color: #E2E8F0;
             --plyr-color-main: var(--brand-blue);
         }
 
-        body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
+        body { margin: 0; padding: 0; background: var(--bg-page); font-family: 'Inter', sans-serif; color: var(--brand-dark); }
 
-        /* --- VIDEO HERO (ANCHO COMPLETO) --- */
-        .hero-video-section { width: 100%; background: #000; position: relative; }
-        .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+        /* --- LAYOUT PRINCIPAL --- */
+        .main-wrapper {
+            display: flex;
+            flex-direction: column; /* Móvil primero */
+            min-height: 100vh;
+        }
 
-        /* --- ESCUDO SUPERIOR (OCULTA TÍTULO/CANAL) --- */
-        .top-info-shield {
+        @media (min-width: 992px) {
+            .main-wrapper { flex-direction: row; }
+            .video-section { flex: 1; height: 100vh; overflow-y: auto; }
+            .sidebar-chapters { width: 350px; height: 100vh; border-left: 1px solid var(--border-color); }
+        }
+
+        /* --- SECCIÓN VIDEO --- */
+        .video-section { background: #FFFFFF; }
+        .video-container { width: 100%; background: #000; position: relative; }
+        .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; }
+
+        /* ESCUDOS Y BANNERS (Se mantienen tus protecciones) */
+        .top-nav-shield {
             position: absolute; top: 0; left: 0; width: 100%; height: 55px;
-            background: #FFFFFF; z-index: 10; opacity: 1; transition: opacity 0.6s ease;
+            background: #FFFFFF; z-index: 10; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; box-sizing: border-box; transition: opacity 0.6s ease;
         }
-        .top-info-shield.force-hide { opacity: 0; pointer-events: none; }
-
-        /* --- CAPAS DOBLE TOQUE --- */
-        .tap-feedback {
-            position: absolute; top: 0; height: 100%; width: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 102, 255, 0.15); opacity: 0; pointer-events: none; z-index: 5;
-            transition: opacity 0.3s ease;
-        }
-        .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
-        .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
-        .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tap-icon svg { width: 40px; height: 40px; fill: white; }
-        .tap-feedback.animate { opacity: 1; }
-        .tap-feedback.animate .tap-icon { transform: scale(1.1); }
-
-        /* --- PANTALLA DE INICIO (BOTÓN CURVO) --- */
-        .start-screen-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; display: flex; align-items: center; justify-content: center;
-            z-index: 20; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        .start-screen-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .big-play-btn {
-            width: 88px; height: 62px; background: var(--brand-blue); border-radius: 18px; 
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-        }
-        .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
-
-        /* --- BANNER RECURSOS (ROBUSTO) --- */
+        .nav-brand { color: var(--brand-blue); font-weight: 800; letter-spacing: 1px; font-size: 0.9rem; }
         .premium-banner {
             position: absolute; bottom: 12px; right: 12px;
-            background: var(--brand-blue); color: #ffffff;
-            padding: 12px 22px; display: flex; align-items: center; gap: 10px;
-            text-decoration: none; z-index: 15; border-radius: 4px; 
-            opacity: 1; transition: opacity 0.6s ease;
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            font-weight: 800; font-size: 0.8rem;
+            background: var(--brand-blue); color: #ffffff; padding: 12px 22px;
+            text-decoration: none; z-index: 15; border-radius: 4px; font-weight: 800; font-size: 0.8rem;
+            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4); transition: opacity 0.6s ease;
         }
-        .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
+        .force-hide { opacity: 0; pointer-events: none; }
 
-        /* --- CONTROLES Y ALINEACIÓN --- */
-        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
-        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
-        .plyr__time--duration {
-            display: block !important; visibility: visible !important;
-            font-size: 0.75rem !important; font-weight: 700 !important;
-            margin-left: auto !important; 
-            margin-right: 160px !important; /* SEPARACIÓN PERFECTA */
-        }
+        /* Plyr Ajustes de alineación */
+        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; }
+        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin: 0 10px !important; }
+        .plyr__time--duration { margin-right: 160px !important; font-weight: 700 !important; }
         .plyr__time--current { display: none !important; }
 
-        /* --- CONTENIDO --- */
-        .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .module-tag { color: var(--brand-blue); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; display: block; }
-        .lesson-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 15px 0; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; margin-top: 20px; }
+        /* --- SIDEBAR DE CAPÍTULOS --- */
+        .sidebar-chapters {
+            background: #FFFFFF;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem; font-weight: 800; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .chapter-list { list-style: none; padding: 0; margin: 0; }
+        .chapter-item {
+            display: flex; align-items: center; gap: 15px;
+            padding: 12px; border-radius: 12px; cursor: pointer;
+            margin-bottom: 10px; transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+        .chapter-item:hover { background: #F0F7FF; }
+        .chapter-item.active {
+            background: #EBF4FF; border-color: var(--brand-blue);
+        }
+
+        .chapter-thumb {
+            width: 50px; height: 50px; background: var(--brand-blue);
+            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 0.7rem; flex-shrink: 0;
+        }
+        .chapter-info h4 { margin: 0; font-size: 0.85rem; font-weight: 700; color: var(--brand-dark); }
+        .chapter-info p { margin: 2px 0 0 0; font-size: 0.75rem; color: var(--brand-gray); }
+
+        /* Feedback Doble Toque */
+        .tap-feedback { position: absolute; top: 0; height: 100%; width: 50%; z-index: 5; opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+        .tap-feedback.animate { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div class="hero-video-section">
-        <div class="video-box" id="videoWrapper">
-            <div class="top-info-shield" id="topShield"></div>
+    <div class="main-wrapper">
+        <div class="video-section">
+            <div class="video-container">
+                <div class="video-box" id="videoWrapper">
+                    
+                    <div class="top-nav-shield" id="topNav">
+                        <div class="nav-brand">DIVÉLUN ACADEMY</div>
+                    </div>
 
-            <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg><span>-10s</span></div></div>
-            <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg><span>+10s</span></div></div>
-
-            <div class="start-screen-overlay" id="startScreen">
-                <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+                    <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
+                        <span>DESCARGAR RECURSOS</span>
+                    </a>
+                    
+                    <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
+                </div>
             </div>
 
-            <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>RECURSOS</span>
-            </a>
-            
-            <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
+            <div style="padding: 25px;">
+                <h1 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 10px;">Lección 1: Fundamentos del Idioma</h1>
+                <p style="color: var(--brand-gray); line-height: 1.6;">Bienvenido a tu curso. Utiliza los capítulos a la derecha para navegar por las secciones de esta clase maestra.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="content-container">
-        <span class="module-tag">Módulo 1</span>
-        <h1 class="lesson-title">Estrategias Avanzadas de Comunicación</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Utiliza el video para practicar tu pronunciación. Recuerda que puedes adelantar o atrasar 10 segundos con doble toque a los lados.</p>
-        <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
+        <div class="sidebar-chapters">
+            <div class="sidebar-title">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                CAPÍTULOS
+            </div>
+
+            <div class="chapter-list">
+                <div class="chapter-item active" onclick="goToTime(0, this)">
+                    <div class="chapter-thumb">LVL 1</div>
+                    <div class="chapter-info">
+                        <h4>Introducción y Saludos</h4>
+                        <p>0:00</p>
+                    </div>
+                </div>
+                <div class="chapter-item" onclick="goToTime(259, this)">
+                    <div class="chapter-thumb">LVL 2</div>
+                    <div class="chapter-info">
+                        <h4>Vocabulario Esencial</h4>
+                        <p>4:19</p>
+                    </div>
+                </div>
+                <div class="chapter-item" onclick="goToTime(521, this)">
+                    <div class="chapter-thumb">LVL 3</div>
+                    <div class="chapter-info">
+                        <h4>Estructuras Gramaticales</h4>
+                        <p>8:41</p>
+                    </div>
+                </div>
+                <div class="chapter-item" onclick="goToTime(792, this)">
+                    <div class="chapter-thumb">LVL 4</div>
+                    <div class="chapter-info">
+                        <h4>Ejercicios de Escucha</h4>
+                        <p>13:12</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'duration'], 
-            fullscreen: { enabled: false },
-            youtube: { 
-                noCookie: true, rel: 0, modestbranding: 1,
-                start: 0, // Aquí puedes poner el segundo de inicio
-                end: 300  // Aquí el segundo de fin (ej. 5 minutos)
-            }
+            controls: ['play', 'progress', 'duration'],
+            youtube: { noCookie: true, rel: 0, modestbranding: 1 }
         });
 
         const banner = document.getElementById('bannerMaterial');
-        const topShield = document.getElementById('topShield');
-        const startScreen = document.getElementById('startScreen');
-        const wrapper = document.getElementById('videoWrapper');
-        const feedbackLeft = document.getElementById('feedbackLeft');
-        const feedbackRight = document.getElementById('feedbackRight');
-        
+        const topNav = document.getElementById('topNav');
         let hideTimer;
-        let lastTapTime = 0;
-        let hasStarted = false;
 
-        startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
-        player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
+        // Función para saltar a tiempo específico
+        function goToTime(seconds, element) {
+            player.currentTime = seconds;
+            player.play();
+            
+            // Actualizar clase activa visualmente
+            document.querySelectorAll('.chapter-item').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+        }
 
+        // Gestión de visibilidad de protecciones
         player.on('controlsshown', () => { 
             clearTimeout(hideTimer); 
             banner.classList.remove('force-hide'); 
-            topShield.classList.remove('force-hide');
+            topNav.classList.remove('force-hide');
         });
 
         player.on('controlshidden', () => { 
             hideTimer = setTimeout(() => { 
                 banner.classList.add('force-hide'); 
-                topShield.classList.add('force-hide');
+                topNav.classList.add('force-hide');
             }, 2000); 
         });
-
-        const handleDoubleAction = (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-            const now = Date.now();
-            if (now - lastTapTime < 300) {
-                e.preventDefault();
-                const rect = wrapper.getBoundingClientRect();
-                const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
-                if (x < rect.width / 2) { player.rewind(10); showFeedback(feedbackLeft); }
-                else { player.forward(10); showFeedback(feedbackRight); }
-            }
-            lastTapTime = now;
-        };
-
-        const showFeedback = (el) => {
-            el.classList.remove('animate'); void el.offsetWidth;
-            el.classList.add('animate');
-            setTimeout(() => el.classList.remove('animate'), 500);
-        };
-
-        wrapper.addEventListener('click', handleDoubleAction);
-        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
     </script>
 </body>
 </html>
