@@ -26,21 +26,18 @@
         .tap-feedback {
             position: absolute; top: 0; height: 100%; width: 50%;
             display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 102, 255, 0.15); /* Tinte azul sutil */
-            opacity: 0; pointer-events: none; z-index: 5;
+            background: rgba(0, 102, 255, 0.15); opacity: 0; pointer-events: none; z-index: 5;
             transition: opacity 0.3s ease;
         }
         .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
         .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
-        
         .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .tap-icon svg { width: 50px; height: 50px; fill: white; }
         .tap-icon span { display: block; font-size: 0.9rem; font-weight: 800; margin-top: 5px; }
-
         .tap-feedback.animate { opacity: 1; }
         .tap-feedback.animate .tap-icon { transform: scale(1.1); }
 
-        /* PANTALLA DE INICIO TRANSPARENTE */
+        /* PANTALLA DE INICIO CON BOTÓN CURVO */
         .start-screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: transparent; display: flex; align-items: center; justify-content: center;
@@ -54,32 +51,38 @@
         }
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
-        /* BANNER PROTECTOR ROBUSTO */
+        /* BANNER RECURSOS (RESTAURADO A FORMATO ROBUSTO Y RECTANGULAR) */
         .premium-banner {
-            position: absolute; bottom: 10px; right: 10px;
+            position: absolute; 
+            bottom: 12px; 
+            right: 12px;
             background: var(--brand-blue); color: #ffffff;
-            padding: 12px 20px; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; z-index: 15; border-radius: 6px; 
+            padding: 12px 22px; /* Más robusto */
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; z-index: 15; 
+            border-radius: 4px; /* ESQUINAS RECTANGULARES COMO ANTES */
             opacity: 1; transition: opacity 0.6s ease;
             box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            font-weight: 800; font-size: 0.75rem;
+            font-weight: 800; font-size: 0.8rem;
         }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
+        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
 
         /* CONTROLES */
         .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
         .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
+        
+        /* DURACIÓN: AJUSTADA LIGERAMENTE A LA DERECHA */
         .plyr__time--duration {
             display: block !important; visibility: visible !important;
             font-size: 0.75rem !important; font-weight: 700 !important;
             margin-left: auto !important; 
-            margin-right: 160px !important; /* POSICIÓN SOLICITADA */
+            margin-right: 145px !important; /* SEPARACIÓN ÓPTIMA DEL BANNER */
         }
         .plyr__time--current { display: none !important; }
 
         /* CONTENIDO */
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .lesson-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
         .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
     </style>
 </head>
@@ -87,18 +90,8 @@
 
     <div class="hero-video-section">
         <div class="video-box" id="videoWrapper">
-            <div class="tap-feedback left" id="feedbackLeft">
-                <div class="tap-icon">
-                    <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
-                    <span>-10s</span>
-                </div>
-            </div>
-            <div class="tap-feedback right" id="feedbackRight">
-                <div class="tap-icon">
-                    <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
-                    <span>+10s</span>
-                </div>
-            </div>
+            <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg><span>-10s</span></div></div>
+            <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg><span>+10s</span></div></div>
 
             <div class="start-screen-overlay" id="startScreen">
                 <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
@@ -114,10 +107,8 @@
     </div>
 
     <div class="content-container">
-        <div class="lesson-header">
-            <h1 style="font-size: 1.8rem; font-weight: 800; margin: 0;">Clase Maestra de Idiomas</h1>
-        </div>
-        <p style="line-height: 1.7; color: #4A5568;">Utiliza el doble toque a los lados del video para retroceder o avanzar rápidamente.</p>
+        <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">Estrategias Avanzadas de Comunicación</h1>
+        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Utiliza el doble toque para navegar y descarga tus recursos desde el banner azul.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
@@ -139,51 +130,33 @@
         let lastTapTime = 0;
         let hasStarted = false;
 
-        // INICIO
         startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
         player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
 
-        // BANNER CON RETRASO DE 2 SEGUNDOS
+        // BANNER CON RETRASO DE 2 SEGUNDOS PARA SEGURIDAD TOTAL
         player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
         player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); });
 
-        // LÓGICA DE DOBLE INTERACCIÓN (CLIC Y TOQUE)
         const handleDoubleAction = (e) => {
-            // No activar si se toca el banner o los controles
             if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-
             const now = Date.now();
-            const TIMESPAN = 300; // Ventana de 300ms para el doble toque
-
-            if (now - lastTapTime < TIMESPAN) {
+            if (now - lastTapTime < 300) {
                 e.preventDefault();
                 const rect = wrapper.getBoundingClientRect();
                 const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
-                
-                if (x < rect.width / 2) {
-                    player.rewind(10);
-                    showFeedback(feedbackLeft);
-                } else {
-                    player.forward(10);
-                    showFeedback(feedbackRight);
-                }
+                if (x < rect.width / 2) { player.rewind(10); showFeedback(feedbackLeft); }
+                else { player.forward(10); showFeedback(feedbackRight); }
             }
             lastTapTime = now;
         };
 
         const showFeedback = (el) => {
-            el.classList.remove('animate');
-            void el.offsetWidth; // Reiniciar animación
+            el.classList.remove('animate'); void el.offsetWidth;
             el.classList.add('animate');
             setTimeout(() => el.classList.remove('animate'), 500);
         };
 
         wrapper.addEventListener('click', handleDoubleAction);
-        wrapper.addEventListener('touchstart', (e) => {
-            if (e.touches.length > 1) e.preventDefault(); // Evitar zoom multitáctil
-        }, { passive: false });
-
-        // Bloquear doble clic nativo para evitar conflictos
         wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
     </script>
 </body>
