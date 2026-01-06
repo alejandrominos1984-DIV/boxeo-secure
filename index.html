@@ -3,118 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Técnica de Cross</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>Divélun | Cross de Poder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #050505;
-            --card-bg: #121212;
-            --accent-color: #ff3b30; /* Rojo/Naranja deportivo */
+            --bg: #000000;
+            --card: #151515;
+            --accent: #ff3b30; 
+            --glass: rgba(255, 255, 255, 0.05);
             --text-main: #ffffff;
-            --text-dim: #a0a0a0;
+            --text-dim: #8e8e93;
         }
 
         body {
             margin: 0;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
             font-family: 'Inter', sans-serif;
             color: var(--text-main);
             display: flex;
             justify-content: center;
         }
 
-        .app-container {
+        .app-shell {
             width: 100%;
-            max-width: 480px;
-            background-color: var(--bg-color);
+            max-width: 450px;
             min-height: 100vh;
-            padding-bottom: 40px;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Video Principal con Estética de App */
-        .hero-video {
+        /* Hero Video Section */
+        .video-wrapper {
             width: 100%;
             position: relative;
             background: #000;
             line-height: 0;
-            border-bottom: 2px solid #1a1a1a;
         }
 
         video {
             width: 100%;
             display: block;
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
             -webkit-user-drag: none;
         }
 
-        .content { padding: 25px; }
-
-        .title { font-size: 2rem; font-weight: 700; margin: 0; }
-        .category { color: var(--accent-color); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-        .description { color: var(--text-dim); line-height: 1.5; margin: 15px 0; font-size: 0.95rem; }
-
-        /* Panel de Control de Voz */
-        .voice-panel {
-            background: var(--card-bg);
+        /* Floating Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 10px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
+            margin: -30px 20px 0 20px;
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-item { text-align: center; }
+        .stat-val { display: block; font-size: 0.9rem; font-weight: 800; color: var(--text-main); }
+        .stat-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; }
+
+        /* Main Content */
+        .main-content { padding: 30px 25px; }
+        .exercise-title { font-size: 2.2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .exercise-desc { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; margin: 15px 0 30px 0; }
+
+        /* Coaching Panel */
+        .coaching-box {
+            background: var(--card);
+            border-radius: 25px;
             padding: 20px;
-            margin-top: 20px;
             border: 1px solid #222;
         }
 
-        .label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 8px; display: block; }
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         select {
             width: 100%;
-            background: #1e1e1e;
+            background: #222;
             color: white;
             border: 1px solid #333;
-            padding: 12px;
-            border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 14px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             font-family: inherit;
+            appearance: none;
         }
 
-        .btn-speak {
+        .btn-action {
             width: 100%;
-            background-color: var(--accent-color);
+            background: var(--accent);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 18px;
             border-radius: 50px;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 1rem;
             cursor: pointer;
-            text-transform: uppercase;
-            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3);
+            transition: 0.2s;
         }
 
-        .btn-speak:active { transform: scale(0.96); opacity: 0.9; }
+        .btn-action:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div class="hero-video">
-            <video 
-                autoplay loop muted playsinline 
-                controlsList="nodownload" 
-                oncontextmenu="return false;"
-                disablePictureInPicture>
+    <div class="app-shell">
+        <div class="video-wrapper">
+            <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture>
                 <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
             </video>
         </div>
 
-        <div class="content">
-            <span class="category">Entrenamiento de Poder</span>
-            <h1 class="title">Golpe de Cross</h1>
-            <p class="description">
-                El cross es tu golpe de poder principal. Requiere una coordinación perfecta entre el giro del pie, la cadera y la extensión total del brazo.
+        <div class="stats-bar">
+            <div class="stat-item"><span class="stat-val">3 Variations</span><span class="stat-label">Level</span></div>
+            <div class="stat-item"><span class="stat-val">12 Minutes</span><span class="stat-label">Time</span></div>
+            <div class="stat-item"><span class="stat-val">180 kcal</span><span class="stat-label">Burn</span></div>
+        </div>
+
+        <div class="main-content">
+            <h1 class="exercise-title">Cross Punch</h1>
+            <p class="exercise-desc">
+                Domina el golpe más potente de tu arsenal. Aprende la rotación de cadera y el impacto lineal perfecto para maximizar tu pegada.
             </p>
 
-            <div class="voice-panel">
-                <span class="label">CONFIGURACIÓN DE ENTRENADOR</span>
+            <div class="coaching-box">
+                <div class="panel-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                    AI Coach Settings
+                </div>
                 <select id="voiceSelect"></select>
-                <button class="btn-speak" onclick="startCoaching()">Iniciar Instrucciones</button>
+                <button class="btn-action" onclick="playCoaching()">Start Audio Coaching</button>
             </div>
         </div>
     </div>
@@ -123,55 +153,59 @@
         const synth = window.speechSynthesis;
         const voiceSelect = document.querySelector('#voiceSelect');
         
-        // GUIONES TÉCNICOS DETALLADOS
         const scripts = {
-            es: "Técnica del Cross de derecha. Gira tu pie trasero hacia adentro y rota la cadera violentamente. Extiende tu brazo derecho en línea recta mientras mantienes el puño izquierdo protegiendo tu pómulo. Exhala al impactar y regresa de inmediato a tu guardia inicial. Velocidad y rotación.",
-            en: "Technical Cross drill. Pivot your back foot and rotate your hips sharply. Extend your dominant arm in a straight line while keeping your lead hand protecting your chin. Breathe out on impact and snap your hand back to your guard. Focus on rotation and speed."
+            es: "Técnica del Cross. Gira tu pie trasero y rota la cadera con fuerza. Extiende tu brazo derecho en línea recta mientras proteges tu rostro con la otra mano. Exhala al impactar y regresa rápido a la guardia.",
+            en: "Cross technique. Pivot your back foot and rotate your hips with power. Extend your dominant arm in a straight line while keeping your other hand protecting your face. Exhale on impact and return fast to your guard.",
+            pt: "Técnica do Cross. Gire o pé traseiro e rotacione o quadril com força. Estenda o braço dominante em linha reta enquanto protege o rosto com a outra mão. Expire no impacto e retorne rápido à guarda."
         };
 
-        let voices = [];
+        function getBestVoices() {
+            let allVoices = synth.getVoices();
+            // Filtro: Solo ES, EN, PT + Prioridad Google + No Microsoft
+            return allVoices.filter(v => {
+                const lang = v.lang.toLowerCase();
+                const isTargetLang = lang.startsWith('es') || lang.startsWith('en') || lang.startsWith('pt');
+                const isNotMicrosoft = !v.name.includes('Microsoft');
+                return isTargetLang && isNotMicrosoft;
+            });
+        }
 
-        function loadVoices() {
-            // Filtramos: Prioriza Google, evita Microsoft por completo
-            voices = synth.getVoices().filter(v => 
-                v.name.includes('Google') || (!v.name.includes('Microsoft'))
-            );
-            
+        function populateVoices() {
+            const filteredVoices = getBestVoices();
             voiceSelect.innerHTML = '';
-            voices.forEach((voice) => {
+
+            filteredVoices.forEach(voice => {
                 const option = document.createElement('option');
                 option.textContent = `${voice.name} (${voice.lang})`;
-                option.setAttribute('data-lang', voice.lang);
-                option.setAttribute('data-name', voice.name);
+                option.value = voice.name;
+                // Marcar español como default
+                if (voice.lang.startsWith('es')) option.selected = true;
                 voiceSelect.appendChild(option);
             });
         }
 
-        // Carga de voces (manejo de compatibilidad con navegadores)
         if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = loadVoices;
+            speechSynthesis.onvoiceschanged = populateVoices;
         }
-        loadVoices();
+        populateVoices();
 
-        function startCoaching() {
-            if (synth.speaking) { synth.cancel(); }
+        function playCoaching() {
+            if (synth.speaking) synth.cancel();
 
-            const selectedOption = voiceSelect.selectedOptions[0];
-            const selectedVoice = voices.find(v => v.name === selectedOption.getAttribute('data-name'));
+            const selectedVoiceName = voiceSelect.value;
+            const voice = synth.getVoices().find(v => v.name === selectedVoiceName);
             
-            // Detecta si la voz es inglesa o española
-            const isEnglish = selectedVoice.lang.startsWith('en');
-            const textToSpeak = isEnglish ? scripts.en : scripts.es;
+            // Lógica bilingüe/trilingüe automática
+            const langCode = voice.lang.substring(0, 2);
+            const text = scripts[langCode] || scripts['es'];
 
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.voice = selectedVoice;
-            utterance.rate = 0.92; // Un poco más lento para mejor comprensión técnica
-            utterance.pitch = 1.0;
-
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.voice = voice;
+            utterance.rate = 0.92;
             synth.speak(utterance);
         }
 
-        // Bloqueo de seguridad adicional
+        // Seguridad anti-descarga
         document.onkeydown = (e) => {
             if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) return false;
         };
