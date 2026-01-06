@@ -17,7 +17,7 @@
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
-        .title { font-size: 2rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
+        .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
 
         /* CONTENEDOR DE VIDEO */
         .video-box {
@@ -30,64 +30,63 @@
             z-index: 0;
         }
 
-        /* EL BANNER DINÁMICO (BOTÓN PDF) */
+        /* BANNER PREMIUM (BOTÓN PDF) */
         .premium-banner {
             position: absolute;
-            bottom: 15px;
-            right: 15px;
+            bottom: 12px;
+            right: 12px;
             width: 100px;
-            height: 40px;
+            height: 42px;
             background: #000;
-            z-index: 10; /* Por encima de todo para ser clicable */
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 4px; /* Un toque mínimo de redondeo para el botón */
-            transition: opacity 0.3s ease; /* Efecto de aparecer/desaparecer */
-            opacity: 0; /* Oculto por defecto */
+            border-radius: 4px;
             text-decoration: none;
+            /* Lógica de visibilidad corregida */
+            opacity: 1; 
+            transition: opacity 0.3s ease, transform 0.2s;
         }
-
-        /* Mostrar banner cuando los controles de Plyr estén visibles */
-        .plyr--hide-controls .premium-banner { opacity: 0; pointer-events: none; }
-        .plyr--hover .premium-banner, 
-        .plyr--paused .premium-banner,
-        .plyr--loading .premium-banner { opacity: 1; pointer-events: all; }
 
         .premium-banner span {
             font-size: 0.6rem;
             font-weight: 900;
             color: var(--gold);
             letter-spacing: 2px;
-            transition: transform 0.2s;
         }
-        
-        .premium-banner:active span { transform: scale(0.9); }
 
-        /* --- CORRECCIÓN DE ALINEACIÓN DE CONTROLES --- */
+        .premium-banner:active { transform: scale(0.95); }
+
+        /* --- ALINEACIÓN PERFECTA DE CONTROLES --- */
         .plyr__controls {
-            display: flex;
-            align-items: center !important; /* Alinea play y barra al centro */
+            display: flex !important;
+            align-items: center !important; /* Centra verticalmente botón y barra */
             justify-content: center !important;
-            padding: 15px !important;
-            gap: 10px;
+            padding: 20px 15px !important;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
         }
+
+        .plyr__control--overlaid { background: var(--accent) !important; }
 
         .plyr__progress {
-            /* Barra de adelantar más corta y centrada */
-            flex: 0 1 50% !important; 
-            margin: 0 !important;
+            flex: 1 !important; /* Toma el espacio disponible */
+            max-width: 55% !important; /* Barra menos larga para estética pro */
+            margin: 0 15px !important; /* Espacio entre play y tiempo */
         }
 
-        .plyr__time { font-size: 0.75rem; color: #888; }
+        /* Ocultar banner cuando Plyr oculta controles */
+        .plyr--hide-controls .premium-banner {
+            opacity: 0;
+            pointer-events: none;
+        }
 
-        /* POPUP BRAVE AMIGABLE */
+        /* POPUP BRAVE */
         #bravePopup {
             display: none; position: fixed; bottom: 10px; left: 50%;
             transform: translateX(-50%); width: 92%; max-width: 440px;
             background: #121212; padding: 18px; border-radius: 24px;
             border: 1px solid #282828; z-index: 10000; text-align: center;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
         .store-grid { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .store-button {
@@ -95,7 +94,6 @@
             display: flex; align-items: center; gap: 10px; text-decoration: none;
             color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid #333; flex: 1;
         }
-        .store-button svg { width: 18px; height: 18px; fill: white; }
     </style>
 </head>
 <body>
@@ -103,8 +101,8 @@
     <div class="container">
         <h1 class="title">Clase Maestra</h1>
 
-        <div class="video-box">
-            <a href="guia-tecnica-cross.pdf" download class="premium-banner" id="pdfBtn">
+        <div class="video-box" id="mainContainer">
+            <a href="clase-cross.pdf" download class="premium-banner" id="bannerBtn">
                 <span>PREMIUM</span>
             </a>
             
@@ -113,23 +111,16 @@
     </div>
 
     <div id="bravePopup">
-        <span style="position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem;" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22" alt="Brave">
             <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MODO SIN ANUNCIOS</span>
         </div>
         <p style="font-size: 0.8rem; color: #999; margin: 0 10px; line-height: 1.4;">
-            Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones y con mayor privacidad.
+            Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones publicitarias.
         </p>
         <div class="store-grid">
-            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-button">
-                <svg viewBox="0 0 512 512"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.7 60.7L104.6 499z"/></svg>
-                Google Play
-            </a>
-            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" class="store-button">
-                <svg viewBox="0 0 384 512"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-                App Store
-            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-button">Google Play</a>
+            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" class="store-button">App Store</a>
         </div>
     </div>
 
@@ -140,12 +131,17 @@
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
-        // Asegurar que el banner se oculte/muestre con los controles
-        player.on('controlshidden', () => {
-            document.querySelector('.premium-banner').style.pointerEvents = 'none';
-        });
+        // Sincronización forzada del banner con los controles de Plyr
+        const banner = document.getElementById('bannerBtn');
+        
         player.on('controlsshown', () => {
-            document.querySelector('.premium-banner').style.pointerEvents = 'all';
+            banner.style.opacity = "1";
+            banner.style.pointerEvents = "all";
+        });
+
+        player.on('controlshidden', () => {
+            banner.style.opacity = "0";
+            banner.style.pointerEvents = "none";
         });
 
         async function checkBrave() {
