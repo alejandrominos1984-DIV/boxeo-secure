@@ -12,6 +12,7 @@
             --bg: #000000;
             --accent: #ff3b30;
             --gold: #D4AF37; /* Dorado Premium */
+            --plyr-color-main: var(--accent); /* El color de la barra de progreso será el acento */
         }
 
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
@@ -30,48 +31,55 @@
             z-index: 0;
         }
 
-        /* EL BANNER RECTANGULAR SIN ESQUINAS (SHARP CORNERS) */
+        /* EL BANNER RECTANGULAR FLOTANTE (AJUSTADO) */
         .premium-banner {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 80px;  /* Tamaño quirúrgico reducido */
-            height: 38px; /* Altura ajustada */
-            background: #000; /* Negro sólido para ocultar el logo */
-            z-index: 1; /* Detrás de la barra de Plyr, delante del video */
+            /* Ahora flota separado del borde */
+            bottom: 12px;
+            right: 12px;
+            /* Un poco más grande para asegurar cobertura total */
+            width: 95px;
+            height: 42px;
+            background: #000; /* Negro sólido */
+            z-index: 1;
             display: flex;
-            align-items: center;   /* Centrado vertical */
-            justify-content: center; /* Centrado horizontal */
-            border-radius: 0 !important; /* Esquinas rectas perfectas */
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 !important; /* Esquinas rectas */
             pointer-events: none;
         }
 
         .premium-banner span {
-            font-size: 0.55rem;
+            font-size: 0.6rem;
             font-weight: 900;
-            color: var(--gold); /* Letras Doradas */
+            color: var(--gold); /* Dorado */
             letter-spacing: 2px;
-            text-transform: uppercase;
         }
 
-        /* POPUP BRAVE (BANNER FLOTANTE REDISEÑADO) */
+        /* --- HACK CSS PARA ACORTAR LA BARRA DE PROGRESO --- */
+        .plyr--full-ui input[type=range] {
+            /* Hace que la barra sea más angosta (ej. 60% del ancho total) */
+            max-width: 60% !important;
+            /* La centra horizontalmente */
+            margin-left: auto !important;
+            margin-right: auto !important;
+        }
+        .plyr__controls {
+            /* Ajusta el espaciado de los controles para que se vea compacto */
+            justify-content: center !important;
+            gap: 15px;
+        }
+        /* -------------------------------------------------- */
+
+
+        /* POPUP BRAVE (Sin cambios) */
         #bravePopup {
-            display: none;
-            position: fixed;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 440px;
-            background: #121212;
-            padding: 18px;
-            border-radius: 24px;
-            border: 1px solid #282828;
-            z-index: 10000;
-            text-align: center;
+            display: none; position: fixed; bottom: 15px; left: 50%;
+            transform: translateX(-50%); width: 92%; max-width: 440px;
+            background: #121212; padding: 18px; border-radius: 24px;
+            border: 1px solid #282828; z-index: 10000; text-align: center;
             box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
-
         .brave-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
         .store-grid { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .store-button {
@@ -120,7 +128,7 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: 'mute' y 'volume' eliminados para una interfaz ultra limpia
+        // CONFIGURACIÓN: Sin volumen, sin fullscreen
         const player = new Plyr('#player', {
             controls: ['play-large', 'play', 'progress', 'current-time'], 
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
