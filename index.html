@@ -18,11 +18,29 @@
 
         body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
 
-        /* VIDEO HERO SUPERIOR (ANCHO COMPLETO) */
+        /* VIDEO HERO SUPERIOR */
         .hero-video-section { width: 100%; background: #000; position: relative; }
         .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-        /* PANTALLA DE INICIO CON BOTÓN CURVO */
+        /* --- CAPAS DE ANIMACIÓN DOBLE TOQUE --- */
+        .tap-feedback {
+            position: absolute; top: 0; height: 100%; width: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0, 102, 255, 0.15); /* Tinte azul sutil */
+            opacity: 0; pointer-events: none; z-index: 5;
+            transition: opacity 0.3s ease;
+        }
+        .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
+        .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
+        
+        .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .tap-icon svg { width: 50px; height: 50px; fill: white; }
+        .tap-icon span { display: block; font-size: 0.9rem; font-weight: 800; margin-top: 5px; }
+
+        .tap-feedback.animate { opacity: 1; }
+        .tap-feedback.animate .tap-icon { transform: scale(1.1); }
+
+        /* PANTALLA DE INICIO TRANSPARENTE */
         .start-screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: transparent; display: flex; align-items: center; justify-content: center;
@@ -33,7 +51,6 @@
             width: 88px; height: 62px; background: var(--brand-blue); border-radius: 18px; 
             display: flex; align-items: center; justify-content: center;
             box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
@@ -48,41 +65,21 @@
             font-weight: 800; font-size: 0.75rem;
         }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
 
         /* CONTROLES */
-        .plyr__controls {
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            padding: 10px 15px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: flex-start !important;
-            gap: 0 !important;
-        }
-
-        .plyr__progress {
-            flex: 0 0 auto !important;
-            width: 80px !important;
-            margin-left: 10px !important;
-        }
-        
-        /* AJUSTE FINAL DE POSICIÓN DEL TIEMPO */
+        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
+        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
         .plyr__time--duration {
-            display: block !important;
-            visibility: visible !important;
-            font-size: 0.75rem !important;
-            font-weight: 700 !important;
+            display: block !important; visibility: visible !important;
+            font-size: 0.75rem !important; font-weight: 700 !important;
             margin-left: auto !important; 
-            /* Reducido de 185px a 160px para moverlo un poco a la derecha */
-            margin-right: 160px !important; 
+            margin-right: 160px !important; /* POSICIÓN SOLICITADA */
         }
         .plyr__time--current { display: none !important; }
 
-        /* CONTENIDO DE LA PÁGINA */
+        /* CONTENIDO */
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
         .lesson-header { margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-        .module-tag { color: var(--brand-blue); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
-        .lesson-title { font-size: 1.8rem; font-weight: 800; margin: 10px 0; }
         .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
     </style>
 </head>
@@ -90,10 +87,21 @@
 
     <div class="hero-video-section">
         <div class="video-box" id="videoWrapper">
-            <div class="start-screen-overlay" id="startScreen">
-                <div class="big-play-btn">
-                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <div class="tap-feedback left" id="feedbackLeft">
+                <div class="tap-icon">
+                    <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg>
+                    <span>-10s</span>
                 </div>
+            </div>
+            <div class="tap-feedback right" id="feedbackRight">
+                <div class="tap-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+                    <span>+10s</span>
+                </div>
+            </div>
+
+            <div class="start-screen-overlay" id="startScreen">
+                <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
             </div>
 
             <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
@@ -107,10 +115,9 @@
 
     <div class="content-container">
         <div class="lesson-header">
-            <span class="module-tag">Módulo 1</span>
-            <h1 class="lesson-title">Estrategias Avanzadas de Comunicación</h1>
+            <h1 style="font-size: 1.8rem; font-weight: 800; margin: 0;">Clase Maestra de Idiomas</h1>
         </div>
-        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Toca el botón de reproducción para comenzar.</p>
+        <p style="line-height: 1.7; color: #4A5568;">Utiliza el doble toque a los lados del video para retroceder o avanzar rápidamente.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
@@ -124,28 +131,60 @@
 
         const banner = document.getElementById('bannerMaterial');
         const startScreen = document.getElementById('startScreen');
+        const wrapper = document.getElementById('videoWrapper');
+        const feedbackLeft = document.getElementById('feedbackLeft');
+        const feedbackRight = document.getElementById('feedbackRight');
+        
         let hideTimer;
+        let lastTapTime = 0;
         let hasStarted = false;
 
-        startScreen.addEventListener('click', () => { if (!hasStarted) { player.play(); } });
+        // INICIO
+        startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
+        player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
 
-        player.on('playing', () => {
-            if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; }
-        });
+        // BANNER CON RETRASO DE 2 SEGUNDOS
+        player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
+        player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); });
 
-        player.on('controlsshown', () => {
-            clearTimeout(hideTimer);
-            banner.classList.remove('force-hide');
-        });
+        // LÓGICA DE DOBLE INTERACCIÓN (CLIC Y TOQUE)
+        const handleDoubleAction = (e) => {
+            // No activar si se toca el banner o los controles
+            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
 
-        player.on('controlshidden', () => {
-            // Se mantienen los 2 segundos para asegurar el logo oculto
-            hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); 
-        });
+            const now = Date.now();
+            const TIMESPAN = 300; // Ventana de 300ms para el doble toque
 
-        document.getElementById('videoWrapper').addEventListener('dblclick', (e) => {
-            e.preventDefault(); e.stopPropagation();
-        }, true);
+            if (now - lastTapTime < TIMESPAN) {
+                e.preventDefault();
+                const rect = wrapper.getBoundingClientRect();
+                const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
+                
+                if (x < rect.width / 2) {
+                    player.rewind(10);
+                    showFeedback(feedbackLeft);
+                } else {
+                    player.forward(10);
+                    showFeedback(feedbackRight);
+                }
+            }
+            lastTapTime = now;
+        };
+
+        const showFeedback = (el) => {
+            el.classList.remove('animate');
+            void el.offsetWidth; // Reiniciar animación
+            el.classList.add('animate');
+            setTimeout(() => el.classList.remove('animate'), 500);
+        };
+
+        wrapper.addEventListener('click', handleDoubleAction);
+        wrapper.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 1) e.preventDefault(); // Evitar zoom multitáctil
+        }, { passive: false });
+
+        // Bloquear doble clic nativo para evitar conflictos
+        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
     </script>
 </body>
 </html>
