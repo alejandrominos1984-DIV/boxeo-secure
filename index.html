@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Interfaz Élite Pro</title>
+    <title>Divélun | Interfaz Élite Final</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -27,45 +27,22 @@
             line-height: 0;
             z-index: 0;
             -webkit-tap-highlight-color: transparent;
-            /* Importante para detectar toques correctamente */
             touch-action: manipulation; 
         }
 
-        /* --- CAPAS DE ANIMACIÓN DOBLE TOQUE --- */
+        /* --- CAPAS DOBLE TOQUE --- */
         .tap-overlay {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 50%; /* Ocupa la mitad de la pantalla */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.4);
-            opacity: 0;
-            pointer-events: none; /* No interfiere con clics normales */
-            z-index: 5; /* Debajo del banner y controles */
-            transition: opacity 0.2s ease;
+            position: absolute; top: 0; height: 100%; width: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.4); opacity: 0; pointer-events: none;
+            z-index: 5; transition: opacity 0.2s ease;
         }
         .tap-overlay.left { left: 0; justify-content: flex-start; padding-left: 30px; }
         .tap-overlay.right { right: 0; justify-content: flex-end; padding-right: 30px; }
-
-        .tap-icon {
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transform: scale(0.8);
-            transition: transform 0.2s ease;
-        }
+        .tap-icon { color: white; display: flex; flex-direction: column; align-items: center; transform: scale(0.8); }
         .tap-icon svg { width: 40px; height: 40px; fill: white; }
-        .tap-icon span { font-size: 0.8rem; font-weight: 700; margin-top: 5px; }
-
-        /* Animación al activar */
         .tap-overlay.animate { opacity: 1; }
-        .tap-overlay.animate .tap-icon { transform: scale(1.1); }
-        
-        /* -------------------------------------- */
-
+        /* ------------------------- */
 
         /* BANNER MATERIAL BLANCO */
         .premium-banner {
@@ -77,30 +54,35 @@
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- CONTROLES: DURACIÓN ARREGLADA --- */
+        /* --- SOLUCIÓN VISIBILIDAD TIEMPO EN MÓVIL --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important; 
             justify-content: flex-start !important; 
-            padding: 15px 20px !important;
+            padding: 10px 15px !important; /* Más compacto */
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
         }
 
         .plyr__progress {
             flex: 0 0 auto !important;
-            width: 90px !important;
+            width: 80px !important; /* Un toque más corta para asegurar espacio */
             margin-left: 8px !important;
-            margin-right: 15px !important; /* Espacio asegurado para la duración */
+            margin-right: 12px !important;
         }
         
-        /* Asegurar que la duración se vea */
-        .plyr__time {
-            font-size: 0.75rem;
-            font-weight: 700;
-            opacity: 0.9;
-            white-space: nowrap; /* Evita que se rompa en dos líneas */
-            display: block !important; /* Fuerza su visualización */
+        /* FORZAR DURACIÓN SIEMPRE VISIBLE */
+        .plyr__time--duration {
+            display: block !important; /* Evita que Plyr lo oculte */
+            visibility: visible !important;
+            font-size: 0.75rem !important;
+            font-weight: 700 !important;
+            opacity: 1 !important;
+            color: #fff !important;
+            white-space: nowrap !important;
         }
+
+        /* Ocultar el tiempo actual para dejar solo la duración (estética limpia) */
+        .plyr__time--current { display: none !important; }
 
         .plyr__control { color: #fff !important; padding: 5px !important; }
 
@@ -119,18 +101,9 @@
         <h1 class="title">Clase Maestra</h1>
 
         <div class="video-box" id="videoWrapper">
-            <div class="tap-overlay left" id="tapLeft">
-                <div class="tap-icon">
-                    <svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg>
-                    <span>10s</span>
-                </div>
-            </div>
-            <div class="tap-overlay right" id="tapRight">
-                <div class="tap-icon">
-                    <svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
-                    <span>10s</span>
-                </div>
-            </div>
+            <div class="tap-overlay left" id="tapLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"></path></svg><span>10s</span></div></div>
+            <div class="tap-overlay right" id="tapRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg><span>10s</span></div></div>
+
             <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>MATERIAL</span>
@@ -142,78 +115,51 @@
 
     <div id="bravePopup">
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
-            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22">
-            <span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
+            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22"><span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Estudia con <b>Brave</b> para evitar publicidad.</p>
-        <div style="display: flex; gap: 10px;">
-            <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">Android</a>
-            <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">iPhone</a>
-        </div>
+        <p style="font-size: 0.8rem; color: #999;">Usa <b>Brave</b> para evitar publicidad.</p>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: Se añade 'duration' explícitamente
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
-        // --- GESTIÓN DE BANNER ---
         const banner = document.getElementById('bannerMaterial');
         let hideTimer;
         player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
         player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 800); });
 
-        // --- LÓGICA DE DOBLE TOQUE (REBOBINAR/AVANZAR) ---
+        // DOBLE TOQUE
         let lastTapTime = 0;
         const tapOverlayLeft = document.getElementById('tapLeft');
         const tapOverlayRight = document.getElementById('tapRight');
         const wrapper = document.getElementById('videoWrapper');
 
         wrapper.addEventListener('touchend', (e) => {
-            // Ignorar si se toca los controles o el banner
             if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-
             const currentTime = new Date().getTime();
             const tapLength = currentTime - lastTapTime;
-
             if (tapLength < 300 && tapLength > 0) {
-                // ¡DOBLE TOQUE DETECTADO!
-                e.preventDefault(); // Evitar zoom nativo
-                
+                e.preventDefault();
                 const touchX = e.changedTouches[0].clientX;
                 const wrapperRect = wrapper.getBoundingClientRect();
                 const middleX = wrapperRect.left + wrapperRect.width / 2;
-
-                if (touchX < middleX) {
-                    // Lado Izquierdo -> Retroceder
-                    player.rewind(10);
-                    triggerAnimation(tapOverlayLeft);
-                } else {
-                    // Lado Derecho -> Avanzar
-                    player.forward(10);
-                    triggerAnimation(tapOverlayRight);
-                }
+                if (touchX < middleX) { player.rewind(10); triggerAnimation(tapOverlayLeft); }
+                else { player.forward(10); triggerAnimation(tapOverlayRight); }
             }
             lastTapTime = currentTime;
         });
 
         function triggerAnimation(overlay) {
-            // Reiniciar animación si ya estaba activa
             overlay.classList.remove('animate');
-            void overlay.offsetWidth; // Forzar reflow (truco CSS)
-            
+            void overlay.offsetWidth;
             overlay.classList.add('animate');
-            setTimeout(() => {
-                overlay.classList.remove('animate');
-            }, 500); // Duración de la animación visual
+            setTimeout(() => overlay.classList.remove('animate'), 500);
         }
-
-        // Bloqueo de doble clic nativo de escritorio por seguridad
-        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
 
         async function checkBrave() {
             const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
