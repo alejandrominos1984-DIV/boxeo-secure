@@ -18,11 +18,18 @@
 
         body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
 
-        /* VIDEO HERO SUPERIOR */
+        /* --- VIDEO HERO (ANCHO COMPLETO) --- */
         .hero-video-section { width: 100%; background: #000; position: relative; }
         .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-        /* --- CAPAS DE ANIMACIÓN DOBLE TOQUE --- */
+        /* --- ESCUDO SUPERIOR (OCULTA TÍTULO/CANAL) --- */
+        .top-info-shield {
+            position: absolute; top: 0; left: 0; width: 100%; height: 55px;
+            background: #FFFFFF; z-index: 10; opacity: 1; transition: opacity 0.6s ease;
+        }
+        .top-info-shield.force-hide { opacity: 0; pointer-events: none; }
+
+        /* --- CAPAS DOBLE TOQUE --- */
         .tap-feedback {
             position: absolute; top: 0; height: 100%; width: 50%;
             display: flex; align-items: center; justify-content: center;
@@ -32,12 +39,11 @@
         .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
         .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
         .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tap-icon svg { width: 50px; height: 50px; fill: white; }
-        .tap-icon span { display: block; font-size: 0.9rem; font-weight: 800; margin-top: 5px; }
+        .tap-icon svg { width: 40px; height: 40px; fill: white; }
         .tap-feedback.animate { opacity: 1; }
         .tap-feedback.animate .tap-icon { transform: scale(1.1); }
 
-        /* PANTALLA DE INICIO CON BOTÓN CURVO */
+        /* --- PANTALLA DE INICIO (BOTÓN CURVO) --- */
         .start-screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: transparent; display: flex; align-items: center; justify-content: center;
@@ -51,16 +57,12 @@
         }
         .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
 
-        /* BANNER RECURSOS (RESTAURADO A FORMATO ROBUSTO Y RECTANGULAR) */
+        /* --- BANNER RECURSOS (ROBUSTO) --- */
         .premium-banner {
-            position: absolute; 
-            bottom: 12px; 
-            right: 12px;
+            position: absolute; bottom: 12px; right: 12px;
             background: var(--brand-blue); color: #ffffff;
-            padding: 12px 22px; /* Más robusto */
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; z-index: 15; 
-            border-radius: 4px; /* ESQUINAS RECTANGULARES COMO ANTES */
+            padding: 12px 22px; display: flex; align-items: center; gap: 10px;
+            text-decoration: none; z-index: 15; border-radius: 4px; 
             opacity: 1; transition: opacity 0.6s ease;
             box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
             font-weight: 800; font-size: 0.8rem;
@@ -68,28 +70,30 @@
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
         .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
 
-        /* CONTROLES */
+        /* --- CONTROLES Y ALINEACIÓN --- */
         .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
         .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
-        
-        /* DURACIÓN: AJUSTADA LIGERAMENTE A LA DERECHA */
         .plyr__time--duration {
             display: block !important; visibility: visible !important;
             font-size: 0.75rem !important; font-weight: 700 !important;
             margin-left: auto !important; 
-            margin-right: 145px !important; /* SEPARACIÓN ÓPTIMA DEL BANNER */
+            margin-right: 160px !important; /* SEPARACIÓN PERFECTA */
         }
         .plyr__time--current { display: none !important; }
 
-        /* CONTENIDO */
+        /* --- CONTENIDO --- */
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
+        .module-tag { color: var(--brand-blue); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .lesson-title { font-size: 1.8rem; font-weight: 800; margin: 0 0 15px 0; }
+        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="hero-video-section">
         <div class="video-box" id="videoWrapper">
+            <div class="top-info-shield" id="topShield"></div>
+
             <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg><span>-10s</span></div></div>
             <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg><span>+10s</span></div></div>
 
@@ -107,8 +111,9 @@
     </div>
 
     <div class="content-container">
-        <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">Estrategias Avanzadas de Comunicación</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Utiliza el doble toque para navegar y descarga tus recursos desde el banner azul.</p>
+        <span class="module-tag">Módulo 1</span>
+        <h1 class="lesson-title">Estrategias Avanzadas de Comunicación</h1>
+        <p style="line-height: 1.7; color: #4A5568;">Utiliza el video para practicar tu pronunciación. Recuerda que puedes adelantar o atrasar 10 segundos con doble toque a los lados.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
@@ -117,10 +122,15 @@
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
-            youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
+            youtube: { 
+                noCookie: true, rel: 0, modestbranding: 1,
+                start: 0, // Aquí puedes poner el segundo de inicio
+                end: 300  // Aquí el segundo de fin (ej. 5 minutos)
+            }
         });
 
         const banner = document.getElementById('bannerMaterial');
+        const topShield = document.getElementById('topShield');
         const startScreen = document.getElementById('startScreen');
         const wrapper = document.getElementById('videoWrapper');
         const feedbackLeft = document.getElementById('feedbackLeft');
@@ -133,9 +143,18 @@
         startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
         player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
 
-        // BANNER CON RETRASO DE 2 SEGUNDOS PARA SEGURIDAD TOTAL
-        player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
-        player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); });
+        player.on('controlsshown', () => { 
+            clearTimeout(hideTimer); 
+            banner.classList.remove('force-hide'); 
+            topShield.classList.remove('force-hide');
+        });
+
+        player.on('controlshidden', () => { 
+            hideTimer = setTimeout(() => { 
+                banner.classList.add('force-hide'); 
+                topShield.classList.add('force-hide');
+            }, 2000); 
+        });
 
         const handleDoubleAction = (e) => {
             if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
