@@ -3,104 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Clase Premium</title>
+    <title>Divélun | Clase Maestra Premium</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg: #000000;
             --accent: #ff3b30;
+            --card: #111111;
         }
 
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
-        .info { padding-bottom: 20px; }
-        .title { font-size: 2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
+        .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; text-align: left; }
 
-        /* CONTENEDOR DEL VIDEO */
+        /* CONTENEDOR DE VIDEO */
         .video-box {
-            position: relative; /* Vital para que el escudo se posicione dentro */
-            border-radius: 25px;
+            position: relative;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
             background: #000;
             border: 1px solid #222;
+            line-height: 0;
         }
 
-        /* ESCUDO CORREGIDO (Esquina Inferior Derecha) */
-        .player-shield {
+        /* EL PARCHE SÓLIDO (OCULTA EL LOGO) */
+        /* Se ubica arriba de la barra de controles de Plyr */
+        .premium-patch {
             position: absolute;
-            bottom: 0;   /* Pegado abajo */
-            right: 0;    /* Pegado a la derecha */
-            width: 130px; /* Ancho suficiente para cubrir el logo de YT */
-            height: 70px; /* Alto suficiente */
-            background: rgba(0, 0, 0, 0.01); /* Capa transparente anti-clic */
-            z-index: 20; /* Por encima de todo */
-            pointer-events: all; /* Captura los clics */
-            
-            /* Alineación del texto PREMIUM */
+            bottom: 45px; /* Altura estratégica para tapar el logo sin tapar la barra */
+            right: 0;
+            width: 130px;
+            height: 65px;
+            background: #000; /* Negro sólido */
+            z-index: 2; /* Por encima del video, debajo de los controles */
             display: flex;
-            justify-content: flex-end; /* Texto a la derecha */
-            align-items: flex-end;     /* Texto abajo */
-            padding: 15px;             /* Margen interno para que no quede pegado al borde */
+            align-items: center;
+            justify-content: center;
+            pointer-events: none; /* No interfiere con los clics del usuario */
         }
 
-        /* MARCA DE AGUA "PREMIUM" */
-        .player-shield::after {
-            content: 'PREMIUM';
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: rgba(255, 255, 255, 0.5); /* Blanco semitransparente elegante */
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        .premium-patch span {
+            font-size: 0.65rem;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 3px;
+            margin-left: 20px;
         }
 
-        /* POPUP BRAVE */
-        #braveAlert {
-            display: none; position: fixed; bottom: 30px; left: 50%;
-            transform: translateX(-50%); width: 85%; max-width: 400px;
-            background: rgba(15, 15, 15, 0.98); backdrop-filter: blur(20px);
-            padding: 25px; border-radius: 30px; border: 1px solid var(--accent);
-            z-index: 10000; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,1);
+        /* POPUP AMIGABLE BAJO */
+        #bravePopup {
+            display: none;
+            position: fixed;
+            bottom: 20px; /* Más abajo */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 420px;
+            background: #161616;
+            padding: 20px;
+            border-radius: 28px;
+            border: 1px solid #333;
+            z-index: 10000;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
+
+        .brave-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+        .brave-logo { width: 24px; height: 24px; }
+        
+        .store-container { display: flex; justify-content: center; gap: 10px; margin-top: 18px; }
+        .store-link {
+            background: #222;
+            padding: 8px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #333;
+        }
+
+        .store-link img { width: 16px; height: 16px; }
+        .close-x { position: absolute; top: 15px; right: 20px; color: #555; cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div class="info">
-            <h1 class="title">Clase Maestra</h1>
-        </div>
+        <h1 class="title">Clase Maestra</h1>
 
         <div class="video-box">
-            <div class="player-shield"></div>
+            <div class="premium-patch">
+                <span>PREMIUM</span>
+            </div>
             
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
         </div>
     </div>
 
-    <div id="braveAlert">
-        <h3 style="color: var(--accent); font-weight: 800; margin-top: 0; font-size: 1.2rem;">SIN ANUNCIOS 🚀</h3>
-        <p style="font-size: 0.9rem; color: #ccc; line-height: 1.5;">Usa el navegador <b>Brave</b> para una experiencia de clase premium. Bloqueo total de publicidad garantizado.</p>
-        <a href="https://brave.com/" target="_blank" style="background:var(--accent); color:white; text-decoration:none; padding:15px 30px; border-radius:50px; font-weight:800; display:inline-block; font-size:0.9rem; margin-top: 15px;">DESCARGAR BRAVE</a>
+    <div id="bravePopup">
+        <span class="close-x" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
+        
+        <div class="brave-header">
+            <img class="brave-logo" src="https://brave.com/static-assets/images/brave-logo.svg" alt="Brave">
+            <span style="color: var(--accent); font-weight: 900; letter-spacing: 1px;">EXPERIENCIA SIN ANUNCIOS</span>
+        </div>
+
+        <p style="font-size: 0.85rem; color: #aaa; margin: 0 10px;">
+            Te recomendamos usar <b>Brave</b> para disfrutar de tus clases con máxima velocidad y <b>cero publicidad</b>.
+        </p>
+        
+        <div class="store-container">
+            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-link">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Play_Store_badge_EN.svg" alt="Play Store">
+                Play Store
+            </a>
+            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" class="store-link">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" alt="App Store">
+                App Store
+            </a>
+        </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
+        // CONFIGURACIÓN SIN PANTALLA COMPLETA
         const player = new Plyr('#player', {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume'], // Fullscreen eliminado
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
-        async function detectBrave() {
+        async function checkBrave() {
             const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
             if (!isBrave) {
-                setTimeout(() => { document.getElementById('braveAlert').style.display = 'block'; }, 4000);
+                setTimeout(() => {
+                    document.getElementById('bravePopup').style.display = 'block';
+                }, 3000);
             }
         }
-        detectBrave();
+        checkBrave();
     </script>
 </body>
 </html>
