@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Recursos de Clase</title>
+    <title>Divélun | Interfaz Élite</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -16,7 +16,7 @@
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow: hidden; }
         .container { width: 100%; max-width: 500px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
 
-        .title { font-size: 2rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
+        .title { font-size: 2rem; font-weight: 900; margin-bottom: 25px; letter-spacing: -1px; }
 
         /* CONTENEDOR DE VIDEO */
         .video-box {
@@ -26,9 +26,12 @@
             background: #000;
             border: 1px solid #222;
             line-height: 0;
+            z-index: 0;
+            /* Evita que el navegador resalte el video al tocarlo */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* BANNER MATERIAL (ESTADO INICIAL: VISIBLE) */
+        /* BANNER MATERIAL (BLANCO) */
         .premium-banner {
             position: absolute;
             bottom: 12px;
@@ -42,38 +45,37 @@
             text-decoration: none;
             z-index: 10;
             border-radius: 4px;
-            
-            /* VISIBLE POR DEFECTO AL CARGAR */
-            opacity: 1;
+            opacity: 1; /* Visible al cargar */
             pointer-events: all;
-            /* Transición suave para cuando toque ocultarse */
             transition: opacity 0.5s ease;
         }
 
-        /* CLASE PARA OCULTARLO (Activada por JS) */
         .premium-banner.force-hide {
             opacity: 0;
             pointer-events: none;
         }
 
-        .premium-banner span {
-            font-size: 0.65rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
+        .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- ALINEACIÓN DE CONTROLES --- */
+        /* --- ESTÉTICA DE CONTROLES Y BARRA CORTA --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             padding: 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
+            gap: 5px;
         }
-        .plyr__progress { flex: 0 1 55% !important; margin: 0 15px !important; }
-        
+
+        .plyr__progress {
+            /* BARRA MUCHO MÁS CORTA (40%) */
+            flex: 0 1 40% !important; 
+            margin: 0 10px !important;
+        }
+
+        .plyr__time { font-size: 0.7rem; opacity: 0.7; }
+
         /* POPUP BRAVE */
         #bravePopup {
             display: none; position: fixed; bottom: 10px; left: 50%;
@@ -88,8 +90,8 @@
     <div class="container">
         <h1 class="title">Clase Maestra</h1>
 
-        <div class="video-box">
-            <a href="material-clase.pdf" download class="premium-banner" id="bannerMaterial">
+        <div class="video-box" id="videoWrapper">
+            <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>MATERIAL</span>
             </a>
@@ -101,9 +103,9 @@
     <div id="bravePopup">
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22">
-            <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
+            <span style="color: #ff3b30; font-weight: 900; font-size: 0.8rem;">MODO SIN ANUNCIOS</span>
         </div>
-        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar con máxima velocidad y cero publicidad.</p>
+        <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar sin publicidad.</p>
         <div style="display: flex; gap: 10px;">
             <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">Play Store</a>
             <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">App Store</a>
@@ -112,27 +114,34 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
+        // CONFIGURACIÓN: Fullscreen deshabilitado totalmente
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'current-time'], 
+            fullscreen: { enabled: false, fallback: false },
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
         });
 
         const banner = document.getElementById('bannerMaterial');
-        let hideTimer; // Variable para controlar el temporizador
+        const wrapper = document.getElementById('videoWrapper');
+        let hideTimer;
 
-        // AL MOSTRAR CONTROLES (Tocar pantalla): Asegurar que el banner se vea
+        // GESTIÓN DE VISIBILIDAD DEL BANNER
         player.on('controlsshown', () => {
-            clearTimeout(hideTimer); // Cancelar cualquier ocultamiento pendiente
-            banner.classList.remove('force-hide'); // Mostrar inmediatamente
+            clearTimeout(hideTimer);
+            banner.classList.remove('force-hide');
         });
 
-        // AL OCULTAR CONTROLES: Iniciar cuenta atrás para ocultar banner
         player.on('controlshidden', () => {
-            // Esperar 800ms antes de añadir la clase que lo oculta
             hideTimer = setTimeout(() => {
                 banner.classList.add('force-hide');
             }, 800); 
         });
+
+        // BLOQUEO DE DOBLE CLIC (PANTALLA COMPLETA)
+        wrapper.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        }, true);
 
         async function checkBrave() {
             const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
