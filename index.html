@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Lección de Idiomas Pro</title>
+    <title>Divélun | Lección Pro</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
     
@@ -19,16 +19,49 @@
 
         body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
 
-        /* VIDEO HERO SUPERIOR */
         .hero-video-section { width: 100%; background: #000; position: relative; }
         .video-box { position: relative; width: 100%; border-radius: 0; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-        /* BANNER PROTECTOR (RETRASO AUMENTADO) */
+        /* --- NUEVA PANTALLA DE INICIO PERSONALIZADA (CUBRE YOUTUBE) --- */
+        .start-screen-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--brand-blue); /* Fondo sólido de marca */
+            display: flex; align-items: center; justify-content: center;
+            z-index: 20; /* Por encima de todo al inicio */
+            cursor: pointer;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        
+        /* Clase para ocultarla suavemente */
+        .start-screen-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* El botón de play blanco gigante */
+        .big-play-btn {
+            width: 80px; height: 80px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .start-screen-overlay:hover .big-play-btn {
+            transform: scale(1.1);
+            background: rgba(255,255,255,0.3);
+        }
+        .big-play-btn svg { width: 40px; height: 40px; fill: white; margin-left: 5px; }
+        /* --------------------------------------------------------- */
+
+
+        /* BANNER PROTECTOR */
         .premium-banner {
             position: absolute; bottom: 15px; right: 15px;
             background: var(--brand-blue); color: #ffffff;
             padding: 10px 16px; display: flex; align-items: center; gap: 8px;
-            text-decoration: none; z-index: 10; border-radius: 8px;
+            text-decoration: none; z-index: 15; border-radius: 8px; /* Z-index ajustado */
             opacity: 1; transition: opacity 0.6s ease;
             box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
             font-weight: 700; font-size: 0.75rem; letter-spacing: 0.5px;
@@ -36,53 +69,33 @@
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
         .premium-banner svg { width: 16px; height: 16px; stroke: #ffffff; }
 
-        /* CONTROLES: TIEMPO CERCA DE LA BARRA */
-        .plyr__controls {
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            padding: 10px 15px !important;
-            justify-content: flex-start !important;
-            gap: 0 !important;
-        }
-        .plyr__progress { 
-            flex: 0 0 auto !important; 
-            width: 80px !important; 
-            margin-left: 10px !important; 
-            margin-right: 8px !important; /* Espacio mínimo al tiempo */
-        }
-        .plyr__time--duration { 
-            display: block !important; 
-            visibility: visible !important; 
-            font-size: 0.75rem !important; 
-            font-weight: 700 !important;
-            margin-left: 0 !important;
-        }
+        /* CONTROLES */
+        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; justify-content: flex-start !important; gap: 0 !important; }
+        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; margin-right: 8px !important; }
+        .plyr__time--duration { display: block !important; visibility: visible !important; font-size: 0.75rem !important; font-weight: 700 !important; margin-left: 0 !important; }
         .plyr__time--current { display: none !important; }
 
-        /* CONTENIDO DEBAJO DEL VIDEO */
+        /* CONTENIDO */
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
         .lesson-header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 25px; }
         .lesson-title { font-size: 1.8rem; font-weight: 800; margin: 10px 0; }
         .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 15px 30px; border-radius: 12px; font-weight: 700; text-decoration: none; margin-top: 20px; box-shadow: 0 5px 20px rgba(0, 102, 255, 0.25); }
 
-        /* POPUP BRAVE CON BOTÓN CERRAR */
-        #bravePopup {
-            display: none; position: fixed; bottom: 20px; left: 50%;
-            transform: translateX(-50%); width: 90%; max-width: 400px;
-            background: #ffffff; padding: 25px; border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            z-index: 10000; text-align: center; border: 1px solid var(--border-color);
-        }
-        .close-popup {
-            position: absolute; top: 12px; right: 15px;
-            font-size: 1.4rem; color: var(--brand-gray);
-            cursor: pointer; font-weight: 400; line-height: 1;
-        }
+        /* POPUP BRAVE */
+        #bravePopup { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: #ffffff; padding: 25px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); z-index: 10000; text-align: center; border: 1px solid var(--border-color); }
+        .close-popup { position: absolute; top: 12px; right: 15px; font-size: 1.4rem; color: var(--brand-gray); cursor: pointer; font-weight: 400; line-height: 1; }
     </style>
 </head>
 <body>
 
     <div class="hero-video-section">
         <div class="video-box" id="videoWrapper">
+            <div class="start-screen-overlay" id="startScreen">
+                <div class="big-play-btn">
+                    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                </div>
+            </div>
+
             <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
                 <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                 <span>RECURSOS</span>
@@ -96,26 +109,23 @@
             <span style="color: var(--brand-blue); font-weight: 600; font-size: 0.8rem; text-transform: uppercase;">Módulo 1</span>
             <h1 class="lesson-title">Estrategias Avanzadas de Comunicación</h1>
         </div>
-        <p style="line-height: 1.7; color: var(--brand-dark);">Bienvenido a tu clase de hoy. No olvides descargar el material complementario directamente desde el video para realizar los ejercicios prácticos.</p>
+        <p style="line-height: 1.7; color: var(--brand-dark);">Bienvenido a tu clase de hoy. Toca el botón de reproducción para comenzar.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
     <div id="bravePopup">
         <span class="close-popup" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
         <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 15px;">
-            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="24">
-            <span style="color: var(--brand-blue); font-weight: 800;">Experiencia Pro</span>
+            <img src="https://brave.com/static-assets/images/brave-logo.svg" width="24"><span style="color: var(--brand-blue); font-weight: 800;">Experiencia Pro</span>
         </div>
-        <p style="font-size: 0.85rem; color: var(--brand-gray); margin-bottom: 20px;">Usa <b>Brave Browser</b> para aprender sin anuncios y con mayor privacidad.</p>
+        <p style="font-size: 0.85rem; color: var(--brand-gray); margin-bottom: 20px;">Usa <b>Brave Browser</b> para aprender sin anuncios.</p>
         <div style="display: flex; gap: 10px;">
-            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" style="background:var(--bg-light); color:var(--brand-dark); text-decoration:none; padding:12px; border-radius:12px; flex:1; font-size:0.75rem; font-weight:700; border:1px solid var(--border-color);">Android</a>
-            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" style="background:var(--bg-light); color:var(--brand-dark); text-decoration:none; padding:12px; border-radius:12px; flex:1; font-size:0.75rem; font-weight:700; border:1px solid var(--border-color);">iPhone</a>
+            <a href="#" style="background:var(--bg-light); color:var(--brand-dark); text-decoration:none; padding:12px; border-radius:12px; flex:1; font-size:0.75rem; font-weight:700; border:1px solid var(--border-color); text-align:center;">Descargar</a>
         </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: Fullscreen eliminado
         const player = new Plyr('#player', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: false },
@@ -123,7 +133,26 @@
         });
 
         const banner = document.getElementById('bannerMaterial');
+        const startScreen = document.getElementById('startScreen');
         let hideTimer;
+        let hasStarted = false;
+
+        // GESTIÓN DE LA PANTALLA DE INICIO
+        startScreen.addEventListener('click', () => {
+            if (!hasStarted) {
+                player.play(); // Inicia el video
+                // La pantalla se ocultará sola cuando Plyr lance el evento 'playing'
+            }
+        });
+
+        // EVENTOS DEL REPRODUCTOR
+        player.on('playing', () => {
+            // Cuando el video realmente empieza a sonar, ocultamos la cortina azul
+            if (!hasStarted) {
+                startScreen.classList.add('hidden');
+                hasStarted = true;
+            }
+        });
 
         player.on('controlsshown', () => {
             clearTimeout(hideTimer);
@@ -131,10 +160,7 @@
         });
 
         player.on('controlshidden', () => {
-            // RETRASO AUMENTADO A 2000ms (2 Segundos) PARA TOTAL SEGURIDAD
-            hideTimer = setTimeout(() => {
-                banner.classList.add('force-hide');
-            }, 2000); 
+            hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); 
         });
 
         async function checkBrave() {
