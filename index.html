@@ -1,163 +1,66 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Academy Pro</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --brand-blue: #0066FF;
-            --brand-dark: #1A202C;
-            --brand-gray: #718096;
-            --border-color: #E2E8F0;
-            --plyr-color-main: var(--brand-blue);
-        }
+<style>
+    /* --- NUEVO: ESCUDO SUPERIOR (TAPA TÍTULO Y CANAL) --- */
+    .top-info-shield {
+        position: absolute;
+        top: 0; left: 0; width: 100%;
+        height: 50px; /* Suficiente para tapar la barra de YouTube */
+        background: #FFFFFF; /* O el color de tu fondo */
+        z-index: 10;
+        opacity: 1;
+        transition: opacity 0.6s ease;
+    }
+    .top-info-shield.force-hide { opacity: 0; pointer-events: none; }
 
-        body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
+    /* Ajuste de los controles para que la duración no se pierda */
+    .plyr__time--duration {
+        margin-right: 155px !important; 
+    }
+</style>
 
-        /* VIDEO HERO SUPERIOR */
-        .hero-video-section { width: 100%; background: #000; position: relative; }
-        .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+<div class="hero-video-section">
+    <div class="video-box" id="videoWrapper">
+        <div class="top-info-shield" id="topShield"></div>
 
-        /* --- CAPAS DE ANIMACIÓN DOBLE TOQUE --- */
-        .tap-feedback {
-            position: absolute; top: 0; height: 100%; width: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 102, 255, 0.15); opacity: 0; pointer-events: none; z-index: 5;
-            transition: opacity 0.3s ease;
-        }
-        .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
-        .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
-        .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tap-icon svg { width: 50px; height: 50px; fill: white; }
-        .tap-icon span { display: block; font-size: 0.9rem; font-weight: 800; margin-top: 5px; }
-        .tap-feedback.animate { opacity: 1; }
-        .tap-feedback.animate .tap-icon { transform: scale(1.1); }
-
-        /* PANTALLA DE INICIO CON BOTÓN CURVO */
-        .start-screen-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; display: flex; align-items: center; justify-content: center;
-            z-index: 20; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        .start-screen-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .big-play-btn {
-            width: 88px; height: 62px; background: var(--brand-blue); border-radius: 18px; 
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-        }
-        .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
-
-        /* BANNER RECURSOS (RESTAURADO A FORMATO ROBUSTO Y RECTANGULAR) */
-        .premium-banner {
-            position: absolute; 
-            bottom: 12px; 
-            right: 12px;
-            background: var(--brand-blue); color: #ffffff;
-            padding: 12px 22px; /* Más robusto */
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; z-index: 15; 
-            border-radius: 4px; /* ESQUINAS RECTANGULARES COMO ANTES */
-            opacity: 1; transition: opacity 0.6s ease;
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            font-weight: 800; font-size: 0.8rem;
-        }
-        .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
-
-        /* CONTROLES */
-        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
-        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
-        
-        /* DURACIÓN: AJUSTADA LIGERAMENTE A LA DERECHA */
-        .plyr__time--duration {
-            display: block !important; visibility: visible !important;
-            font-size: 0.75rem !important; font-weight: 700 !important;
-            margin-left: auto !important; 
-            margin-right: 145px !important; /* SEPARACIÓN ÓPTIMA DEL BANNER */
-        }
-        .plyr__time--current { display: none !important; }
-
-        /* CONTENIDO */
-        .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
-    </style>
-</head>
-<body>
-
-    <div class="hero-video-section">
-        <div class="video-box" id="videoWrapper">
-            <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg><span>-10s</span></div></div>
-            <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg><span>+10s</span></div></div>
-
-            <div class="start-screen-overlay" id="startScreen">
-                <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
-            </div>
-
-            <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>RECURSOS</span>
-            </a>
-            
-            <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
+        <div class="start-screen-overlay" id="startScreen">
+            <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
         </div>
-    </div>
 
-    <div class="content-container">
-        <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">Estrategias Avanzadas de Comunicación</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Utiliza el doble toque para navegar y descarga tus recursos desde el banner azul.</p>
-        <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
-    </div>
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    <script>
-        const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'duration'], 
-            fullscreen: { enabled: false },
-            youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
-        });
-
-        const banner = document.getElementById('bannerMaterial');
-        const startScreen = document.getElementById('startScreen');
-        const wrapper = document.getElementById('videoWrapper');
-        const feedbackLeft = document.getElementById('feedbackLeft');
-        const feedbackRight = document.getElementById('feedbackRight');
+        <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>RECURSOS</span>
+        </a>
         
-        let hideTimer;
-        let lastTapTime = 0;
-        let hasStarted = false;
+        <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
+    </div>
+</div>
 
-        startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
-        player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
+<script>
+    const player = new Plyr('#player', {
+        controls: ['play', 'progress', 'duration'],
+        // CONFIGURACIÓN DE FRAGMENTO: Aquí defines inicio y fin en segundos
+        youtube: { 
+            noCookie: true, 
+            rel: 0, 
+            modestbranding: 1,
+            start: 60,  /* EMPIEZA AL MINUTO 1 */
+            end: 360    /* TERMINA AL MINUTO 6 (Fragmento de 5 min) */
+        }
+    });
 
-        // BANNER CON RETRASO DE 2 SEGUNDOS PARA SEGURIDAD TOTAL
-        player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
-        player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); });
+    const topShield = document.getElementById('topShield');
+    const banner = document.getElementById('bannerMaterial');
+    let hideTimer;
 
-        const handleDoubleAction = (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-            const now = Date.now();
-            if (now - lastTapTime < 300) {
-                e.preventDefault();
-                const rect = wrapper.getBoundingClientRect();
-                const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
-                if (x < rect.width / 2) { player.rewind(10); showFeedback(feedbackLeft); }
-                else { player.forward(10); showFeedback(feedbackRight); }
-            }
-            lastTapTime = now;
-        };
+    player.on('controlsshown', () => {
+        clearTimeout(hideTimer);
+        topShield.classList.remove('force-hide');
+        banner.classList.remove('force-hide');
+    });
 
-        const showFeedback = (el) => {
-            el.classList.remove('animate'); void el.offsetWidth;
-            el.classList.add('animate');
-            setTimeout(() => el.classList.remove('animate'), 500);
-        };
-
-        wrapper.addEventListener('click', handleDoubleAction);
-        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
-    </script>
-</body>
-</html>
+    player.on('controlshidden', () => {
+        hideTimer = setTimeout(() => {
+            topShield.classList.add('force-hide');
+            banner.classList.add('force-hide');
+        }, 2000); // 2 segundos de seguridad
+    });
+</script>
