@@ -4,186 +4,175 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divélun | Técnica de Cross</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0a0a0a;
-            --card-bg: #141414;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --accent-color: #ff471a; /* Naranja/Rojo de acento */
+            --bg-color: #050505;
+            --card-bg: #121212;
+            --accent-color: #ff3b30; /* Rojo/Naranja deportivo */
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
         }
 
         body {
             margin: 0;
             background-color: var(--bg-color);
             font-family: 'Inter', sans-serif;
-            color: var(--text-primary);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
-            min-height: 100vh;
         }
 
         .app-container {
             width: 100%;
-            max-width: 500px; /* Ancho típico de app móvil */
+            max-width: 480px;
             background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
+            min-height: 100vh;
+            padding-bottom: 40px;
         }
 
-        /* Header simple */
-        .header {
-            padding: 20px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        /* Sección del Video Principal */
-        .video-section {
-            margin: 0 20px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        /* Video Principal con Estética de App */
+        .hero-video {
+            width: 100%;
             position: relative;
+            background: #000;
+            line-height: 0;
+            border-bottom: 2px solid #1a1a1a;
         }
 
         video {
             width: 100%;
             display: block;
-            /* Mantiene tus protecciones */
             -webkit-user-drag: none;
-            outline: none;
         }
 
-        /* Sección de Detalles y Audio */
-        .details-section {
-            padding: 25px 20px;
-        }
+        .content { padding: 25px; }
 
-        .workout-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-        }
+        .title { font-size: 2rem; font-weight: 700; margin: 0; }
+        .category { color: var(--accent-color); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .description { color: var(--text-dim); line-height: 1.5; margin: 15px 0; font-size: 0.95rem; }
 
-        .workout-subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 25px;
-        }
-
-        /* Tarjeta de Audio */
-        .audio-card {
-            background-color: var(--card-bg);
-            border-radius: 15px;
+        /* Panel de Control de Voz */
+        .voice-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
             padding: 20px;
-            display: flex;
-            align-items: center;
+            margin-top: 20px;
             border: 1px solid #222;
         }
 
-        .audio-icon {
-            background-color: rgba(255, 71, 26, 0.1); /* Acento transparente */
-            color: var(--accent-color);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
+        .label { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 8px; display: block; }
+
+        select {
+            width: 100%;
+            background: #1e1e1e;
+            color: white;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-family: inherit;
         }
 
-        .audio-info {
-            flex-grow: 1;
+        .btn-speak {
+            width: 100%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
         }
 
-        .audio-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .audio-status {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        /* Reproductor de audio oculto pero funcional */
-        audio {
-            display: none;
-        }
+        .btn-speak:active { transform: scale(0.96); opacity: 0.9; }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <div class="header">DIVÉLUN TRAINING</div>
-
-        <div class="video-section">
+        <div class="hero-video">
             <video 
-                autoplay 
-                loop 
-                muted 
-                playsinline 
-                preload="auto"
-                controlsList="nodownload"
-                disablePictureInPicture
-                oncontextmenu="return false;">
-                <source src="v-x9z2-sh01-div.mp4.mp4" type="video/mp4">
-                Tu navegador no soporta este video.
+                autoplay loop muted playsinline 
+                controlsList="nodownload" 
+                oncontextmenu="return false;"
+                disablePictureInPicture>
+                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
             </video>
         </div>
 
-        <div class="details-section">
-            <h1 class="workout-title">Técnica de Cross</h1>
-            <p class="workout-subtitle">Domina el golpe de poder fundamental.</p>
+        <div class="content">
+            <span class="category">Entrenamiento de Poder</span>
+            <h1 class="title">Golpe de Cross</h1>
+            <p class="description">
+                El cross es tu golpe de poder principal. Requiere una coordinación perfecta entre el giro del pie, la cadera y la extensión total del brazo.
+            </p>
 
-            <div class="audio-card">
-                <div class="audio-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
-                </div>
-                <div class="audio-info">
-                    <div class="audio-title">Explicación Detallada</div>
-                    <div class="audio-status" id="audioStatus">Escuchando al entrenador...</div>
-                </div>
+            <div class="voice-panel">
+                <span class="label">CONFIGURACIÓN DE ENTRENADOR</span>
+                <select id="voiceSelect"></select>
+                <button class="btn-speak" onclick="startCoaching()">Iniciar Instrucciones</button>
             </div>
-
-            <audio id="techniqueAudio" preload="auto">
-                <source src="explicacion-cross.mp3" type="audio/mpeg">
-            </audio>
         </div>
     </div>
 
     <script>
-        // Script para garantizar la reproducción del audio
-        document.addEventListener('DOMContentLoaded', () => {
-            const audio = document.getElementById('techniqueAudio');
-            const statusText = document.getElementById('audioStatus');
-            let hasStarted = false;
+        const synth = window.speechSynthesis;
+        const voiceSelect = document.querySelector('#voiceSelect');
+        
+        // GUIONES TÉCNICOS DETALLADOS
+        const scripts = {
+            es: "Técnica del Cross de derecha. Gira tu pie trasero hacia adentro y rota la cadera violentamente. Extiende tu brazo derecho en línea recta mientras mantienes el puño izquierdo protegiendo tu pómulo. Exhala al impactar y regresa de inmediato a tu guardia inicial. Velocidad y rotación.",
+            en: "Technical Cross drill. Pivot your back foot and rotate your hips sharply. Extend your dominant arm in a straight line while keeping your lead hand protecting your chin. Breathe out on impact and snap your hand back to your guard. Focus on rotation and speed."
+        };
 
-            // Intenta reproducir al cargar (puede fallar en algunos navegadores)
-            audio.play().then(() => {
-                hasStarted = true;
-            }).catch(error => {
-                console.log("Autoplay bloqueado inicialmente. Esperando interacción.");
-                statusText.textContent = "Haz clic en cualquier lugar para escuchar.";
+        let voices = [];
+
+        function loadVoices() {
+            // Filtramos: Prioriza Google, evita Microsoft por completo
+            voices = synth.getVoices().filter(v => 
+                v.name.includes('Google') || (!v.name.includes('Microsoft'))
+            );
+            
+            voiceSelect.innerHTML = '';
+            voices.forEach((voice) => {
+                const option = document.createElement('option');
+                option.textContent = `${voice.name} (${voice.lang})`;
+                option.setAttribute('data-lang', voice.lang);
+                option.setAttribute('data-name', voice.name);
+                voiceSelect.appendChild(option);
             });
+        }
 
-            // Si falló, se asegura de reproducir en el primer clic del usuario
-            document.addEventListener('click', () => {
-                if (!hasStarted) {
-                    audio.play();
-                    statusText.textContent = "Escuchando al entrenador...";
-                    hasStarted = true;
-                }
-            }, { once: true }); // Se ejecuta solo una vez
-        });
+        // Carga de voces (manejo de compatibilidad con navegadores)
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+        loadVoices();
 
-        // Capa extra de seguridad
-        document.onkeydown = function(e) {
+        function startCoaching() {
+            if (synth.speaking) { synth.cancel(); }
+
+            const selectedOption = voiceSelect.selectedOptions[0];
+            const selectedVoice = voices.find(v => v.name === selectedOption.getAttribute('data-name'));
+            
+            // Detecta si la voz es inglesa o española
+            const isEnglish = selectedVoice.lang.startsWith('en');
+            const textToSpeak = isEnglish ? scripts.en : scripts.es;
+
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            utterance.voice = selectedVoice;
+            utterance.rate = 0.92; // Un poco más lento para mejor comprensión técnica
+            utterance.pitch = 1.0;
+
+            synth.speak(utterance);
+        }
+
+        // Bloqueo de seguridad adicional
+        document.onkeydown = (e) => {
             if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) return false;
         };
     </script>
