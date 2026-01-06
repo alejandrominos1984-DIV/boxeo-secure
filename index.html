@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divélun - Entrenamiento Privado</title>
+    <style>
+        body { 
+            margin: 0; 
+            background-color: #050505; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            overflow: hidden;
+        }
+        .video-wrapper {
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            overflow: hidden; /* Corta cualquier menú que intente salir */
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+            border: 1px solid #333;
+        }
+        video {
+            width: 100%;
+            display: block;
+            /* Evita que el usuario pueda arrastrar el video fuera de la web */
+            -webkit-user-drag: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-wrapper">
+        <video 
+            autoplay 
+            loop 
+            muted 
+            playsinline 
+            preload="auto"
+            controlsList="nodownload"
+            disablePictureInPicture
+            oncontextmenu="return false;">
+            
+            <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
+            
+            Tu navegador no soporta este video privado.
+        </video>
+    </div>
+
+    <script>
+        // Capa extra: Bloquea combinaciones de teclas (Ctrl+S, Ctrl+U) 
+        document.onkeydown = function(e) {
+            if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) {
+                return false;
+            }
+        };
+    </script>
+</body>
+</html>
