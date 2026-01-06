@@ -26,67 +26,52 @@
             background: #000;
             border: 1px solid #222;
             line-height: 0;
+            /* Asegura que los controles de Plyr queden encima */
+            z-index: 0;
         }
 
-        /* EL PARCHE SÓLIDO (AHORA ABAJO Y MÁS GRANDE) */
+        /* EL PARCHE SÓLIDO (PEQUEÑO Y AL FONDO) */
         .premium-patch {
             position: absolute;
-            bottom: 0; /* Pegado al fondo */
-            right: 0;  /* Pegado a la derecha */
-            width: 160px; /* Más ancho para cubrir todo el rastro */
-            height: 90px; /* Más alto */
+            bottom: 0;  /* Pegado absolutamente abajo */
+            right: 0;   /* Pegado absolutamente a la derecha */
+            width: 90px;  /* Ancho justo para el logo */
+            height: 45px; /* Alto justo */
             background: #000; /* Negro total */
-            z-index: 1; /* Por debajo de los controles de Plyr, por encima del video */
+            /* Z-INDEX CLAVE:
+               1 = Encima del video de YouTube
+               Plyr controls (por defecto son >1) = Quedarán encima del parche
+            */
+            z-index: 1;
             display: flex;
-            align-items: flex-end;
-            justify-content: flex-end;
-            padding: 15px;
-            pointer-events: none; /* Permite que el toque pase a la barra de progreso si es necesario */
+            align-items: flex-end; /* Texto abajo */
+            justify-content: flex-end; /* Texto derecha */
+            padding: 5px 10px; /* Pequeño margen interno */
+            pointer-events: none; /* Ignora clics, permite tocar los controles de Plyr encima */
         }
 
         .premium-patch span {
-            font-size: 0.6rem;
+            font-size: 0.55rem; /* Texto mucho más pequeño y sutil */
             font-weight: 900;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.3); /* Muy tenue */
+            letter-spacing: 2px;
         }
 
-        /* POPUP BRAVE AMIGABLE Y MUY BAJO */
+        /* POPUP BRAVE (Sin cambios, ya estaba aprobado) */
         #bravePopup {
-            display: none;
-            position: fixed;
-            bottom: 10px; /* Casi al borde inferior */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 92%;
-            max-width: 440px;
-            background: #121212;
-            padding: 18px;
-            border-radius: 24px;
-            border: 1px solid #282828;
-            z-index: 10000;
-            text-align: center;
+            display: none; position: fixed; bottom: 10px; left: 50%;
+            transform: translateX(-50%); width: 92%; max-width: 440px;
+            background: #121212; padding: 18px; border-radius: 24px;
+            border: 1px solid #282828; z-index: 10000; text-align: center;
             box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
-
         .brave-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
-        
         .store-grid { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .store-button {
-            background: #1e1e1e;
-            padding: 10px 16px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            border: 1px solid #333;
-            flex: 1;
+            background: #1e1e1e; padding: 10px 16px; border-radius: 14px;
+            display: flex; align-items: center; gap: 10px; text-decoration: none;
+            color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid #333; flex: 1;
         }
-
         .store-button svg { width: 18px; height: 18px; fill: white; }
         .close-btn { position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem; }
     </style>
@@ -107,16 +92,13 @@
 
     <div id="bravePopup">
         <span class="close-btn" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
-        
         <div class="brave-header">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22" alt="Brave">
             <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MODO SIN ANUNCIOS</span>
         </div>
-
         <p style="font-size: 0.8rem; color: #999; margin: 0 10px; line-height: 1.4;">
             Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones publicitarias y con mayor privacidad.
         </p>
-        
         <div class="store-grid">
             <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-button">
                 <svg viewBox="0 0 512 512"><path d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l220.7-221.3 60.7 60.7L104.6 499z"/></svg>
@@ -131,7 +113,6 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: Fullscreen eliminado para proteger el logo oculto
         const player = new Plyr('#player', {
             controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume'],
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
