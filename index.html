@@ -28,32 +28,32 @@
             line-height: 0;
         }
 
-        /* BANNER MATERIAL (BLANCO + FLOTANTE) */
+        /* BANNER MATERIAL (ESTADO INICIAL: VISIBLE) */
         .premium-banner {
             position: absolute;
             bottom: 12px;
             right: 12px;
-            background: #ffffff; /* Blanco sólido */
-            color: #000000;      /* Texto negro */
+            background: #ffffff;
+            color: #000000;
             padding: 8px 15px;
             display: flex;
             align-items: center;
             gap: 8px;
             text-decoration: none;
             z-index: 10;
-            border-radius: 4px; /* Rectángulo con mínima curvatura */
+            border-radius: 4px;
             
-            /* ESTADO INICIAL: OCULTO */
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease; /* Desvanecimiento suave */
-        }
-
-        /* CLASE ACTIVA (Controlada por JS) */
-        .premium-banner.is-active {
+            /* VISIBLE POR DEFECTO AL CARGAR */
             opacity: 1;
             pointer-events: all;
-            transition: opacity 0.2s ease; /* Aparición rápida */
+            /* Transición suave para cuando toque ocultarse */
+            transition: opacity 0.5s ease;
+        }
+
+        /* CLASE PARA OCULTARLO (Activada por JS) */
+        .premium-banner.force-hide {
+            opacity: 0;
+            pointer-events: none;
         }
 
         .premium-banner span {
@@ -72,12 +72,7 @@
             padding: 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
         }
-
-        /* BARRA DE PROGRESO CORTA Y CENTRADA */
-        .plyr__progress {
-            flex: 0 1 55% !important; 
-            margin: 0 15px !important;
-        }
+        .plyr__progress { flex: 0 1 55% !important; margin: 0 15px !important; }
         
         /* POPUP BRAVE */
         #bravePopup {
@@ -110,8 +105,8 @@
         </div>
         <p style="font-size: 0.8rem; color: #999; margin-bottom: 15px;">Usa <b>Brave</b> para estudiar con máxima velocidad y cero publicidad.</p>
         <div style="display: flex; gap: 10px;">
-            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333;">Play Store</a>
-            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333;">App Store</a>
+            <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">Play Store</a>
+            <a href="#" style="background:#1e1e1e; color:white; text-decoration:none; padding:10px; border-radius:12px; flex:1; font-size:0.7rem; font-weight:700; border:1px solid #333; text-align: center;">App Store</a>
         </div>
     </div>
 
@@ -123,17 +118,19 @@
         });
 
         const banner = document.getElementById('bannerMaterial');
+        let hideTimer; // Variable para controlar el temporizador
 
-        // LÓGICA DE VISIBILIDAD CON RETRASO (Delay)
+        // AL MOSTRAR CONTROLES (Tocar pantalla): Asegurar que el banner se vea
         player.on('controlsshown', () => {
-            banner.classList.add('is-active');
+            clearTimeout(hideTimer); // Cancelar cualquier ocultamiento pendiente
+            banner.classList.remove('force-hide'); // Mostrar inmediatamente
         });
 
+        // AL OCULTAR CONTROLES: Iniciar cuenta atrás para ocultar banner
         player.on('controlshidden', () => {
-            // El banner espera 800ms antes de empezar a desaparecer
-            // Esto asegura que el logo de YouTube ya se haya ido
-            setTimeout(() => {
-                banner.classList.remove('is-active');
+            // Esperar 800ms antes de añadir la clase que lo oculta
+            hideTimer = setTimeout(() => {
+                banner.classList.add('force-hide');
             }, 800); 
         });
 
