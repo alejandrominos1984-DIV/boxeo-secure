@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Entrenamiento Premium</title>
+    <title>Divélun | Clase Élite</title>
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -11,8 +11,7 @@
         :root {
             --bg: #000000;
             --accent: #ff3b30;
-            --gold: #D4AF37; /* Dorado Premium */
-            --plyr-color-main: var(--accent); /* El color de la barra de progreso será el acento */
+            --gold: #D4AF37;
         }
 
         body { margin: 0; background: var(--bg); font-family: 'Inter', sans-serif; color: white; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
@@ -31,56 +30,65 @@
             z-index: 0;
         }
 
-        /* EL BANNER RECTANGULAR FLOTANTE (AJUSTADO) */
+        /* EL BANNER DINÁMICO (BOTÓN PDF) */
         .premium-banner {
             position: absolute;
-            /* Ahora flota separado del borde */
-            bottom: 12px;
-            right: 12px;
-            /* Un poco más grande para asegurar cobertura total */
-            width: 95px;
-            height: 42px;
-            background: #000; /* Negro sólido */
-            z-index: 1;
+            bottom: 15px;
+            right: 15px;
+            width: 100px;
+            height: 40px;
+            background: #000;
+            z-index: 10; /* Por encima de todo para ser clicable */
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0 !important; /* Esquinas rectas */
-            pointer-events: none;
+            border-radius: 4px; /* Un toque mínimo de redondeo para el botón */
+            transition: opacity 0.3s ease; /* Efecto de aparecer/desaparecer */
+            opacity: 0; /* Oculto por defecto */
+            text-decoration: none;
         }
+
+        /* Mostrar banner cuando los controles de Plyr estén visibles */
+        .plyr--hide-controls .premium-banner { opacity: 0; pointer-events: none; }
+        .plyr--hover .premium-banner, 
+        .plyr--paused .premium-banner,
+        .plyr--loading .premium-banner { opacity: 1; pointer-events: all; }
 
         .premium-banner span {
             font-size: 0.6rem;
             font-weight: 900;
-            color: var(--gold); /* Dorado */
+            color: var(--gold);
             letter-spacing: 2px;
+            transition: transform 0.2s;
         }
+        
+        .premium-banner:active span { transform: scale(0.9); }
 
-        /* --- HACK CSS PARA ACORTAR LA BARRA DE PROGRESO --- */
-        .plyr--full-ui input[type=range] {
-            /* Hace que la barra sea más angosta (ej. 60% del ancho total) */
-            max-width: 60% !important;
-            /* La centra horizontalmente */
-            margin-left: auto !important;
-            margin-right: auto !important;
-        }
+        /* --- CORRECCIÓN DE ALINEACIÓN DE CONTROLES --- */
         .plyr__controls {
-            /* Ajusta el espaciado de los controles para que se vea compacto */
+            display: flex;
+            align-items: center !important; /* Alinea play y barra al centro */
             justify-content: center !important;
-            gap: 15px;
+            padding: 15px !important;
+            gap: 10px;
         }
-        /* -------------------------------------------------- */
 
+        .plyr__progress {
+            /* Barra de adelantar más corta y centrada */
+            flex: 0 1 50% !important; 
+            margin: 0 !important;
+        }
 
-        /* POPUP BRAVE (Sin cambios) */
+        .plyr__time { font-size: 0.75rem; color: #888; }
+
+        /* POPUP BRAVE AMIGABLE */
         #bravePopup {
-            display: none; position: fixed; bottom: 15px; left: 50%;
+            display: none; position: fixed; bottom: 10px; left: 50%;
             transform: translateX(-50%); width: 92%; max-width: 440px;
             background: #121212; padding: 18px; border-radius: 24px;
             border: 1px solid #282828; z-index: 10000; text-align: center;
             box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
         }
-        .brave-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px; }
         .store-grid { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
         .store-button {
             background: #1e1e1e; padding: 10px 16px; border-radius: 14px;
@@ -88,7 +96,6 @@
             color: white; font-size: 0.75rem; font-weight: 700; border: 1px solid #333; flex: 1;
         }
         .store-button svg { width: 18px; height: 18px; fill: white; }
-        .close-btn { position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem; }
     </style>
 </head>
 <body>
@@ -97,22 +104,22 @@
         <h1 class="title">Clase Maestra</h1>
 
         <div class="video-box">
-            <div class="premium-banner">
+            <a href="guia-tecnica-cross.pdf" download class="premium-banner" id="pdfBtn">
                 <span>PREMIUM</span>
-            </div>
+            </a>
             
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
         </div>
     </div>
 
     <div id="bravePopup">
-        <span class="close-btn" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
-        <div class="brave-header">
+        <span style="position: absolute; top: 12px; right: 18px; color: #444; cursor: pointer; font-size: 1.4rem;" onclick="document.getElementById('bravePopup').style.display='none'">&times;</span>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 10px;">
             <img src="https://brave.com/static-assets/images/brave-logo.svg" width="22" alt="Brave">
             <span style="color: var(--accent); font-weight: 900; font-size: 0.8rem; letter-spacing: 1px;">MODO SIN ANUNCIOS</span>
         </div>
         <p style="font-size: 0.8rem; color: #999; margin: 0 10px; line-height: 1.4;">
-            Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones publicitarias y con mayor privacidad.
+            Recomendamos <b>Brave Browser</b> para estudiar sin interrupciones y con mayor privacidad.
         </p>
         <div class="store-grid">
             <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="store-button">
@@ -128,18 +135,23 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // CONFIGURACIÓN: Sin volumen, sin fullscreen
         const player = new Plyr('#player', {
-            controls: ['play-large', 'play', 'progress', 'current-time'], 
+            controls: ['play', 'progress', 'current-time'], 
             youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
+        });
+
+        // Asegurar que el banner se oculte/muestre con los controles
+        player.on('controlshidden', () => {
+            document.querySelector('.premium-banner').style.pointerEvents = 'none';
+        });
+        player.on('controlsshown', () => {
+            document.querySelector('.premium-banner').style.pointerEvents = 'all';
         });
 
         async function checkBrave() {
             const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
             if (!isBrave) {
-                setTimeout(() => {
-                    document.getElementById('bravePopup').style.display = 'block';
-                }, 3000);
+                setTimeout(() => { document.getElementById('bravePopup').style.display = 'block'; }, 3000);
             }
         }
         checkBrave();
