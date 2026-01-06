@@ -3,212 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun | Cross de Poder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Divélun Idiomas | Clase Maestra</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --bg: #000000;
-            --card: #151515;
-            --accent: #ff3b30; 
+            --bg: #050505;
+            --accent: #ff3b30;
             --glass: rgba(255, 255, 255, 0.05);
-            --text-main: #ffffff;
-            --text-dim: #8e8e93;
         }
 
         body {
             margin: 0;
             background-color: var(--bg);
             font-family: 'Inter', sans-serif;
-            color: var(--text-main);
+            color: white;
             display: flex;
             justify-content: center;
         }
 
-        .app-shell {
-            width: 100%;
-            max-width: 450px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        .container { width: 100%; max-width: 500px; padding: 20px; }
 
-        /* Hero Video Section */
-        .video-wrapper {
-            width: 100%;
-            position: relative;
-            background: #000;
-            line-height: 0;
-        }
-
-        video {
-            width: 100%;
-            display: block;
-            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-            -webkit-user-drag: none;
-        }
-
-        /* Floating Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px 10px;
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            margin: -30px 20px 0 20px;
-            z-index: 10;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .stat-item { text-align: center; }
-        .stat-val { display: block; font-size: 0.9rem; font-weight: 800; color: var(--text-main); }
-        .stat-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; }
-
-        /* Main Content */
-        .main-content { padding: 30px 25px; }
-        .exercise-title { font-size: 2.2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .exercise-desc { color: var(--text-dim); font-size: 0.95rem; line-height: 1.6; margin: 15px 0 30px 0; }
-
-        /* Coaching Panel */
-        .coaching-box {
-            background: var(--card);
+        /* Estilo del reproductor */
+        .video-container {
             border-radius: 25px;
-            padding: 20px;
-            border: 1px solid #222;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            margin-bottom: 25px;
+            background: #000;
         }
 
-        .panel-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            color: var(--accent);
-            font-size: 0.75rem;
+        .class-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -1px; }
+        .class-desc { color: #888; font-size: 0.9rem; line-height: 1.5; margin-bottom: 30px; }
+
+        /* Popup de Brave */
+        #bravePopup {
+            display: none;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 400px;
+            background: rgba(15, 15, 15, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 59, 48, 0.4);
+            z-index: 9999;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0,0,0,1);
+        }
+
+        .brave-btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 50px;
             font-weight: 800;
+            margin-top: 15px;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        select {
-            width: 100%;
-            background: #222;
-            color: white;
-            border: 1px solid #333;
-            padding: 14px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            font-family: inherit;
-            appearance: none;
-        }
-
-        .btn-action {
-            width: 100%;
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 1rem;
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #555;
             cursor: pointer;
-            box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3);
-            transition: 0.2s;
+            font-size: 1.5rem;
         }
-
-        .btn-action:active { transform: scale(0.97); }
     </style>
 </head>
 <body>
 
-    <div class="app-shell">
-        <div class="video-wrapper">
-            <video autoplay loop muted playsinline controlsList="nodownload" oncontextmenu="return false;" disablePictureInPicture>
-                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
-            </video>
-        </div>
+    <div class="container">
+        <h1 class="class-title">Introducción al Idioma</h1>
+        <p class="class-desc">Comienza tu viaje lingüístico con esta lección fundamental. Domina las bases en solo unos minutos.</p>
 
-        <div class="stats-bar">
-            <div class="stat-item"><span class="stat-val">3 Variations</span><span class="stat-label">Level</span></div>
-            <div class="stat-item"><span class="stat-val">12 Minutes</span><span class="stat-label">Time</span></div>
-            <div class="stat-item"><span class="stat-val">180 kcal</span><span class="stat-label">Burn</span></div>
-        </div>
-
-        <div class="main-content">
-            <h1 class="exercise-title">Cross Punch</h1>
-            <p class="exercise-desc">
-                Domina el golpe más potente de tu arsenal. Aprende la rotación de cadera y el impacto lineal perfecto para maximizar tu pegada.
-            </p>
-
-            <div class="coaching-box">
-                <div class="panel-header">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-                    AI Coach Settings
-                </div>
-                <select id="voiceSelect"></select>
-                <button class="btn-action" onclick="playCoaching()">Start Audio Coaching</button>
-            </div>
+        <div class="video-container">
+            <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="rGrBHiuPlT0"></div>
         </div>
     </div>
 
-    <script>
-        const synth = window.speechSynthesis;
-        const voiceSelect = document.querySelector('#voiceSelect');
+    <div id="bravePopup">
+        <span class="close-popup" onclick="closePopup()">&times;</span>
+        <h3 style="margin-top:0; color: #ff3b30; font-weight: 800;">¡ESTUDIA SIN ANUNCIOS! 🚀</h3>
+        <p style="font-size: 0.85rem; color: #bbb; line-height: 1.4;">Te recomendamos abrir esta web en el navegador <b>Brave</b>. Es más rápido, protege tu privacidad y lo mejor: <b>no verás ningún anuncio en tus clases</b>.</p>
         
-        const scripts = {
-            es: "Técnica del Cross. Gira tu pie trasero y rota la cadera con fuerza. Extiende tu brazo derecho en línea recta mientras proteges tu rostro con la otra mano. Exhala al impactar y regresa rápido a la guardia.",
-            en: "Cross technique. Pivot your back foot and rotate your hips with power. Extend your dominant arm in a straight line while keeping your other hand protecting your face. Exhale on impact and return fast to your guard.",
-            pt: "Técnica do Cross. Gire o pé traseiro e rotacione o quadril com força. Estenda o braço dominante em linha reta enquanto protege o rosto com a outra mão. Expire no impacto e retorne rápido à guarda."
-        };
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <a href="https://play.google.com/store/apps/details?id=com.brave.browser" target="_blank" class="brave-btn">Android</a>
+            <a href="https://apps.apple.com/app/brave-private-web-browser/id1052879175" target="_blank" class="brave-btn">iPhone</a>
+        </div>
+    </div>
 
-        function getBestVoices() {
-            let allVoices = synth.getVoices();
-            // Filtro: Solo ES, EN, PT + Prioridad Google + No Microsoft
-            return allVoices.filter(v => {
-                const lang = v.lang.toLowerCase();
-                const isTargetLang = lang.startsWith('es') || lang.startsWith('en') || lang.startsWith('pt');
-                const isNotMicrosoft = !v.name.includes('Microsoft');
-                return isTargetLang && isNotMicrosoft;
-            });
-        }
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <script>
+        // Inicializar reproductor con controles limpios
+        const player = new Plyr('#player', {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            settings: ['quality', 'speed'],
+            youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3 }
+        });
 
-        function populateVoices() {
-            const filteredVoices = getBestVoices();
-            voiceSelect.innerHTML = '';
-
-            filteredVoices.forEach(voice => {
-                const option = document.createElement('option');
-                option.textContent = `${voice.name} (${voice.lang})`;
-                option.value = voice.name;
-                // Marcar español como default
-                if (voice.lang.startsWith('es')) option.selected = true;
-                voiceSelect.appendChild(option);
-            });
-        }
-
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = populateVoices;
-        }
-        populateVoices();
-
-        function playCoaching() {
-            if (synth.speaking) synth.cancel();
-
-            const selectedVoiceName = voiceSelect.value;
-            const voice = synth.getVoices().find(v => v.name === selectedVoiceName);
+        // DETECCIÓN INTELIGENTE DE BRAVE
+        async function checkBrave() {
+            // Verifica si la API de Brave está presente
+            const isBrave = (navigator.brave && await navigator.brave.isBrave()) || false;
             
-            // Lógica bilingüe/trilingüe automática
-            const langCode = voice.lang.substring(0, 2);
-            const text = scripts[langCode] || scripts['es'];
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.voice = voice;
-            utterance.rate = 0.92;
-            synth.speak(utterance);
+            if (!isBrave) {
+                // Aparece a los 3 segundos si no están en Brave
+                setTimeout(() => {
+                    document.getElementById('bravePopup').style.display = 'block';
+                }, 3000);
+            }
         }
 
-        // Seguridad anti-descarga
-        document.onkeydown = (e) => {
-            if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) return false;
-        };
+        function closePopup() {
+            document.getElementById('bravePopup').style.display = 'none';
+        }
+
+        checkBrave();
     </script>
 </body>
 </html>
