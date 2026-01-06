@@ -57,21 +57,29 @@
         .premium-banner span { font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; }
         .premium-banner svg { width: 14px; height: 14px; stroke: #000; }
 
-        /* --- BARRA DE PROGRESO ULTRA-CORTA Y CENTRADA --- */
+        /* --- BARRA DE PROGRESO FIJA Y ULTRA-CORTA --- */
         .plyr__controls {
             display: flex !important;
             align-items: center !important;
-            justify-content: center !important; /* Centrado absoluto */
+            justify-content: center !important;
             padding: 15px !important;
             background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            gap: 5px;
+            gap: 10px; /* Espacio reducido entre elementos */
         }
 
         .plyr__progress {
-            /* REDUCIDA DRÁSTICAMENTE AL 15% */
-            flex: 0 1 15% !important; 
-            /* Margen aumentado para separar más */
-            margin: 0 25px !important;
+            /* NO CRECER, NO ENCOGER, BASE AUTOMÁTICA */
+            flex: 0 0 auto !important;
+            /* ANCHO MÁXIMO FIJO EN PIXELES (La clave del éxito) */
+            width: 60px !important;
+            max-width: 60px !important;
+            /* Márgenes para centrar */
+            margin: 0 15px !important;
+        }
+        
+        /* Asegurar que el input interno respete el ancho */
+        .plyr__progress input[type=range] {
+             max-width: 100% !important;
         }
 
         .plyr__time { font-size: 0.7rem; opacity: 0.6; font-weight: 700; }
@@ -125,20 +133,17 @@
         const wrapper = document.getElementById('videoWrapper');
         let hideTimer;
 
-        // GESTIÓN DE BANNER
         player.on('controlsshown', () => {
             clearTimeout(hideTimer);
             banner.classList.remove('force-hide');
         });
 
         player.on('controlshidden', () => {
-            // Retraso de 800ms para enterrar el logo de YouTube antes de ocultarse
             hideTimer = setTimeout(() => {
                 banner.classList.add('force-hide');
             }, 800); 
         });
 
-        // BLOQUEO DE DOBLE CLIC
         wrapper.addEventListener('dblclick', (e) => {
             e.preventDefault();
             e.stopPropagation();
