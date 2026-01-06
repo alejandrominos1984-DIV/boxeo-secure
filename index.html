@@ -3,58 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun - Entrenamiento Privado</title>
+    <title>Divélun | Técnica de Cross</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            margin: 0; 
-            background-color: #050505; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
+        :root {
+            --bg-color: #0a0a0a;
+            --card-bg: #141414;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --accent-color: #ff471a; /* Naranja/Rojo de acento */
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px; /* Ancho típico de app móvil */
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header simple */
+        .header {
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* Sección del Video Principal */
+        .video-section {
+            margin: 0 20px;
+            border-radius: 20px;
             overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
-        .video-wrapper {
-            width: 90%;
-            max-width: 600px;
-            border-radius: 15px;
-            overflow: hidden; /* Corta cualquier menú que intente salir */
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-            border: 1px solid #333;
-        }
+
         video {
             width: 100%;
             display: block;
-            /* Evita que el usuario pueda arrastrar el video fuera de la web */
+            /* Mantiene tus protecciones */
             -webkit-user-drag: none;
+            outline: none;
+        }
+
+        /* Sección de Detalles y Audio */
+        .details-section {
+            padding: 25px 20px;
+        }
+
+        .workout-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+        }
+
+        .workout-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 25px;
+        }
+
+        /* Tarjeta de Audio */
+        .audio-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #222;
+        }
+
+        .audio-icon {
+            background-color: rgba(255, 71, 26, 0.1); /* Acento transparente */
+            color: var(--accent-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .audio-info {
+            flex-grow: 1;
+        }
+
+        .audio-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .audio-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Reproductor de audio oculto pero funcional */
+        audio {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="video-wrapper">
-        <video 
-            autoplay 
-            loop 
-            muted 
-            playsinline 
-            preload="auto"
-            controlsList="nodownload"
-            disablePictureInPicture
-            oncontextmenu="return false;">
-            
-            <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
-            
-            Tu navegador no soporta este video privado.
-        </video>
+    <div class="app-container">
+        <div class="header">DIVÉLUN TRAINING</div>
+
+        <div class="video-section">
+            <video 
+                autoplay 
+                loop 
+                muted 
+                playsinline 
+                preload="auto"
+                controlsList="nodownload"
+                disablePictureInPicture
+                oncontextmenu="return false;">
+                <source src="v-x9z2-sh01-div.mp4.mp4" type="video/mp4">
+                Tu navegador no soporta este video.
+            </video>
+        </div>
+
+        <div class="details-section">
+            <h1 class="workout-title">Técnica de Cross</h1>
+            <p class="workout-subtitle">Domina el golpe de poder fundamental.</p>
+
+            <div class="audio-card">
+                <div class="audio-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
+                </div>
+                <div class="audio-info">
+                    <div class="audio-title">Explicación Detallada</div>
+                    <div class="audio-status" id="audioStatus">Escuchando al entrenador...</div>
+                </div>
+            </div>
+
+            <audio id="techniqueAudio" preload="auto">
+                <source src="explicacion-cross.mp3" type="audio/mpeg">
+            </audio>
+        </div>
     </div>
 
     <script>
-        // Capa extra: Bloquea combinaciones de teclas (Ctrl+S, Ctrl+U) 
+        // Script para garantizar la reproducción del audio
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('techniqueAudio');
+            const statusText = document.getElementById('audioStatus');
+            let hasStarted = false;
+
+            // Intenta reproducir al cargar (puede fallar en algunos navegadores)
+            audio.play().then(() => {
+                hasStarted = true;
+            }).catch(error => {
+                console.log("Autoplay bloqueado inicialmente. Esperando interacción.");
+                statusText.textContent = "Haz clic en cualquier lugar para escuchar.";
+            });
+
+            // Si falló, se asegura de reproducir en el primer clic del usuario
+            document.addEventListener('click', () => {
+                if (!hasStarted) {
+                    audio.play();
+                    statusText.textContent = "Escuchando al entrenador...";
+                    hasStarted = true;
+                }
+            }, { once: true }); // Se ejecuta solo una vez
+        });
+
+        // Capa extra de seguridad
         document.onkeydown = function(e) {
-            if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) {
-                return false;
-            }
+            if(e.ctrlKey && (e.keyCode === 83 || e.keyCode === 85)) return false;
         };
     </script>
 </body>
