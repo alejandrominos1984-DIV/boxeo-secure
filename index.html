@@ -62,12 +62,12 @@
             </div>
         </div>
 
-        <!-- 2. VIDEO PLAYER (Prioridad Visual) -->
-        <!-- Ajustado para estar siempre arriba y visible -->
+        <!-- 2. VIDEO PLAYER (Autoplay Independiente) -->
         <div class="relative w-full aspect-video bg-black mt-0 sm:mt-0 shadow-lg z-10">
+            <!-- Añadido autoplay para iniciar solo -->
             <video id="exerciseVideo" 
                    class="w-full h-full object-contain" 
-                   muted playsinline loop>
+                   autoplay muted playsinline loop>
                 <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
                 <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
             </video>
@@ -90,31 +90,40 @@
                 Escuchar Instrucciones
             </button>
 
-            <!-- Tarjetas de Métricas (Cronómetro y Calorías) -->
+            <!-- Tarjetas de Métricas -->
             <div class="grid grid-cols-2 gap-4">
-                <!-- Cronómetro -->
-                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center">
+                <!-- Cronómetro (Cuenta Regresiva con Ajuste) -->
+                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center relative group">
                     <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Tiempo Restante</span>
-                    <div class="text-3xl font-mono font-bold text-white tracking-tighter" id="timerDisplay">01:00</div>
+                    <div class="text-3xl font-mono font-bold text-white tracking-tighter mb-2" id="timerDisplay">01:00</div>
+                    
+                    <!-- Controles de Tiempo (NUEVO) -->
+                    <div class="flex gap-2 w-full justify-center">
+                        <button onclick="adjustTime(-10)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded transition-colors">-10s</button>
+                        <button onclick="adjustTime(30)" class="text-[10px] bg-brand-red/20 border border-brand-red/50 hover:bg-brand-red text-white px-2 py-1 rounded transition-colors">+30s</button>
+                    </div>
                 </div>
-                <!-- Calorías -->
-                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center">
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Calorías (Est)</span>
+
+                <!-- Calorías (Fijas) -->
+                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center justify-center">
+                    <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Quema Estimada</span>
                     <div class="flex items-baseline gap-1">
-                        <span class="text-3xl font-mono font-bold text-brand-red tracking-tighter" id="caloriesDisplay">0</span>
+                        <!-- Valor fijo -->
+                        <span class="text-3xl font-mono font-bold text-brand-red tracking-tighter">45</span>
                         <span class="text-xs text-gray-400">KCAL</span>
                     </div>
                 </div>
             </div>
 
-            <!-- BOTÓN PRINCIPAL (Acción Grande) -->
+            <!-- BOTÓN PRINCIPAL (Controla SOLO el Cronómetro) -->
             <div class="mt-2">
-                <button id="mainBtn" onclick="toggleWorkout()" class="w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all rounded-2xl shadow-neon flex items-center justify-center gap-3 group relative overflow-hidden">
+                <button id="mainBtn" onclick="toggleTimer()" class="w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all rounded-2xl shadow-neon flex items-center justify-center gap-3 group relative overflow-hidden">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span id="btnIcon">
+                        <!-- Icono Play -->
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </span>
-                    <span id="btnText" class="text-white font-bold text-lg tracking-widest uppercase">INICIAR CRONÓMETRO</span>
+                    <span id="btnText" class="text-white font-bold text-lg tracking-widest uppercase">INICIAR ASALTO</span>
                 </button>
                 <p id="statusText" class="text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest">Listo para comenzar</p>
             </div>
@@ -134,26 +143,25 @@
 
     <script>
         // --- CONFIGURACIÓN ---
-        const DRILL_TIME = 60; // 60 segundos
-        const KCAL_PER_MINUTE = 45; // Calorías ajustadas (Alto impacto)
+        const DRILL_TIME = 60; // 60 segundos cuenta regresiva inicial
         
         const coachScript = "¡Guardia arriba! Vamos a pulir ese Jab. Pies firmes. Dispara ese brazo delantero recto como una flecha. Gira el puño al final para cortar. Exhala fuerte al golpear. ¡Shhh! Y regresa la mano rápido a la cara. ¡Vamos, con fuerza!";
-        const finishScript = "¡Tiempo! Excelente trabajo. Has quemado buena energía. Respira hondo y pasa al siguiente asalto.";
+        // Audio final actualizado según petición
+        const finishScript = "¡Terminó el tiempo campeón! ¿Quieren agregar más tiempo o continuar a la siguiente lección?";
 
         // DOM Elements
-        const video = document.getElementById('exerciseVideo');
         const timerDisplay = document.getElementById('timerDisplay');
-        const caloriesDisplay = document.getElementById('caloriesDisplay');
         const mainBtn = document.getElementById('mainBtn');
         const btnText = document.getElementById('btnText');
         const btnIcon = document.getElementById('btnIcon');
         const statusText = document.getElementById('statusText');
+        const video = document.getElementById('exerciseVideo');
 
         // Estado
         let timeLeft = DRILL_TIME;
         let isRunning = false;
+        let isFinished = false; // Nuevo estado para saber si terminó
         let timerInterval;
-        let totalCalories = 0;
         let synth = window.speechSynthesis;
         let utterance = null;
 
@@ -161,6 +169,11 @@
         const iconPlay = '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
         const iconPause = '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         const iconReset = '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
+
+        // Asegurar que el video se reproduzca al cargar
+        window.onload = function() {
+            video.play().catch(e => console.log("Autoplay handled by browser/user interaction"));
+        };
 
         // 1. SOLO ESCUCHAR INSTRUCCIONES
         function playInstructionsOnly() {
@@ -171,51 +184,74 @@
             }
         }
 
-        // 2. CONTROL PRINCIPAL (CRONÓMETRO + VIDEO)
-        function toggleWorkout() {
-            if (timeLeft <= 0) {
-                resetWorkout();
-                return;
-            }
+        // 2. AJUSTAR TIEMPO (NUEVA FUNCIÓN)
+        function adjustTime(seconds) {
+            timeLeft += seconds;
+            if (timeLeft < 0) timeLeft = 0;
+            
+            updateTimerUI();
 
-            if (isRunning) {
-                pauseWorkout();
-            } else {
-                startWorkout();
+            // Si se agrega tiempo cuando ya había terminado, reseteamos el estado "Terminado"
+            if (isFinished && timeLeft > 0) {
+                isFinished = false;
+                // Restauramos botón a estado inicial o Play
+                btnText.innerText = "REANUDAR CRONÓMETRO";
+                btnIcon.innerHTML = iconPlay;
+                statusText.innerText = "Tiempo añadido";
+                statusText.className = "text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest";
+                mainBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                mainBtn.classList.add('bg-brand-red');
             }
         }
 
-        function startWorkout() {
+        // 3. CONTROL DEL CRONÓMETRO
+        function toggleTimer() {
+            // Si terminó y no se ha agregado tiempo, es un reset completo
+            if (timeLeft <= 0 && isFinished) {
+                resetTimer();
+                return;
+            }
+
+            // Si está corriendo, pausamos
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                // Si no está corriendo, iniciamos
+                if (timeLeft > 0) {
+                    startTimer();
+                } else {
+                    // Caso borde: 0 tiempo pero usuario quiere iniciar
+                    resetTimer();
+                }
+            }
+        }
+
+        function startTimer() {
             isRunning = true;
+            isFinished = false;
             
             // UI Update
             btnText.innerText = "PAUSAR CRONÓMETRO";
             btnIcon.innerHTML = iconPause;
-            statusText.innerText = "Entrenamiento en curso...";
+            statusText.innerText = "Cronómetro corriendo...";
             statusText.className = "text-center text-[10px] text-brand-red mt-3 font-mono uppercase tracking-widest animate-pulse";
             mainBtn.classList.remove('bg-brand-red');
             mainBtn.classList.add('bg-gray-800', 'border', 'border-gray-600');
-
-            // Video Play
-            video.play().catch(e => console.log(e));
 
             // Timer Logic
             timerInterval = setInterval(() => {
                 if (timeLeft > 0) {
                     timeLeft--;
                     updateTimerUI();
-                    updateCalories();
                 } else {
-                    finishWorkout();
+                    finishTimer();
                 }
             }, 1000);
         }
 
-        function pauseWorkout() {
+        function pauseTimer() {
             isRunning = false;
             clearInterval(timerInterval);
-            video.pause();
-            synth.cancel();
 
             // UI Update
             btnText.innerText = "REANUDAR";
@@ -228,9 +264,10 @@
             mainBtn.classList.remove('bg-gray-800', 'border', 'border-gray-600');
         }
 
-        function finishWorkout() {
-            pauseWorkout(); // Detener loops
+        function finishTimer() {
+            pauseTimer(); // Detener intervalo
             timeLeft = 0;
+            isFinished = true;
             updateTimerUI();
             
             // UI Final
@@ -244,35 +281,27 @@
             speak(finishScript);
         }
 
-        function resetWorkout() {
+        function resetTimer() {
             timeLeft = DRILL_TIME;
-            totalCalories = 0;
+            isFinished = false;
             updateTimerUI();
-            caloriesDisplay.innerText = "0";
             
             mainBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
             mainBtn.classList.add('bg-brand-red');
             statusText.innerText = "Listo para comenzar";
             statusText.className = "text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest";
             
-            startWorkout();
+            startTimer();
         }
 
-        // 3. ACTUALIZACIONES DE UI
+        // 4. ACTUALIZACIONES DE UI
         function updateTimerUI() {
             const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const s = (timeLeft % 60).toString().padStart(2, '0');
             timerDisplay.innerText = `${m}:${s}`;
         }
 
-        function updateCalories() {
-            // Calcular calorías proporcionales al tiempo transcurrido
-            const timePassed = DRILL_TIME - timeLeft;
-            const kcal = (timePassed / 60) * KCAL_PER_MINUTE;
-            caloriesDisplay.innerText = Math.floor(kcal);
-        }
-
-        // 4. MOTOR DE VOZ
+        // 5. MOTOR DE VOZ
         function speak(text) {
             if (synth.speaking) synth.cancel();
             utterance = new SpeechSynthesisUtterance(text);
