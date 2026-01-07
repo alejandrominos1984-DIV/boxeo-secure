@@ -3,179 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrenador Divélun AI - Técnica Jab</title>
+    <title>Divélun Pro - Boxing Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Fuentes: Oswald para títulos deportivos, Roboto Mono para datos técnicos -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-black': '#09090b',
+                        'brand-dark': '#18181b',
+                        'brand-accent': '#ff2a2a', /* Rojo Agresivo High-Energy */
+                        'brand-active': '#ffffff', /* Blanco para estado activo */
+                    },
+                    fontFamily: {
+                        sans: ['Oswald', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        body { background-color: #000; color: white; }
         
-        /* Animación para el botón activo */
-        .btn-pulse {
-            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        }
-        
-        @keyframes pulse-ring {
-            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-        }
-
-        /* Animación de Onda de Voz */
-        .voice-wave {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 20px;
-            gap: 4px;
+        /* Efecto de escaneo en el video (Rojo) */
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 42, 42, 0.3);
+            position: absolute;
+            z-index: 10;
+            animation: scan 3s linear infinite;
+            box-shadow: 0 0 4px rgba(255, 42, 42, 0.5);
         }
         
-        .bar {
-            width: 4px;
-            height: 4px;
-            background-color: #3b82f6;
-            border-radius: 2px;
-            animation: sound 0ms -800ms linear infinite alternate;
-            transition: height 0.1s ease;
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
         }
 
-        .voice-active .bar {
-            animation-duration: 450ms;
+        /* Animación del visualizador de audio Pro (Rojo) */
+        .equalizer-bar {
+            transition: height 0.15s ease;
+            box-shadow: 0 0 8px rgba(255, 42, 42, 0.4);
         }
 
-        @keyframes sound {
-            0% { height: 4px; opacity: 0.5; }
-            100% { height: 20px; opacity: 1; }
-        }
-
-        /* Ocultar controles nativos de video */
-        video::-webkit-media-controls { display:none !important; }
+        /* Ocultar scrollbar */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 bg-slate-100 dark:bg-slate-950">
+<body class="flex items-center justify-center min-h-screen bg-neutral-900 p-0 sm:p-4">
 
-    <!-- Tarjeta Principal -->
-    <!-- CAMBIO: Aumentado max-w-md a max-w-lg para que el video 16:9 se luzca mejor -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full border border-slate-200 dark:border-slate-800">
+    <!-- App Container -->
+    <div class="relative w-full max-w-md bg-brand-black sm:rounded-[30px] overflow-hidden shadow-2xl border-0 sm:border border-neutral-800 h-[100vh] sm:h-auto sm:min-h-[800px] flex flex-col">
         
-        <!-- 1. SECCIÓN DE VIDEO (ARRIBA) -->
-        <!-- CAMBIO: aspect-[9/16] reemplazado por aspect-video (16:9) -->
-        <div class="relative w-full aspect-video bg-black group">
-            
-            <!-- VIDEO -->
-            <video id="exerciseVideo" 
-                   class="w-full h-full object-cover opacity-90" 
-                   autoplay loop muted playsinline>
-                
-                <!-- OPCIÓN 1: Ruta Relativa (Tu video en GitHub) -->
-                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
-                
-                <!-- OPCIÓN 2 (Respaldo): Video de ejemplo horizontal para probar el diseño -->
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
-                
-                Tu navegador no soporta video.
-            </video>
-            
-            <!-- Mensaje de error si falla el video -->
-            <div id="videoError" class="hidden absolute inset-0 flex items-center justify-center bg-black/80 p-6 text-center">
-                <p class="text-white text-sm">No se pudo cargar el video 'v-x9z2-sh01-div.mp4'.</p>
+        <!-- HEADER APP -->
+        <div class="flex justify-between items-center p-5 bg-brand-black z-20 border-b border-white/10">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-brand-accent rounded flex items-center justify-center shadow-[0_0_10px_rgba(255,42,42,0.4)]">
+                    <span class="text-white font-bold text-lg">D</span>
+                </div>
+                <h1 class="text-xl tracking-wider font-bold text-white">DIVÉLUN <span class="text-brand-accent font-light">PRO</span></h1>
             </div>
-            
-            <!-- Overlay estético -->
-            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80 pointer-events-none"></div>
-
-            <div class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg backdrop-blur-sm">
-                Técnica: JAB
+            <div class="flex gap-2">
+                <div class="w-2 h-2 rounded-full bg-brand-accent animate-pulse"></div>
+                <span class="text-xs font-mono text-brand-accent">ONLINE</span>
             </div>
         </div>
 
-        <!-- 2. SECCIÓN DE AUDIO / CONTROLES (ABAJO) -->
-        <div class="p-6 relative -mt-6 bg-white dark:bg-slate-900 rounded-t-3xl z-10 transition-colors">
+        <!-- AREA DE VIDEO (MAIN STAGE) -->
+        <div class="relative w-full aspect-video bg-black flex-shrink-0 border-b border-white/10 group">
             
-            <!-- Cabecera -->
-            <div class="flex items-center space-x-4 mb-6">
-                <div class="relative">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                        AI
-                    </div>
-                    <div id="statusDot" class="absolute bottom-0 right-0 w-3 h-3 bg-gray-400 border-2 border-white dark:border-slate-900 rounded-full transition-colors"></div>
+            <!-- Línea de escaneo decorativa -->
+            <div class="scanline"></div>
+
+            <!-- Etiquetas HUD -->
+            <div class="absolute top-4 right-4 z-10 flex flex-col items-end gap-1">
+                <span class="bg-black/60 backdrop-blur text-brand-accent text-[10px] font-mono px-2 py-1 border border-brand-accent/30 rounded">REC: 1080p</span>
+                <span class="bg-brand-accent text-white text-[10px] font-bold px-2 py-1 rounded shadow-[0_0_10px_rgba(255,42,42,0.5)]">LIVE FEED</span>
+            </div>
+
+            <!-- VIDEO PLAYER -->
+            <video id="exerciseVideo" 
+                   class="w-full h-full object-contain" 
+                   autoplay loop muted playsinline>
+                
+                <!-- TU ARCHIVO -->
+                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
+                
+                <!-- Fallback -->
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
+            </video>
+
+            <!-- Overlay Gradiente -->
+            <div class="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-brand-black to-transparent"></div>
+            
+            <!-- Título Técnica -->
+            <div class="absolute bottom-4 left-5">
+                <h2 class="text-3xl font-bold italic text-white leading-none">JAB <span class="text-brand-accent">CROSS</span></h2>
+                <p class="text-xs text-neutral-400 font-mono mt-1">MODULE 01 // FUNDAMENTALS</p>
+            </div>
+        </div>
+
+        <!-- DASHBOARD & CONTROLES -->
+        <div class="flex-1 bg-brand-black p-6 flex flex-col gap-6 relative overflow-y-auto">
+            
+            <!-- Barra de Estadísticas -->
+            <div class="grid grid-cols-3 gap-3">
+                <div class="bg-brand-dark p-3 rounded border border-white/5 flex flex-col items-center">
+                    <span class="text-[10px] text-neutral-500 font-mono uppercase">Cadencia</span>
+                    <span class="text-xl font-mono text-white">120<span class="text-xs text-neutral-500">ppm</span></span>
                 </div>
-                <div>
-                    <h2 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Entrenador Divélun</h2>
-                    <p id="statusText" class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">
-                        Toque para iniciar instrucción
-                    </p>
+                <div class="bg-brand-dark p-3 rounded border border-white/5 flex flex-col items-center">
+                    <span class="text-[10px] text-neutral-500 font-mono uppercase">Fuerza</span>
+                    <span class="text-xl font-mono text-brand-accent">88<span class="text-xs text-neutral-500">%</span></span>
+                </div>
+                <div class="bg-brand-dark p-3 rounded border border-white/5 flex flex-col items-center">
+                    <span class="text-[10px] text-neutral-500 font-mono uppercase">Tiempo</span>
+                    <span id="sessionTimer" class="text-xl font-mono text-white">00:00</span>
                 </div>
             </div>
 
-            <!-- Panel de Voz Sintética -->
-            <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700">
+            <!-- Panel de Inteligencia Artificial -->
+            <div class="flex-1 flex flex-col justify-end gap-4">
                 
-                <!-- Visualizador de Onda de Voz -->
-                <div class="flex flex-col items-center justify-center mb-5 h-8">
-                    <div id="voiceWave" class="voice-wave w-full flex justify-center gap-1">
-                        <!-- Barras visuales -->
-                        <div class="bar h-1"></div><div class="bar h-2"></div><div class="bar h-3"></div><div class="bar h-4"></div>
-                        <div class="bar h-3"></div><div class="bar h-5"></div><div class="bar h-2"></div><div class="bar h-1"></div>
-                        <div class="bar h-3"></div><div class="bar h-2"></div><div class="bar h-4"></div><div class="bar h-1"></div>
-                        <div class="bar h-1"></div><div class="bar h-2"></div><div class="bar h-3"></div><div class="bar h-4"></div>
-                        <div class="bar h-3"></div><div class="bar h-5"></div><div class="bar h-2"></div><div class="bar h-1"></div>
+                <!-- Visualizador de Audio -->
+                <div class="bg-brand-dark rounded-xl p-4 border border-white/5 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-xs font-mono text-brand-accent flex items-center gap-2">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
+                            AI COACHING INSTRUCTION
+                        </span>
+                        <div id="statusIndicator" class="text-[10px] bg-neutral-800 px-2 py-0.5 rounded text-neutral-400 uppercase">Standby</div>
+                    </div>
+
+                    <!-- Barras animadas -->
+                    <div id="equalizer" class="flex items-end justify-between h-12 gap-1 px-2">
+                        <!-- Generado por JS -->
                     </div>
                 </div>
 
-                <!-- Botón Principal -->
-                <button id="toggleBtn" onclick="toggleSpeech()" class="w-full py-3 px-4 bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 text-white rounded-lg font-semibold shadow-md transition-all flex items-center justify-center gap-2 group active:scale-95">
-                    <svg id="iconSpeaker" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                    </svg>
+                <!-- Botón de Acción Principal -->
+                <!-- shadow color actualizado a rojo -->
+                <button id="toggleBtn" onclick="toggleSpeech()" class="group relative w-full h-16 bg-brand-accent hover:bg-red-600 transition-all duration-300 rounded overflow-hidden flex items-center justify-center shadow-[0_0_20px_rgba(255,42,42,0.3)]">
+                    <!-- Fondo de textura -->
+                    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9IiMwMDAiIG9wYWNpdHk9IjAuMSIvPjwvc3ZnPg==')] opacity-20"></div>
                     
-                    <svg id="iconStop" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
-                    </svg>
-
-                    <span id="btnText">Explicar Técnica Jab</span>
+                    <div class="relative flex items-center gap-3 z-10">
+                        <span id="btnIcon" class="bg-black text-brand-accent p-1.5 rounded-full transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+                        </span>
+                        <span id="btnText" class="text-white font-bold text-lg tracking-wider uppercase">INICIAR ANÁLISIS</span>
+                    </div>
                 </button>
             </div>
+        </div>
+
+        <!-- Footer Decorativo -->
+        <div class="p-3 bg-brand-black border-t border-white/5 flex justify-center pb-6 sm:pb-3">
+            <div class="h-1 w-1/3 bg-neutral-800 rounded-full"></div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN DEL GUION TÉCNICO ---
+        // --- LÓGICA DEL SISTEMA ---
         const techniqueText = "Atención, boxeador. Para ejecutar un Jab perfecto, sigue estos pasos: Primero, colócate en tu postura de combate con la guardia alta. Segundo, extiende tu brazo delantero de forma explosiva y en línea recta. Tercero, justo antes del impacto, gira el puño para que la palma mire hacia el suelo. Cuarto, exhala aire al golpear. Y quinto, recupera la mano inmediatamente hacia tu rostro para protegerte. Repite: Extiende, gira, impacta y cubre.";
 
-        // Variables UI
         const btn = document.getElementById('toggleBtn');
         const btnText = document.getElementById('btnText');
-        const iconSpeaker = document.getElementById('iconSpeaker');
-        const iconStop = document.getElementById('iconStop');
-        const statusText = document.getElementById('statusText');
-        const statusDot = document.getElementById('statusDot');
-        const voiceWave = document.getElementById('voiceWave');
-        const videoElement = document.getElementById('exerciseVideo');
-        
-        // Detección de errores en video
-        const sources = videoElement.getElementsByTagName('source');
+        const btnIcon = document.getElementById('btnIcon');
+        const statusIndicator = document.getElementById('statusIndicator');
+        const equalizer = document.getElementById('equalizer');
+        const timerDisplay = document.getElementById('sessionTimer');
         
         let synth = window.speechSynthesis;
         let utterance = null;
-        let isSpeaking = false;
+        let animationFrame;
+        let sessionSeconds = 0;
 
-        // Configuración inicial de voz
+        // 1. Inicializar Ecualizador Visual
+        function initEqualizer() {
+            equalizer.innerHTML = '';
+            for(let i=0; i<20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'equalizer-bar w-1.5 bg-brand-accent rounded-t-sm';
+                bar.style.height = '4px';
+                bar.style.opacity = '0.3';
+                equalizer.appendChild(bar);
+            }
+        }
+        initEqualizer();
+
+        // 2. Animar Ecualizador
+        function animateEqualizer(isActive) {
+            const bars = document.querySelectorAll('.equalizer-bar');
+            
+            if (!isActive) {
+                bars.forEach(bar => {
+                    bar.style.height = '4px';
+                    bar.style.opacity = '0.3';
+                });
+                cancelAnimationFrame(animationFrame);
+                return;
+            }
+
+            function loop() {
+                bars.forEach(bar => {
+                    const h = Math.random() * 40 + 5; 
+                    bar.style.height = `${h}px`;
+                    bar.style.opacity = '1';
+                });
+                setTimeout(() => {
+                   animationFrame = requestAnimationFrame(loop);
+                }, 100);
+            }
+            loop();
+        }
+
+        // 3. Temporizador de Sesión
+        setInterval(() => {
+            sessionSeconds++;
+            const m = Math.floor(sessionSeconds / 60).toString().padStart(2, '0');
+            const s = (sessionSeconds % 60).toString().padStart(2, '0');
+            timerDisplay.innerText = `${m}:${s}`;
+        }, 1000);
+
+        // 4. Lógica de Voz
         function setupSpeech() {
             if (synth.speaking) synth.cancel();
-            
             utterance = new SpeechSynthesisUtterance(techniqueText);
-            utterance.lang = 'es-ES'; 
-            utterance.rate = 1.0;     
-            utterance.pitch = 1.0;    
-
+            utterance.lang = 'es-ES';
+            
             utterance.onstart = () => updateUI(true);
             utterance.onend = () => updateUI(false);
             utterance.onerror = () => updateUI(false);
         }
 
-        // Función principal de control
         function toggleSpeech() {
             if (!utterance) setupSpeech();
 
@@ -184,44 +253,51 @@
                 updateUI(false);
             } else {
                 const voices = synth.getVoices();
-                const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
-                if (googleVoice) utterance.voice = googleVoice;
-
+                const bestVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es')) || 
+                                  voices.find(v => v.lang.includes('es'));
+                
+                if (bestVoice) utterance.voice = bestVoice;
                 synth.speak(utterance);
             }
         }
 
-        // Actualizar la interfaz
-        function updateUI(active) {
-            isSpeaking = active;
-            
-            if (active) {
-                btnText.innerText = "Detener Explicación";
-                iconSpeaker.classList.add('hidden');
-                iconStop.classList.remove('hidden');
-                btn.classList.remove('bg-slate-900');
-                btn.classList.add('bg-blue-600', 'btn-pulse');
-                statusText.innerText = "Explicando técnica...";
-                statusText.classList.add('text-blue-500');
-                statusDot.classList.remove('bg-gray-400');
-                statusDot.classList.add('bg-green-500', 'animate-ping');
-                voiceWave.classList.add('voice-active');
+        function updateUI(isActive) {
+            if (isActive) {
+                // Estado ACTIVO (Hablando) -> Botón Blanco para "Stop"
+                btnText.innerText = "DETENER";
+                btnText.classList.replace('text-white', 'text-black');
+                
+                btn.classList.replace('bg-brand-accent', 'bg-brand-active');
+                btn.classList.remove('hover:bg-red-600'); // Quitar hover rojo
+                
+                // Icono invertido
+                btnIcon.classList.replace('text-brand-accent', 'text-black');
+                btnIcon.classList.replace('bg-black', 'bg-brand-accent'); // Icono fondo rojo
+
+                statusIndicator.innerText = "ANALYZING...";
+                statusIndicator.className = "text-[10px] bg-brand-accent text-white px-2 py-0.5 rounded font-bold animate-pulse shadow-[0_0_8px_rgba(255,42,42,0.6)]";
+                animateEqualizer(true);
             } else {
-                btnText.innerText = "Explicar Técnica Jab";
-                iconSpeaker.classList.remove('hidden');
-                iconStop.classList.add('hidden');
-                btn.classList.add('bg-slate-900');
-                btn.classList.remove('bg-blue-600', 'btn-pulse');
-                statusText.innerText = "Listo para instruir";
-                statusText.classList.remove('text-blue-500');
-                statusDot.classList.add('bg-gray-400');
-                statusDot.classList.remove('bg-green-500', 'animate-ping');
-                voiceWave.classList.remove('voice-active');
+                // Estado INACTIVO (Espera) -> Botón Rojo para "Start"
+                btnText.innerText = "INICIAR ANÁLISIS";
+                btnText.classList.replace('text-black', 'text-white');
+                
+                btn.classList.replace('bg-brand-active', 'bg-brand-accent');
+                btn.classList.add('hover:bg-red-600');
+                
+                // Icono normal
+                btnIcon.classList.replace('text-black', 'text-brand-accent');
+                btnIcon.classList.replace('bg-brand-accent', 'bg-black');
+
+                statusIndicator.innerText = "STANDBY";
+                statusIndicator.className = "text-[10px] bg-neutral-800 px-2 py-0.5 rounded text-neutral-400 uppercase";
+                animateEqualizer(false);
             }
         }
 
         window.speechSynthesis.onvoiceschanged = setupSpeech;
         setupSpeech();
+
     </script>
 </body>
 </html>
