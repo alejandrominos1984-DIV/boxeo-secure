@@ -55,33 +55,30 @@
 <body class="flex items-center justify-center min-h-screen p-4 bg-slate-100 dark:bg-slate-950">
 
     <!-- Tarjeta Principal -->
-    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden max-w-md w-full border border-slate-200 dark:border-slate-800">
+    <!-- CAMBIO: Aumentado max-w-md a max-w-lg para que el video 16:9 se luzca mejor -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden max-w-lg w-full border border-slate-200 dark:border-slate-800">
         
         <!-- 1. SECCIÓN DE VIDEO (ARRIBA) -->
-        <div class="relative w-full aspect-[9/16] bg-black group">
+        <!-- CAMBIO: aspect-[9/16] reemplazado por aspect-video (16:9) -->
+        <div class="relative w-full aspect-video bg-black group">
             
             <!-- VIDEO -->
             <video id="exerciseVideo" 
                    class="w-full h-full object-cover opacity-90" 
                    autoplay loop muted playsinline>
                 
-                <!-- OPCIÓN 1 (Recomendada): Ruta Relativa -->
-                <!-- Si el HTML y el video están en la MISMA carpeta en GitHub, esto funcionará directo -->
+                <!-- OPCIÓN 1: Ruta Relativa (Tu video en GitHub) -->
                 <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
                 
-                <!-- OPCIÓN 2 (Respaldo): Ruta Absoluta -->
-                <!-- Si Opción 1 falla, intenta usar la URL completa. REEMPLAZA TU_USUARIO y TU_REPO -->
-                <!-- <source src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/v-x9z2-sh01-div.mp4" type="video/mp4"> -->
-                
-                <!-- OPCIÓN 3 (Respaldo final): Video de ejemplo si no encuentra el tuyo -->
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxer-training-in-a-gym-4835-large.mp4" type="video/mp4">
+                <!-- OPCIÓN 2 (Respaldo): Video de ejemplo horizontal para probar el diseño -->
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
                 
                 Tu navegador no soporta video.
             </video>
             
-            <!-- Mensaje de error si falla el video (visible solo si falla) -->
+            <!-- Mensaje de error si falla el video -->
             <div id="videoError" class="hidden absolute inset-0 flex items-center justify-center bg-black/80 p-6 text-center">
-                <p class="text-white text-sm">No se pudo cargar el video 'v-x9z2-sh01-div.mp4'. Verifica que el nombre sea exacto y esté en la misma carpeta.</p>
+                <p class="text-white text-sm">No se pudo cargar el video 'v-x9z2-sh01-div.mp4'.</p>
             </div>
             
             <!-- Overlay estético -->
@@ -159,8 +156,6 @@
         
         // Detección de errores en video
         const sources = videoElement.getElementsByTagName('source');
-        // Si el último source falla (que es el de backup), mostramos error?
-        // En realidad el navegador prueba en orden. Si falla el primero, va al segundo.
         
         let synth = window.speechSynthesis;
         let utterance = null;
