@@ -1,37 +1,235 @@
-<div class="video-wrapper">
-    <video id="exerciseVideo" autoplay loop muted playsinline controlsList="nodownload">
-        <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
-    </video>
-</div>
-
-<div class="coaching-box">
-    <div class="panel-header">ENTRENADOR DIVÉLUN AI</div>
-    <p id="audioStatus" style="font-size: 0.8rem; color: #888;">Pulsa para escuchar la técnica completa</p>
-    <button class="btn-action" onclick="toggleCoaching()">
-        <span id="btnText">REPRODUCIR INSTRUCCIÓN</span>
-    </button>
-</div>
-
-<audio id="coachAudio" preload="auto">
-    <source src="explicacion-cross-pro.mp3" type="audio/mpeg">
-</audio>
-
-<script>
-    const coachAudio = document.getElementById('coachAudio');
-    const btnText = document.getElementById('btnText');
-
-    function toggleCoaching() {
-        if (coachAudio.paused) {
-            coachAudio.play();
-            btnText.innerText = "PAUSAR ENTRENADOR";
-        } else {
-            coachAudio.pause();
-            btnText.innerText = "REPRODUCIR INSTRUCCIÓN";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador Divélun AI - Técnica Jab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        /* Animación para el botón activo */
+        .btn-pulse {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
         }
-    }
+        
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
 
-    // Al terminar el audio, el botón vuelve a su estado original
-    coachAudio.onended = () => {
-        btnText.innerText = "REPRODUCIR INSTRUCCIÓN";
-    };
-</script>
+        /* Animación de Onda de Voz (Sustituye a la barra de progreso) */
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 20px;
+            gap: 4px;
+        }
+        
+        .bar {
+            width: 4px;
+            height: 4px;
+            background-color: #3b82f6;
+            border-radius: 2px;
+            animation: sound 0ms -800ms linear infinite alternate;
+            transition: height 0.1s ease;
+        }
+
+        .voice-active .bar {
+            animation-duration: 450ms;
+        }
+
+        @keyframes sound {
+            0% { height: 4px; opacity: 0.5; }
+            100% { height: 20px; opacity: 1; }
+        }
+
+        /* Ocultar controles nativos de video */
+        video::-webkit-media-controls { display:none !important; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 bg-slate-100 dark:bg-slate-950">
+
+    <!-- Tarjeta Principal -->
+    <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden max-w-md w-full border border-slate-200 dark:border-slate-800">
+        
+        <!-- 1. SECCIÓN DE VIDEO (ARRIBA) -->
+        <div class="relative w-full aspect-[9/16] bg-black group">
+            
+            <!-- VIDEO: Aquí pondrás tu enlace de GitHub -->
+            <!-- Ejemplo para GitHub: src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/video_jab.mp4" -->
+            <video id="exerciseVideo" 
+                   class="w-full h-full object-cover opacity-90" 
+                   autoplay loop muted playsinline>
+                <!-- Video placeholder de boxeo -->
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxer-training-in-a-gym-4835-large.mp4" type="video/mp4">
+                Tu navegador no soporta video.
+            </video>
+            
+            <!-- Overlay estético -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
+
+            <div class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-lg backdrop-blur-sm">
+                Técnica: JAB
+            </div>
+        </div>
+
+        <!-- 2. SECCIÓN DE AUDIO / CONTROLES (ABAJO) -->
+        <div class="p-6 relative -mt-6 bg-white dark:bg-slate-900 rounded-t-3xl z-10 transition-colors">
+            
+            <!-- Cabecera -->
+            <div class="flex items-center space-x-4 mb-6">
+                <div class="relative">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        AI
+                    </div>
+                    <div id="statusDot" class="absolute bottom-0 right-0 w-3 h-3 bg-gray-400 border-2 border-white dark:border-slate-900 rounded-full transition-colors"></div>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 dark:text-white leading-tight">Entrenador Divélun</h2>
+                    <p id="statusText" class="text-xs text-slate-500 dark:text-slate-400 font-medium uppercase tracking-wide">
+                        Toque para iniciar instrucción
+                    </p>
+                </div>
+            </div>
+
+            <!-- Panel de Voz Sintética -->
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700">
+                
+                <!-- Visualizador de Onda de Voz (Sustituye barra de progreso) -->
+                <div class="flex flex-col items-center justify-center mb-5 h-8">
+                    <div id="voiceWave" class="voice-wave w-full flex justify-center gap-1">
+                        <!-- Generamos barras visuales con JS o estáticas -->
+                        <div class="bar h-1"></div><div class="bar h-2"></div><div class="bar h-3"></div><div class="bar h-4"></div>
+                        <div class="bar h-3"></div><div class="bar h-5"></div><div class="bar h-2"></div><div class="bar h-1"></div>
+                        <div class="bar h-3"></div><div class="bar h-2"></div><div class="bar h-4"></div><div class="bar h-1"></div>
+                        <div class="bar h-1"></div><div class="bar h-2"></div><div class="bar h-3"></div><div class="bar h-4"></div>
+                        <div class="bar h-3"></div><div class="bar h-5"></div><div class="bar h-2"></div><div class="bar h-1"></div>
+                    </div>
+                </div>
+
+                <!-- Botón Principal -->
+                <button id="toggleBtn" onclick="toggleSpeech()" class="w-full py-3 px-4 bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-500 text-white rounded-lg font-semibold shadow-md transition-all flex items-center justify-center gap-2 group active:scale-95">
+                    <svg id="iconSpeaker" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                    
+                    <svg id="iconStop" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                    </svg>
+
+                    <span id="btnText">Explicar Técnica Jab</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURACIÓN DEL GUION TÉCNICO ---
+        const techniqueText = "Atención, boxeador. Para ejecutar un Jab perfecto, sigue estos pasos: Primero, colócate en tu postura de combate con la guardia alta. Segundo, extiende tu brazo delantero de forma explosiva y en línea recta. Tercero, justo antes del impacto, gira el puño para que la palma mire hacia el suelo. Cuarto, exhala aire al golpear. Y quinto, recupera la mano inmediatamente hacia tu rostro para protegerte. Repite: Extiende, gira, impacta y cubre.";
+
+        // Variables UI
+        const btn = document.getElementById('toggleBtn');
+        const btnText = document.getElementById('btnText');
+        const iconSpeaker = document.getElementById('iconSpeaker');
+        const iconStop = document.getElementById('iconStop');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const voiceWave = document.getElementById('voiceWave');
+        
+        let synth = window.speechSynthesis;
+        let utterance = null;
+        let isSpeaking = false;
+
+        // Configuración inicial de voz
+        function setupSpeech() {
+            // Cancelar cualquier audio previo al recargar
+            if (synth.speaking) synth.cancel();
+            
+            utterance = new SpeechSynthesisUtterance(techniqueText);
+            utterance.lang = 'es-ES'; // Preferencia Español
+            utterance.rate = 1.0;     // Velocidad normal
+            utterance.pitch = 1.0;    // Tono normal
+
+            // Eventos del habla
+            utterance.onstart = () => updateUI(true);
+            utterance.onend = () => updateUI(false);
+            utterance.onerror = () => updateUI(false);
+        }
+
+        // Función principal de control
+        function toggleSpeech() {
+            if (!utterance) setupSpeech();
+
+            if (synth.speaking) {
+                // Si está hablando, lo detenemos (reset)
+                synth.cancel();
+                updateUI(false);
+            } else {
+                // Intentamos buscar una voz mejor (Google Español si existe)
+                const voices = synth.getVoices();
+                const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
+                if (googleVoice) utterance.voice = googleVoice;
+
+                synth.speak(utterance);
+            }
+        }
+
+        // Actualizar la interfaz
+        function updateUI(active) {
+            isSpeaking = active;
+            
+            if (active) {
+                btnText.innerText = "Detener Explicación";
+                iconSpeaker.classList.add('hidden');
+                iconStop.classList.remove('hidden');
+                
+                // Estilos activo
+                btn.classList.remove('bg-slate-900');
+                btn.classList.add('bg-blue-600', 'btn-pulse');
+                
+                // Texto estado
+                statusText.innerText = "Explicando técnica...";
+                statusText.classList.add('text-blue-500');
+                
+                // Indicador visual
+                statusDot.classList.remove('bg-gray-400');
+                statusDot.classList.add('bg-green-500', 'animate-ping');
+                
+                // Onda de audio
+                voiceWave.classList.add('voice-active');
+            } else {
+                btnText.innerText = "Explicar Técnica Jab";
+                iconSpeaker.classList.remove('hidden');
+                iconStop.classList.add('hidden');
+                
+                // Estilos inactivo
+                btn.classList.add('bg-slate-900');
+                btn.classList.remove('bg-blue-600', 'btn-pulse');
+                
+                // Texto estado
+                statusText.innerText = "Listo para instruir";
+                statusText.classList.remove('text-blue-500');
+                
+                // Indicador visual
+                statusDot.classList.add('bg-gray-400');
+                statusDot.classList.remove('bg-green-500', 'animate-ping');
+                
+                // Onda de audio
+                voiceWave.classList.remove('voice-active');
+            }
+        }
+
+        // Cargar voces al inicio (necesario en Chrome)
+        window.speechSynthesis.onvoiceschanged = setupSpeech;
+        // Inicializar al cargar página
+        setupSpeech();
+
+    </script>
+</body>
+</html>
