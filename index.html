@@ -1,176 +1,37 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Boxing Elite</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg: #000000;
-            --accent: #ff3b30; /* Rojo Boxeo */
-            --plyr-color-main: var(--accent);
+<div class="video-wrapper">
+    <video id="exerciseVideo" autoplay loop muted playsinline controlsList="nodownload">
+        <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
+    </video>
+</div>
+
+<div class="coaching-box">
+    <div class="panel-header">ENTRENADOR DIVÉLUN AI</div>
+    <p id="audioStatus" style="font-size: 0.8rem; color: #888;">Pulsa para escuchar la técnica completa</p>
+    <button class="btn-action" onclick="toggleCoaching()">
+        <span id="btnText">REPRODUCIR INSTRUCCIÓN</span>
+    </button>
+</div>
+
+<audio id="coachAudio" preload="auto">
+    <source src="explicacion-cross-pro.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const coachAudio = document.getElementById('coachAudio');
+    const btnText = document.getElementById('btnText');
+
+    function toggleCoaching() {
+        if (coachAudio.paused) {
+            coachAudio.play();
+            btnText.innerText = "PAUSAR ENTRENADOR";
+        } else {
+            coachAudio.pause();
+            btnText.innerText = "REPRODUCIR INSTRUCCIÓN";
         }
+    }
 
-        body { 
-            margin: 0; 
-            background: var(--bg); 
-            font-family: 'Inter', sans-serif; 
-            color: white; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh; 
-            overflow-x: hidden; 
-        }
-
-        /* --- CONTENEDOR DE VIDEO (ANCHO COMPLETO) --- */
-        .video-wrapper {
-            width: 100%;
-            background: #000;
-            position: relative;
-            line-height: 0;
-        }
-
-        /* --- BANNER MATERIAL (BLANCO/ROJO) --- */
-        .material-banner {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            background: #ffffff;
-            color: #000000;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-            z-index: 10;
-            border-radius: 4px;
-            font-weight: 900;
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-            transition: opacity 0.5s ease;
-        }
-        .material-banner svg { width: 16px; height: 16px; stroke: #ff3b30; stroke-width: 3; }
-        .force-hide { opacity: 0; pointer-events: none; }
-
-        /* --- CONTROLES PERSONALIZADOS --- */
-        .plyr__controls {
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important;
-            padding: 15px !important;
-        }
-
-        /* Barra de progreso ultra-corta centrada */
-        .plyr__progress {
-            flex: 0 0 auto !important;
-            width: 80px !important;
-            margin-left: 15px !important;
-        }
-
-        /* Tiempo de duración a la izquierda del banner */
-        .plyr__time--duration {
-            display: block !important;
-            visibility: visible !important;
-            font-weight: 700 !important;
-            font-size: 0.8rem !important;
-            margin-left: auto !important;
-            margin-right: 150px !important; /* Espacio para el banner */
-        }
-        .plyr__time--current { display: none !important; }
-
-        /* --- ANIMACIÓN DOBLE TOQUE --- */
-        .tap-area {
-            position: absolute; top: 0; height: 100%; width: 50%;
-            display: flex; align-items: center; justify-content: center;
-            z-index: 5; opacity: 0; pointer-events: none;
-            transition: opacity 0.3s;
-        }
-        .tap-area.left { left: 0; }
-        .tap-area.right { right: 0; }
-        .tap-area.animate { opacity: 1; background: rgba(255, 59, 48, 0.1); }
-        .tap-icon { color: white; text-align: center; }
-        .tap-icon svg { width: 50px; height: 50px; fill: var(--accent); }
-
-        /* --- CONTENIDO DEBAJO --- */
-        .content {
-            padding: 30px 20px;
-            max-width: 600px;
-            width: 100%;
-        }
-        .content h1 { font-size: 2rem; font-weight: 900; margin: 0 0 10px 0; letter-spacing: -1px; }
-        .content p { color: #888; line-height: 1.6; }
-    </style>
-</head>
-<body>
-
-    <div class="video-wrapper" id="videoContainer">
-        <div class="tap-area left" id="tapLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg></div></div>
-        <div class="tap-area right" id="tapRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg></div></div>
-
-        <a href="guia-tecnica.pdf" download class="material-banner" id="materialBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-            <span>MATERIAL</span>
-        </a>
-
-        <video id="player" playsinline controls data-poster="poster-boxeo.jpg">
-            <source src="video-clase.mp4" type="video/mp4" />
-        </video>
-    </div>
-
-    <div class="content">
-        <h1>Entrenamiento Élite</h1>
-        <p>Domina las combinaciones de poder. Usa el doble toque lateral para repetir los movimientos técnicos de la clase.</p>
-    </div>
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    <script>
-        const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'duration'],
-            tooltips: { controls: false, seek: false }
-        });
-
-        const banner = document.getElementById('materialBtn');
-        const container = document.getElementById('videoContainer');
-        const tapLeft = document.getElementById('tapLeft');
-        const tapRight = document.getElementById('tapRight');
-        let lastTapTime = 0;
-        let hideTimer;
-
-        // Gestión de visibilidad del banner
-        player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
-        player.on('controlshidden', () => { hideTimer = setTimeout(() => banner.classList.add('force-hide'), 2000); });
-
-        // Lógica de Doble Toque/Clic
-        container.addEventListener('click', (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.material-banner')) return;
-            
-            const now = Date.now();
-            if (now - lastTapTime < 300) {
-                e.preventDefault();
-                const rect = container.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                
-                if (x < rect.width / 2) {
-                    player.rewind(10);
-                    showFeedback(tapLeft);
-                } else {
-                    player.forward(10);
-                    showFeedback(tapRight);
-                }
-            }
-            lastTapTime = now;
-        });
-
-        function showFeedback(el) {
-            el.classList.add('animate');
-            setTimeout(() => el.classList.remove('animate'), 500);
-        }
-
-        // Bloqueo de menú contextual para proteger el video
-        container.addEventListener('contextmenu', e => e.preventDefault());
-    </script>
-</body>
-</html>
+    // Al terminar el audio, el botón vuelve a su estado original
+    coachAudio.onended = () => {
+        btnText.innerText = "REPRODUCIR INSTRUCCIÓN";
+    };
+</script>
