@@ -21,7 +21,7 @@
             100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
         }
 
-        /* Animación de Onda de Voz (Sustituye a la barra de progreso) */
+        /* Animación de Onda de Voz */
         .voice-wave {
             display: flex;
             align-items: center;
@@ -60,13 +60,19 @@
         <!-- 1. SECCIÓN DE VIDEO (ARRIBA) -->
         <div class="relative w-full aspect-[9/16] bg-black group">
             
-            <!-- VIDEO: Aquí pondrás tu enlace de GitHub -->
-            <!-- Ejemplo para GitHub: src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/video_jab.mp4" -->
             <video id="exerciseVideo" 
                    class="w-full h-full object-cover opacity-90" 
                    autoplay loop muted playsinline>
-                <!-- Video placeholder de boxeo -->
+                
+                <!-- IMPORTANTE: Edita TU_USUARIO y TU_REPOSITORIO abajo -->
+                <!-- El formato RAW de GitHub suele ser: https://raw.githubusercontent.com/[USUARIO]/[REPO]/[RAMA]/[ARCHIVO] -->
+                <!-- Asumimos que la rama es 'main' o 'master' -->
+                
+                <source src="https://raw.githubusercontent.com/TU_USUARIO/TU_REPOSITORIO/main/v-x9z2-sh01-div.mp4" type="video/mp4">
+                
+                <!-- Video de respaldo (se verá si el de arriba falla o no has puesto tu usuario) -->
                 <source src="https://assets.mixkit.co/videos/preview/mixkit-boxer-training-in-a-gym-4835-large.mp4" type="video/mp4">
+                
                 Tu navegador no soporta video.
             </video>
             
@@ -100,10 +106,10 @@
             <!-- Panel de Voz Sintética -->
             <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-5 border border-slate-100 dark:border-slate-700">
                 
-                <!-- Visualizador de Onda de Voz (Sustituye barra de progreso) -->
+                <!-- Visualizador de Onda de Voz -->
                 <div class="flex flex-col items-center justify-center mb-5 h-8">
                     <div id="voiceWave" class="voice-wave w-full flex justify-center gap-1">
-                        <!-- Generamos barras visuales con JS o estáticas -->
+                        <!-- Barras visuales -->
                         <div class="bar h-1"></div><div class="bar h-2"></div><div class="bar h-3"></div><div class="bar h-4"></div>
                         <div class="bar h-3"></div><div class="bar h-5"></div><div class="bar h-2"></div><div class="bar h-1"></div>
                         <div class="bar h-3"></div><div class="bar h-2"></div><div class="bar h-4"></div><div class="bar h-1"></div>
@@ -148,15 +154,13 @@
 
         // Configuración inicial de voz
         function setupSpeech() {
-            // Cancelar cualquier audio previo al recargar
             if (synth.speaking) synth.cancel();
             
             utterance = new SpeechSynthesisUtterance(techniqueText);
-            utterance.lang = 'es-ES'; // Preferencia Español
-            utterance.rate = 1.0;     // Velocidad normal
-            utterance.pitch = 1.0;    // Tono normal
+            utterance.lang = 'es-ES'; 
+            utterance.rate = 1.0;     
+            utterance.pitch = 1.0;    
 
-            // Eventos del habla
             utterance.onstart = () => updateUI(true);
             utterance.onend = () => updateUI(false);
             utterance.onerror = () => updateUI(false);
@@ -167,11 +171,9 @@
             if (!utterance) setupSpeech();
 
             if (synth.speaking) {
-                // Si está hablando, lo detenemos (reset)
                 synth.cancel();
                 updateUI(false);
             } else {
-                // Intentamos buscar una voz mejor (Google Español si existe)
                 const voices = synth.getVoices();
                 const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
                 if (googleVoice) utterance.voice = googleVoice;
@@ -188,48 +190,29 @@
                 btnText.innerText = "Detener Explicación";
                 iconSpeaker.classList.add('hidden');
                 iconStop.classList.remove('hidden');
-                
-                // Estilos activo
                 btn.classList.remove('bg-slate-900');
                 btn.classList.add('bg-blue-600', 'btn-pulse');
-                
-                // Texto estado
                 statusText.innerText = "Explicando técnica...";
                 statusText.classList.add('text-blue-500');
-                
-                // Indicador visual
                 statusDot.classList.remove('bg-gray-400');
                 statusDot.classList.add('bg-green-500', 'animate-ping');
-                
-                // Onda de audio
                 voiceWave.classList.add('voice-active');
             } else {
                 btnText.innerText = "Explicar Técnica Jab";
                 iconSpeaker.classList.remove('hidden');
                 iconStop.classList.add('hidden');
-                
-                // Estilos inactivo
                 btn.classList.add('bg-slate-900');
                 btn.classList.remove('bg-blue-600', 'btn-pulse');
-                
-                // Texto estado
                 statusText.innerText = "Listo para instruir";
                 statusText.classList.remove('text-blue-500');
-                
-                // Indicador visual
                 statusDot.classList.add('bg-gray-400');
                 statusDot.classList.remove('bg-green-500', 'animate-ping');
-                
-                // Onda de audio
                 voiceWave.classList.remove('voice-active');
             }
         }
 
-        // Cargar voces al inicio (necesario en Chrome)
         window.speechSynthesis.onvoiceschanged = setupSpeech;
-        // Inicializar al cargar página
         setupSpeech();
-
     </script>
 </body>
 </html>
