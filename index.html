@@ -372,18 +372,29 @@
 
             <!-- Categories Section -->
             <section class="mb-20">
-                <div class="flex justify-between items-end mb-6">
-                    <h2 class="text-2xl font-black uppercase italic tracking-tighter text-white">Explora <span class="text-primary dash-text-glow">Categorías</span></h2>
-                    <a class="text-xs font-bold text-gray-400 hover:text-white uppercase tracking-wider transition-colors flex items-center gap-1" href="#">
-                        Ver todo <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                    </a>
+                <!-- CABECERA MEJORADA: Estética Profesional & Tech -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4 relative z-10">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
+                            <div class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-accent)]"></div>
+                            <span class="text-[10px] font-bold tracking-[0.25em] text-blue-200/70 uppercase">High Performance Selection</span>
+                        </div>
+                        <h2 class="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white leading-none">
+                            Rutinas <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent)] to-cyan-400 dash-text-glow relative z-10">
+                                Científicas
+                            </span>
+                        </h2>
+                    </div>
+                    <!-- Línea decorativa Tech -->
+                    <div class="h-[1px] w-full md:w-auto md:flex-1 bg-gradient-to-r from-primary/50 via-primary/20 to-transparent md:ml-6 mb-3 opacity-40"></div>
                 </div>
                 
                 <!-- Ajustado padding-top (pt-16) para dar espacio a las cabezas de las imágenes -->
                 <div class="flex gap-6 overflow-x-auto dash-no-scrollbar pb-12 pt-16 snap-x snap-mandatory px-2">
                     
                     <!-- Cat 1: Piernas (fit1.png) -->
-                    <div class="snap-start flex-shrink-0 w-80 relative group cursor-pointer">
+                    <!-- NOTA: Se cambió w-80 por w-[75vw] md:w-80 para efecto 'peek' en móvil -->
+                    <div class="snap-start flex-shrink-0 w-[75vw] md:w-80 relative group cursor-pointer">
                         <!-- Imagen Pop-Out: Ajustado a right-0 para moverla un poco a la izquierda -->
                         <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute bottom-0 right-0 h-[125%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-2 pop-out-img" alt="Piernas Model" />
                         
@@ -400,7 +411,7 @@
                     </div>
 
                     <!-- Cat 2: Abdomen (fit3.png) -->
-                    <div class="snap-start flex-shrink-0 w-80 relative group cursor-pointer">
+                    <div class="snap-start flex-shrink-0 w-[75vw] md:w-80 relative group cursor-pointer">
                         <!-- Imagen Pop-Out: AJUSTADA POSICIÓN (right-0 para equilibrio) -->
                         <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="absolute bottom-0 right-0 h-[125%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-2 pop-out-img" alt="Abdomen Model" />
 
@@ -417,7 +428,7 @@
                     </div>
 
                     <!-- Cat 3: Brazos (fit2.png) -->
-                    <div class="snap-start flex-shrink-0 w-80 relative group cursor-pointer">
+                    <div class="snap-start flex-shrink-0 w-[75vw] md:w-80 relative group cursor-pointer">
                         <!-- Imagen Pop-Out -->
                         <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute bottom-0 right-[-10px] h-[125%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-2 pop-out-img" alt="Brazos Model" />
 
@@ -434,7 +445,7 @@
                     </div>
 
                     <!-- Cat 4: Espalda (fit5.webp) -->
-                    <div class="snap-start flex-shrink-0 w-80 relative group cursor-pointer">
+                    <div class="snap-start flex-shrink-0 w-[75vw] md:w-80 relative group cursor-pointer">
                         <!-- Imagen Pop-Out: ACTUALIZADA A fit5 (2).webp -->
                         <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp" class="absolute bottom-0 right-[-10px] h-[125%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-2 pop-out-img" alt="Espalda Model" />
 
@@ -451,7 +462,7 @@
                     </div>
 
                     <!-- Cat 5: Ciencia Fitness -->
-                    <div class="snap-start flex-shrink-0 w-80 relative group cursor-pointer">
+                    <div class="snap-start flex-shrink-0 w-[75vw] md:w-80 relative group cursor-pointer">
                         <!-- Imagen Pop-Out: ACTUALIZADA A fit4.png (mismo modelo que Espalda) -->
                         <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="absolute bottom-0 right-[-10px] h-[125%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:scale-105 group-hover:-translate-y-2 pop-out-img" alt="Educación Model" />
 
