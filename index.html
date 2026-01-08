@@ -113,6 +113,14 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Fade in para las tarjetas de la lista */
+        @keyframes listFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-list-item {
+            animation: listFade 0.3s ease-out forwards;
+        }
     </style>
 </head>
 
@@ -475,113 +483,27 @@
                 </div>
 
                 <!-- Filtros (Tabs Scrollables) -->
-                <div class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
-                    <!-- Tab Activo -->
-                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon">
+                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
+                    <button onclick="filterBodyFocus('abs', this)" class="filter-btn active flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon transition-all duration-300">
                         Abdominales
                     </button>
-                    <!-- Tabs Inactivos -->
-                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    <button onclick="filterBodyFocus('brazos', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
                         Brazo
                     </button>
-                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    <button onclick="filterBodyFocus('pecho', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
                         Pecho
                     </button>
-                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    <button onclick="filterBodyFocus('piernas', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
                         Piernas
                     </button>
-                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                    <button onclick="filterBodyFocus('espalda', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
                         Espalda
                     </button>
                 </div>
 
-                <!-- Lista Vertical de Rutinas -->
-                <div class="flex flex-col gap-4">
-                    
-                    <!-- Item 1: Abdominales Principiante -->
-                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
-                        <!-- Imagen (Izquierda) -->
-                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="w-full h-full object-cover object-top opacity-90 group-hover:scale-110 transition-transform duration-500" alt="Abs Beginner">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        
-                        <!-- Info (Derecha) -->
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Principiante</h3>
-                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
-                                <span>15 min</span>
-                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                                <span>16 Ejercicios</span>
-                            </div>
-                            <!-- Intensidad (Rayos) -->
-                            <div class="flex gap-0.5">
-                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-gray-700">bolt</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Icono Arrow -->
-                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                        </div>
-                    </div>
-
-                    <!-- Item 2: Abdominales Intermedio -->
-                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
-                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
-                            <!-- Usando imagen de pecho como placeholder visual diferente, ajustado con object-position -->
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="w-full h-full object-cover object-center opacity-90 group-hover:scale-110 transition-transform duration-500" alt="Abs Intermediate">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Intermedio</h3>
-                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
-                                <span>24 min</span>
-                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                                <span>21 Ejercicios</span>
-                            </div>
-                            <div class="flex gap-0.5">
-                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
-                            </div>
-                        </div>
-                        
-                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                        </div>
-                    </div>
-
-                    <!-- Item 3: Abdominales Avanzado -->
-                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
-                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
-                            <!-- Reutilizando fit3 con otro estilo -->
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="w-full h-full object-cover object-left opacity-90 group-hover:scale-110 transition-transform duration-500 grayscale-[50%]" alt="Abs Advanced">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Avanzado</h3>
-                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
-                                <span>27 min</span>
-                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                                <span>21 Ejercicios</span>
-                            </div>
-                            <div class="flex gap-0.5">
-                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
-                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
-                            </div>
-                        </div>
-                        
-                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                        </div>
-                    </div>
-
+                <!-- Lista Vertical de Rutinas (Contenedor Dinámico) -->
+                <div id="body-focus-list" class="flex flex-col gap-4">
+                    <!-- El contenido se inyecta vía JS al cargar -->
                 </div>
             </section>
         </main>
@@ -637,7 +559,102 @@
 
     <!-- SCRIPTS -->
     <script>
-        // Función para selección de Menú Inferior
+        // --- BASE DE DATOS DE RUTINAS ---
+        const workoutsDB = {
+            'abs': [
+                { title: "Abdominales Principiante", time: "15 min", ex: "16", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-top" },
+                { title: "Abdominales Intermedio", time: "24 min", ex: "21", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-center", grayscale: true },
+                { title: "Abdominales Avanzado", time: "27 min", ex: "25", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-bottom", grayscale: false }
+            ],
+            'brazos': [
+                { title: "Brazos Principiante", time: "18 min", ex: "12", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-top" },
+                { title: "Brazos Tonificación", time: "25 min", ex: "18", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: true },
+                { title: "Brazos Massive", time: "35 min", ex: "24", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: false }
+            ],
+            'pecho': [
+                { title: "Pecho Básico", time: "20 min", ex: "14", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-top" },
+                { title: "Pecho Volumen", time: "30 min", ex: "20", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" },
+                { title: "Pecho Pro", time: "45 min", ex: "28", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" }
+            ],
+            'piernas': [
+                { title: "Piernas Inicio", time: "25 min", ex: "15", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+                { title: "Piernas Potencia", time: "40 min", ex: "22", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" },
+                { title: "Piernas Destrucción", time: "55 min", ex: "30", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" }
+            ],
+            'espalda': [
+                { title: "Espalda Sana", time: "20 min", ex: "14", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-top" },
+                { title: "Espalda en V", time: "35 min", ex: "20", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" },
+                { title: "Espalda Cobra", time: "50 min", ex: "26", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" }
+            ]
+        };
+
+        // --- LÓGICA DE FILTRADO ---
+        function filterBodyFocus(category, btnElement) {
+            // 1. Actualizar estado visual de los botones
+            const buttons = document.querySelectorAll('#body-focus-filters .filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white', 'shadow-neon');
+                btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
+            });
+
+            // Activar botón clickeado
+            if(btnElement) {
+                btnElement.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
+                btnElement.classList.add('bg-primary', 'text-white', 'shadow-neon');
+            }
+
+            // 2. Renderizar lista
+            const listContainer = document.getElementById('body-focus-list');
+            listContainer.innerHTML = ''; // Limpiar lista actual
+
+            const routines = workoutsDB[category];
+            
+            routines.forEach((routine, index) => {
+                // Generar HTML de los rayos de intensidad
+                let boltsHtml = '';
+                for(let i=0; i<3; i++) {
+                    const colorClass = i < routine.intensity 
+                        ? (routine.intensity === 3 ? 'text-red-500' : 'text-primary') 
+                        : 'text-gray-700';
+                    boltsHtml += `<span class="material-symbols-outlined text-[14px] ${colorClass} fill-current">bolt</span>`;
+                }
+
+                const itemHtml = `
+                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30 animate-list-item" style="animation-delay: ${index * 0.1}s">
+                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                            <img src="${routine.img}" class="w-full h-full object-cover ${routine.align} opacity-90 group-hover:scale-110 transition-transform duration-500 ${routine.grayscale ? 'grayscale-[50%]' : ''}" alt="${routine.title}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-white mb-1 truncate">${routine.title}</h3>
+                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
+                                <span>${routine.time}</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                                <span>${routine.ex} Ejercicios</span>
+                            </div>
+                            <div class="flex gap-0.5">
+                                ${boltsHtml}
+                            </div>
+                        </div>
+                        
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        }
+
+        // --- INICIALIZACIÓN ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cargar 'Abdominales' por defecto
+            const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+            filterBodyFocus('abs', firstBtn);
+        });
+
+        // Función para selección de Menú Inferior (Existente)
         function selectNav(clickedElement) {
             const allNavItems = document.querySelectorAll('.nav-item');
             
@@ -666,20 +683,17 @@
             activeTextLabel.classList.add('text-primary');
         }
 
-        // Función para animación de botón "Comenzar" (Cambio a Verde)
+        // Función para animación de botón "Comenzar" (Existente)
         function animateStart(btn) {
-            // Cambiar estilos base a verde
             btn.classList.remove('bg-primary', 'shadow-neon');
             btn.classList.add('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
 
-            // Cambiar texto e icono
             const textSpan = btn.querySelector('.btn-text');
             const iconSpan = btn.querySelector('.btn-icon');
 
             if (textSpan) textSpan.textContent = '¡Iniciando!';
             if (iconSpan) iconSpan.textContent = 'check_circle';
 
-            // Resetear después de 2 segundos (opcional, para demo)
             setTimeout(() => {
                 btn.classList.add('bg-primary', 'shadow-neon');
                 btn.classList.remove('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
