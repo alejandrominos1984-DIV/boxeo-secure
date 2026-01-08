@@ -1,820 +1,422 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Navy Elite - App View</title>
-
-    <!-- DEPENDENCIAS EXTERNAS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect"/>
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-
-    <!-- CONFIGURACIÓN DE INTEGRACIÓN -->
+    <title>Divélun | Short Educativo</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
-            --primary-accent: #0055ff;
-            --primary-navy: #0a0a1a;
-            --bg-black: #050505;
-            --text-main: #ffffff;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --brand-blue: #0066FF;
+            --brand-dark: #1A202C;
+            --brand-gray: #718096;
+            --plyr-color-main: var(--brand-blue);
         }
-    </style>
 
-    <!-- CONFIGURACIÓN TAILWIND -->
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "var(--primary-accent)", 
-                        "background-light": "#f3f4f6",
-                        "background-dark": "var(--bg-black)",
-                        "navy-base": "var(--primary-navy)",
-                        "card-dark": "#121212",
-                    },
-                    fontFamily: {
-                        display: ["Inter", "sans-serif"],
-                        sans: ["Inter", "sans-serif"],
-                    },
-                    boxShadow: {
-                        'neon': '0 0 20px rgba(0, 85, 255, 0.5)', 
-                        'neon-strong': '0 0 30px rgba(0, 85, 255, 0.6)',
-                        'neon-sm': '0 0 10px rgba(0, 85, 255, 0.4)',
-                    }
-                },
-            },
-        };
-    </script>
-
-    <!-- ESTILOS ESPECÍFICOS (APP MODE) -->
-    <style>
-        /* FONDO GLOBAL DE ESCRITORIO (NEUTRO) */
-        body {
-            background-color: #000000; /* Fondo negro puro fuera de la app */
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: #000000; /* Fondo negro para mejor contraste */
+            font-family: 'Inter', sans-serif; 
+            color: white; 
+            overflow-x: hidden;
             display: flex;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            margin: 0;
-            font-family: 'Inter', sans-serif;
         }
 
-        /* CONTENEDOR DE LA APP (MÓVIL SIMULADO) */
-        #view-dashboard {
+        /* --- CONTENEDOR PRINCIPAL VERTICAL (SHORT) --- */
+        .short-container {
             width: 100%;
-            max-width: 480px; /* Ancho máximo estricto */
-            background-color: var(--bg-black);
-            min-height: 100vh;
+            max-width: 360px; /* Ancho típico de un Short vertical */
             position: relative;
-            box-shadow: 0 0 50px rgba(20, 20, 30, 0.5);
-            overflow-x: hidden;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0, 102, 255, 0.2);
         }
 
-        /* SCROLLBAR OCULTO */
-        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
-        .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* GLASS PANEL */
-        .dash-glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        .dark .dash-glass-panel {
-            background: linear-gradient(145deg, rgba(20,20,30,0.8) 0%, rgba(10,10,20,0.95) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        /* --- VIDEO BOX VERTICAL --- */
+        .video-box-short {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9/16; /* Relación vertical para Shorts */
+            overflow: hidden;
+            line-height: 0;
+            z-index: 0;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            background: #000;
         }
 
-        /* UTILIDADES VISUALES */
-        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
-        .nav-glass {
-            background: rgba(10, 10, 26, 0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--glass-border);
+        /* --- FEEDBACK VISUAL PARA SHORTS --- */
+        .tap-feedback-short {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 102, 255, 0.08);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 0.3s ease;
         }
-        .pop-out-img {
-            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        .tap-feedback-short.left { 
+            left: 0; 
+            border-radius: 0;
+        }
+        .tap-feedback-short.right { 
+            right: 0; 
+            border-radius: 0;
+        }
+        .tap-icon-short { 
+            color: white; 
+            transform: scale(0.7); 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .tap-feedback-short.animate { 
+            opacity: 1; 
+        }
+        .tap-feedback-short.animate .tap-icon-short { 
+            transform: scale(1.1); 
+        }
+
+        /* --- BOTÓN INICIO PARA SHORTS --- */
+        .start-screen-short {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            cursor: pointer;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        .start-screen-short.hidden { 
+            opacity: 0; 
+            visibility: hidden; 
+            pointer-events: none; 
         }
         
-        /* ANIMACIONES */
-        @keyframes pop-icon {
-            0% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.15) translateY(-2px); }
-            100% { transform: scale(1) translateY(-4px); }
+        .big-play-btn-short { 
+            width: 100px;
+            height: 50px;
+            background: var(--brand-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
+            border-radius: 0; /* Rectangular sin esquinas */
+            border: none;
         }
-        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        
+        .big-play-btn-short svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
         }
-        /* Fade in para las tarjetas de la lista */
-        @keyframes listFade {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        /* --- BANNER DE RECURSOS PARA SHORTS --- */
+        .premium-banner-short {
+            position: absolute;
+            bottom: 20px;
+            right: 15px;
+            background: var(--brand-blue);
+            color: #ffffff;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            z-index: 15;
+            border-radius: 4px;
+            opacity: 1;
+            transition: opacity 0.6s ease;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.4);
+            font-weight: 800;
+            font-size: 0.75rem;
         }
-        .animate-list-item {
-            animation: listFade 0.3s ease-out forwards;
+        .premium-banner-short.force-hide { 
+            opacity: 0; 
+            pointer-events: none; 
+        }
+
+        /* --- CONTROLES DE PLYR MODIFICADOS PARA SHORTS --- */
+        .plyr__controls {
+            background: linear-gradient(transparent, rgba(0,0,0,0.7)) !important;
+            padding: 10px 12px !important;
+            min-height: 50px !important;
+        }
+        
+        /* Barra de progreso más corta y centrada */
+        .plyr__progress {
+            flex: 0 0 auto !important;
+            width: 60px !important;
+            margin: 0 auto !important;
+            order: 1;
+        }
+        
+        /* Duración visible y centrada */
+        .plyr__time--duration {
+            display: block !important;
+            visibility: visible !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            color: white !important;
+            margin: 0 auto !important;
+            order: 2;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 8px;
+        }
+        
+        /* Ocultar tiempo actual y otros controles no necesarios */
+        .plyr__time--current { 
+            display: none !important; 
+        }
+        
+        /* Botón de play más pequeño y centrado */
+        .plyr__control--play {
+            order: 0;
+            margin-right: 0 !important;
+        }
+        
+        /* Ocultar otros controles que no necesitamos para Shorts */
+        .plyr__controls .plyr__controls__item:not(.plyr__control--play):not(.plyr__progress):not(.plyr__time--duration) {
+            display: none !important;
+        }
+
+        /* --- CONTENIDO INFORMATIVO DEBAJO DEL SHORT --- */
+        .short-info {
+            padding: 18px 20px;
+            background: #1A202C;
+            color: white;
+            border-top: 1px solid #2D3748;
+        }
+        
+        .short-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            color: white;
+        }
+        
+        .short-description {
+            font-size: 0.9rem;
+            color: #CBD5E0;
+            line-height: 1.5;
+            margin: 0 0 15px 0;
+        }
+        
+        .short-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .short-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .short-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .short-action-btn.primary {
+            background: var(--brand-blue);
+        }
+        
+        .short-action-btn.primary:hover {
+            background: #0052CC;
         }
     </style>
 </head>
+<body>
 
-<body class="text-white selection:bg-primary selection:text-white">
-
-    <!-- CONTENEDOR APP PRINCIPAL -->
-    <div id="view-dashboard" class="relative bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors duration-300">
-        
-        <!-- Background Effects (Dentro del móvil) -->
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] dark:bg-primary/15"></div>
-            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] dark:bg-indigo-900/20"></div>
-        </div>
-
-        <!-- Main Content -->
-        <main class="relative z-10 w-full px-5 pb-32 pt-6">
+    <div class="short-container">
+        <div class="video-box-short" id="videoWrapperShort">
             
-            <!-- Header Section -->
-            <div class="flex justify-between items-center mb-8">
-                <!-- Status Chip -->
-                <div class="flex items-center gap-2 bg-white/50 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/5 rounded-full pl-2 pr-4 py-1.5 shadow-sm">
-                    <div class="w-2 h-2 rounded-full bg-primary shadow-neon animate-pulse ml-1"></div>
-                    <h3 class="text-[9px] font-bold tracking-[0.15em] text-gray-600 dark:text-gray-300 uppercase">Navy Elite</h3>
+            <!-- Feedback visual para doble toque -->
+            <div class="tap-feedback-short left" id="feedbackLeftShort">
+                <div class="tap-icon-short">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                        <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+                    </svg>
                 </div>
-
-                <!-- User Controls -->
-                <div class="flex items-center gap-3">
-                    <button class="dash-btn w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] shadow-sm border border-gray-200 dark:border-white/5 active:scale-95 transition-transform" onclick="document.documentElement.classList.toggle('dark')">
-                        <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">light_mode</span>
-                    </button>
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-[1.5px] relative group">
-                        <img alt="User" class="w-full h-full rounded-full object-cover border-2 border-background-light dark:border-background-dark" src="https://i.pravatar.cc/150?img=11"/>
-                    </div>
+            </div>
+            
+            <div class="tap-feedback-short right" id="feedbackRightShort">
+                <div class="tap-icon-short">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
+                        <path d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+                    </svg>
                 </div>
             </div>
 
-            <!-- Hero Title -->
-            <div class="mb-8 relative z-10">
-                <div>
-                    <div class="flex items-center gap-2 mb-3 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]" style="animation-fill-mode: forwards; animation-delay: 0.1s;">
-                        <span class="flex h-2.5 w-2.5 relative">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
-                        </span>
-                        <span class="text-[10px] font-bold uppercase tracking-wider text-primary">Sistema activo • Día 12</span>
-                    </div>
-                    <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter text-gray-900 dark:text-white mb-2">
-                        Protocolo <br/>
-                        <span class="text-primary dash-text-glow relative inline-block">
-                             Elite
-                            <svg class="absolute -bottom-1 left-0 w-full h-2 text-primary opacity-50" preserveAspectRatio="none" viewBox="0 0 100 10">
-                                <path d="M0 5 Q 50 10 100 5" fill="none" stroke="currentColor" stroke-width="2"></path>
-                            </svg>
-                        </span>
-                        <span class="text-transparent bg-clip-text bg-gradient-to-br from-gray-800 to-gray-400 dark:from-white dark:to-gray-600">Ops</span>
-                    </h1>
+            <!-- Overlay de inicio con botón rectangular azul -->
+            <div class="start-screen-short" id="startScreenShort">
+                <div class="big-play-btn-short">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
                 </div>
             </div>
 
-            <!-- Horizontal Scroll Cards (Rutinas Diarias) -->
-            <section class="mb-12">
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
-                    
-                    <!-- DÍA 1 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-primary/30 shadow-neon-sm">
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-100"></div>
-                            
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-primary">Día 1</span>
-                                    <span class="material-symbols-outlined text-primary">fitness_center</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-primary">Power</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Cuádriceps &amp; Gemelos</p>
-                            </div>
-                            
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 65 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Intensidad Alta</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 2 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 2</span>
-                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Push <br/><span class="text-gray-400">Focus</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Pecho, Hombro, Tríceps</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 55 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Media-Alta</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 3 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 3</span>
-                                    <span class="material-symbols-outlined text-gray-500">pool</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Active <br/><span class="text-gray-400">Rest</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Movilidad &amp; Cardio LISS</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 40 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Baja</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 4 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 4</span>
-                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Pull <br/><span class="text-gray-400">Hyper</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Espalda &amp; Bíceps</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 60 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Alta</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 5 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 5</span>
-                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-gray-400">Posterior</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Femoral &amp; Glúteo</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 70 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Muy Alta</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 6 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 6</span>
-                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Upper <br/><span class="text-gray-400">Body</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Torso Completo</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 50 min
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Media</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- DÍA 7 -->
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
-                            <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4">
-                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 7</span>
-                                    <span class="material-symbols-outlined text-gray-500">spa</span>
-                                </div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Full <br/><span class="text-gray-400">Recovery</span></h4>
-                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Descanso Total</p>
-                            </div>
-                            <div class="relative z-10 mt-auto">
-                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
-                                    <span class="material-symbols-outlined text-[14px]">schedule</span> --
-                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
-                                    <span>Relax</span>
-                                </div>
-                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
-                                    <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Categories Section (Rutinas Científicas) -->
-            <section class="mb-10">
-                <!-- Header Tech -->
-                <div class="flex flex-col mb-8 gap-2 relative z-10">
-                    <div class="flex items-center gap-2 mb-1 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
-                        <div class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-accent)]"></div>
-                        <span class="text-[9px] font-bold tracking-[0.25em] text-blue-200/70 uppercase">High Performance</span>
-                    </div>
-                    <div class="flex items-end gap-3">
-                         <h2 class="text-3xl font-black uppercase italic tracking-tighter text-white leading-none">
-                            Rutinas <br/>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent)] to-cyan-400 dash-text-glow">
-                                Científicas
-                            </span>
-                        </h2>
-                        <div class="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent mb-2 opacity-40"></div>
-                    </div>
-                </div>
-                
-                <!-- Scroll Horizontal con "Peek" Effect -->
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-12 pt-14 snap-x snap-mandatory -mx-5 px-5">
-                    
-                    <!-- Cat 1: Piernas -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute bottom-0 right-0 h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Piernas Model" />
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-blue-500/20 bg-blue-900/10">
-                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent z-0"></div>
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-blue-500/20 text-[8px] font-bold text-blue-300 uppercase tracking-wider mb-1.5 border border-blue-500/30">Top Pick</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Rutina <br/><span class="text-blue-400">Piernas</span></h3>
-                                <p class="text-[9px] font-medium text-blue-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 12
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cat 2: Abdomen -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="absolute bottom-0 right-0 h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Abdomen Model" />
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-purple-500/20 bg-purple-900/10">
-                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-transparent z-0"></div>
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-purple-500/20 text-[8px] font-bold text-purple-300 uppercase tracking-wider mb-1.5 border border-purple-500/30">Core</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Abdomen <br/><span class="text-purple-400">Steel</span></h3>
-                                <p class="text-[9px] font-medium text-purple-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]">local_fire_department</span> 8
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cat 3: Brazos -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Brazos Model" />
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-cyan-500/20 bg-cyan-900/10">
-                            <div class="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-transparent z-0"></div>
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-cyan-500/20 text-[8px] font-bold text-cyan-300 uppercase tracking-wider mb-1.5 border border-cyan-500/30">Hypertrophy</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Brazos <br/><span class="text-cyan-400">Massive</span></h3>
-                                <p class="text-[9px] font-medium text-cyan-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 10
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cat 4: Espalda -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Espalda Model" />
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-indigo-500/20 bg-indigo-900/10">
-                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-transparent z-0"></div>
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-indigo-500/20 text-[8px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5 border border-indigo-500/30">Width</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Espalda <br/><span class="text-indigo-400">Cobra</span></h3>
-                                <p class="text-[9px] font-medium text-indigo-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 14
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Cat 5: Ciencia Fitness -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Educación Model" />
-
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-emerald-500/20 bg-emerald-900/10">
-                            <div class="absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-transparent z-0"></div>
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-[8px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5 border border-emerald-500/30">Edu</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Ciencia <br/><span class="text-emerald-400">Fitness</span></h3>
-                                <p class="text-[9px] font-medium text-emerald-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
-                                    <span class="material-symbols-outlined text-[10px]">school</span> 15
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- SECCIÓN NUEVA: Body Focus (Centrado en el cuerpo) -->
-            <section class="mb-10">
-                <!-- Título Sección -->
-                <div class="flex items-center gap-2 mb-6 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.2s;">
-                    <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">
-                        Enfoque <span class="text-primary dash-text-glow">Corporal</span>
-                    </h2>
-                    <div class="h-[1px] flex-1 bg-white/10 ml-2"></div>
-                </div>
-
-                <!-- Filtros (Tabs Scrollables) -->
-                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
-                    <button onclick="filterBodyFocus('abs', this)" class="filter-btn active flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon transition-all duration-300">
-                        Abdominales
-                    </button>
-                    <button onclick="filterBodyFocus('brazos', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
-                        Brazo
-                    </button>
-                    <button onclick="filterBodyFocus('pecho', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
-                        Pecho
-                    </button>
-                    <button onclick="filterBodyFocus('piernas', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
-                        Piernas
-                    </button>
-                    <button onclick="filterBodyFocus('espalda', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
-                        Espalda
-                    </button>
-                </div>
-
-                <!-- Lista Vertical de Rutinas (Contenedor Dinámico) -->
-                <div id="body-focus-list" class="flex flex-col gap-4">
-                    <!-- El contenido se inyecta vía JS al cargar -->
-                </div>
-            </section>
-
-            <!-- SECCIÓN NUEVA: Descubre con Navy AI -->
-            <section class="mb-28"> <!-- Margen inferior extra para el menú flotante -->
-                <!-- Cabecera con Icono Animado -->
-                <div class="flex items-center gap-2 mb-6 px-1 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.3s;">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-cyan-400 flex items-center justify-center shadow-neon animate-pulse">
-                        <span class="material-symbols-outlined text-white text-[18px]">auto_awesome</span>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-black uppercase italic tracking-tighter text-white leading-none">
-                            Descubre con <br/>
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Navy AI</span>
-                        </h2>
-                    </div>
-                </div>
-
-                <!-- Scroll Horizontal Cards AI -->
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-8 -mx-5 px-5 snap-x snap-mandatory">
-                    
-                    <!-- Card 1: Cerebro -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
-                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-emerald-500/20 bg-gradient-to-b from-emerald-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <!-- Glow decorativo -->
-                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-colors"></div>
-                            
-                            <div class="mb-6 relative z-10">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
-                                    <span class="material-symbols-outlined text-[24px]">psychology</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Cómo el ejercicio cambia tu cerebro</h3>
-                                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                                    Neurociencia
-                                </p>
-                            </div>
-
-                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-600 hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-                                <span>Pregunta a Navy AI</span>
-                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Card 2: Mitos Peso -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
-                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-orange-500/20 bg-gradient-to-b from-orange-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/20 rounded-full blur-3xl group-hover:bg-orange-500/30 transition-colors"></div>
-                            
-                            <div class="mb-6 relative z-10">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
-                                    <span class="material-symbols-outlined text-[24px]">monitor_weight</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Desmontando mitos de pérdida de peso</h3>
-                                <p class="text-[10px] font-bold text-orange-400 uppercase tracking-wider flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
-                                    Realidad vs Ficción
-                                </p>
-                            </div>
-
-                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-orange-600 hover:border-orange-500 hover:shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-                                <span>Pregunta a Navy AI</span>
-                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Card 3: Psicología -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
-                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-purple-500/20 bg-gradient-to-b from-purple-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-colors"></div>
-                            
-                            <div class="mb-6 relative z-10">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
-                                    <span class="material-symbols-outlined text-[24px]">model_training</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-white leading-tight mb-2">¿Por qué saltas los entrenamientos?</h3>
-                                <p class="text-[10px] font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-                                    Psicología
-                                </p>
-                            </div>
-
-                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-purple-600 hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-                                <span>Pregunta a Navy AI</span>
-                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Card 4: Ansiedad -->
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
-                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-cyan-500/20 bg-gradient-to-b from-cyan-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl group-hover:bg-cyan-500/30 transition-colors"></div>
-                            
-                            <div class="mb-6 relative z-10">
-                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center mb-4 shadow-lg shadow-cyan-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
-                                    <span class="material-symbols-outlined text-[24px]">self_improvement</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Supera la ansiedad con ejercicio</h3>
-                                <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-                                    Bienestar Mental
-                                </p>
-                            </div>
-
-                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-cyan-600 hover:border-cyan-500 hover:shadow-[0_0_15px_rgba(34,211,238,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
-                                <span>Pregunta a Navy AI</span>
-                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-        </main>
-
-        <!-- Bottom Navigation (Fixed and centered) -->
-        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
-            <nav id="nav-bar" class="nav-glass rounded-[2rem] p-2.5 px-5 flex justify-between items-center shadow-2xl shadow-black/80">
-                
-                <!-- Nav Item 1: Inicio -->
-                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group cursor-pointer relative" href="#">
-                    <div class="absolute -top-1 right-0 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#1a1a1a] z-10"></div>
-                    <div class="icon-container w-9 h-9 rounded-xl bg-primary shadow-neon text-white -translate-y-1 flex items-center justify-center transition-all duration-300">
-                        <span class="material-symbols-outlined text-[20px]">grid_view</span>
-                    </div>
-                    <span class="text-label text-[8px] font-bold text-primary uppercase tracking-wide mt-0.5 transition-colors duration-300">Inicio</span>
-                </a>
-                
-                <!-- Nav Item 2: Biblioteca -->
-                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                        <span class="material-symbols-outlined text-[20px]">fitness_center</span>
-                    </div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Biblio</span>
-                </a>
-                
-                <!-- Nav Item 3: Creador -->
-                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                        <span class="material-symbols-outlined text-[20px]">add_circle</span>
-                    </div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Crear</span>
-                </a>
-                
-                <!-- Nav Item 4: Progreso -->
-                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                        <span class="material-symbols-outlined text-[20px]">bar_chart</span>
-                    </div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Datos</span>
-                </a>
-                
-                <!-- Nav Item 5: IA Coach -->
-                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                        <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
-                    </div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">IA</span>
-                </a>
-
-            </nav>
+            <!-- Banner de recursos azul -->
+            <a href="short-material.pdf" download class="premium-banner-short" id="bannerMaterialShort">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>APUNTES</span>
+            </a>
+            
+            <!-- Reproductor Plyr con el Short de YouTube -->
+            <div id="playerShort" data-plyr-provider="youtube" data-plyr-embed-id="1mGXae-LCiM"></div>
+        </div>
+        
+        <!-- Información del Short -->
+        <div class="short-info">
+            <h2 class="short-title">Técnica Rápida: Mejora tu Pronunciación</h2>
+            <p class="short-description">Aprende un ejercicio de 60 segundos para perfeccionar tu acento en japonés. Usa el doble toque a los lados para repetir fragmentos clave.</p>
+            <div class="short-actions">
+                <button class="short-action-btn primary">Guardar Short</button>
+                <button class="short-action-btn">Compartir</button>
+            </div>
         </div>
     </div>
 
-    <!-- SCRIPTS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // --- BASE DE DATOS DE RUTINAS ---
-        const workoutsDB = {
-            'abs': [
-                { title: "Abdominales Principiante", time: "15 min", ex: "16", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-top" },
-                { title: "Abdominales Intermedio", time: "24 min", ex: "21", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-center", grayscale: true },
-                { title: "Abdominales Avanzado", time: "27 min", ex: "25", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-bottom", grayscale: false }
-            ],
-            'brazos': [
-                { title: "Brazos Principiante", time: "18 min", ex: "12", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-top" },
-                { title: "Brazos Tonificación", time: "25 min", ex: "18", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: true },
-                { title: "Brazos Massive", time: "35 min", ex: "24", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: false }
-            ],
-            'pecho': [
-                { title: "Pecho Básico", time: "20 min", ex: "14", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-top" },
-                { title: "Pecho Volumen", time: "30 min", ex: "20", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" },
-                { title: "Pecho Pro", time: "45 min", ex: "28", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" }
-            ],
-            'piernas': [
-                { title: "Piernas Inicio", time: "25 min", ex: "15", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
-                { title: "Piernas Potencia", time: "40 min", ex: "22", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" },
-                { title: "Piernas Destrucción", time: "55 min", ex: "30", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" }
-            ],
-            'espalda': [
-                { title: "Espalda Sana", time: "20 min", ex: "14", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-top" },
-                { title: "Espalda en V", time: "35 min", ex: "20", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" },
-                { title: "Espalda Cobra", time: "50 min", ex: "26", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" }
-            ]
-        };
-
-        // --- LÓGICA DE FILTRADO ---
-        function filterBodyFocus(category, btnElement) {
-            // 1. Actualizar estado visual de los botones
-            const buttons = document.querySelectorAll('#body-focus-filters .filter-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('bg-primary', 'text-white', 'shadow-neon');
-                btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
-            });
-
-            // Activar botón clickeado
-            if(btnElement) {
-                btnElement.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
-                btnElement.classList.add('bg-primary', 'text-white', 'shadow-neon');
+        // Inicializar reproductor para el Short
+        const playerShort = new Plyr('#playerShort', {
+            controls: ['play', 'progress', 'duration'], 
+            fullscreen: { enabled: true },
+            ratio: '9:16', // Forzar relación vertical para Shorts
+            youtube: { 
+                noCookie: true, 
+                rel: 0, 
+                modestbranding: 1,
+                // Configuraciones específicas para Shorts
+                playsinline: 1
             }
-
-            // 2. Renderizar lista
-            const listContainer = document.getElementById('body-focus-list');
-            listContainer.innerHTML = ''; // Limpiar lista actual
-
-            const routines = workoutsDB[category];
-            
-            routines.forEach((routine, index) => {
-                // Generar HTML de los rayos de intensidad
-                let boltsHtml = '';
-                for(let i=0; i<3; i++) {
-                    const colorClass = i < routine.intensity 
-                        ? (routine.intensity === 3 ? 'text-red-500' : 'text-primary') 
-                        : 'text-gray-700';
-                    boltsHtml += `<span class="material-symbols-outlined text-[14px] ${colorClass} fill-current">bolt</span>`;
-                }
-
-                const itemHtml = `
-                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30 animate-list-item" style="animation-delay: ${index * 0.1}s">
-                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
-                            <img src="${routine.img}" class="w-full h-full object-cover ${routine.align} opacity-90 group-hover:scale-110 transition-transform duration-500 ${routine.grayscale ? 'grayscale-[50%]' : ''}" alt="${routine.title}">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        </div>
-                        
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-sm font-bold text-white mb-1 truncate">${routine.title}</h3>
-                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
-                                <span>${routine.time}</span>
-                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
-                                <span>${routine.ex} Ejercicios</span>
-                            </div>
-                            <div class="flex gap-0.5">
-                                ${boltsHtml}
-                            </div>
-                        </div>
-                        
-                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
-                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                        </div>
-                    </div>
-                `;
-                listContainer.insertAdjacentHTML('beforeend', itemHtml);
-            });
-        }
-
-        // --- INICIALIZACIÓN ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Cargar 'Abdominales' por defecto
-            const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
-            filterBodyFocus('abs', firstBtn);
         });
 
-        // Función para selección de Menú Inferior (Existente)
-        function selectNav(clickedElement) {
-            const allNavItems = document.querySelectorAll('.nav-item');
-            
-            allNavItems.forEach(item => {
-                item.classList.add('opacity-50');
-                const iconContainer = item.querySelector('.icon-container');
-                iconContainer.classList.remove('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1', 'animate-pop');
-                iconContainer.classList.add('text-gray-500', 'dark:text-gray-400');
-                
-                const textLabel = item.querySelector('.text-label');
-                textLabel.classList.remove('text-primary');
-                textLabel.classList.add('text-gray-500', 'dark:text-gray-400');
-            });
+        // Referencias a elementos del DOM
+        const bannerShort = document.getElementById('bannerMaterialShort');
+        const startScreenShort = document.getElementById('startScreenShort');
+        const wrapperShort = document.getElementById('videoWrapperShort');
+        let hideTimerShort;
+        let lastTapTimeShort = 0;
+        let hasStartedShort = false;
 
-            clickedElement.classList.remove('opacity-50');
-            const activeIconContainer = clickedElement.querySelector('.icon-container');
-            activeIconContainer.classList.remove('text-gray-500', 'dark:text-gray-400');
-            activeIconContainer.classList.add('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1');
-            
-            requestAnimationFrame(() => {
-                activeIconContainer.classList.add('animate-pop');
-            });
-
-            const activeTextLabel = clickedElement.querySelector('.text-label');
-            activeTextLabel.classList.remove('text-gray-500', 'dark:text-gray-400');
-            activeTextLabel.classList.add('text-primary');
-        }
-
-        // Función para animación de botón "Comenzar" (Existente)
-        function animateStart(btn) {
-            btn.classList.remove('bg-primary', 'shadow-neon');
-            btn.classList.add('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
-
-            const textSpan = btn.querySelector('.btn-text');
-            const iconSpan = btn.querySelector('.btn-icon');
-
-            if (textSpan) textSpan.textContent = '¡Iniciando!';
-            if (iconSpan) iconSpan.textContent = 'check_circle';
-
+        // Controlar overlay de inicio
+        startScreenShort.addEventListener('click', () => { 
+            if (!hasStartedShort) {
+                playerShort.play(); 
+            }
+        });
+        
+        playerShort.on('playing', () => { 
+            if (!hasStartedShort) { 
+                startScreenShort.classList.add('hidden'); 
+                hasStartedShort = true; 
+            } 
+        });
+        
+        playerShort.on('pause', () => {
+            // Mostrar overlay de inicio solo si no es una pausa momentánea
             setTimeout(() => {
-                btn.classList.add('bg-primary', 'shadow-neon');
-                btn.classList.remove('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
-                if (textSpan) textSpan.textContent = 'Comenzar';
-                if (iconSpan) iconSpan.textContent = 'arrow_forward';
-            }, 2000);
-        }
+                if (playerShort.paused && hasStartedShort) {
+                    startScreenShort.classList.remove('hidden');
+                }
+            }, 300);
+        });
+
+        // Controlar visibilidad del banner y controles
+        playerShort.on('controlsshown', () => { 
+            clearTimeout(hideTimerShort); 
+            bannerShort.classList.remove('force-hide');
+        });
+
+        playerShort.on('controlshidden', () => { 
+            hideTimerShort = setTimeout(() => { 
+                bannerShort.classList.add('force-hide');
+            }, 1500); 
+        });
+
+        // Función para manejar el doble toque en Shorts
+        const handleDoubleActionShort = (e) => {
+            // No activar si se tocan los controles o el banner
+            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner-short')) return;
+            
+            const now = Date.now();
+            if (now - lastTapTimeShort < 300) {
+                e.preventDefault();
+                const rect = wrapperShort.getBoundingClientRect();
+                const x = (e.clientX || (e.changedTouches && e.changedTouches[0].clientX)) - rect.left;
+                
+                if (x < rect.width / 2) { 
+                    // Tocar lado izquierdo: retroceder 5 segundos
+                    playerShort.rewind(5); 
+                    showFeedbackShort(document.getElementById('feedbackLeftShort'));
+                } else { 
+                    // Tocar lado derecho: avanzar 5 segundos
+                    playerShort.forward(5); 
+                    showFeedbackShort(document.getElementById('feedbackRightShort'));
+                }
+            }
+            lastTapTimeShort = now;
+        };
+
+        // Mostrar feedback visual
+        const showFeedbackShort = (el) => {
+            if (!el) return;
+            
+            el.classList.remove('animate'); 
+            void el.offsetWidth; // Forzar reflow
+            el.classList.add('animate');
+            
+            setTimeout(() => {
+                el.classList.remove('animate');
+            }, 500);
+        };
+
+        // Event listeners para interacción táctil y de ratón
+        wrapperShort.addEventListener('click', handleDoubleActionShort);
+        wrapperShort.addEventListener('touchend', handleDoubleActionShort);
+        wrapperShort.addEventListener('dblclick', (e) => e.preventDefault(), true);
+        
+        // Reproducir automáticamente al hacer scroll en la vista (simulación)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasStartedShort) {
+                    // playerShort.play(); // Descomentar para reproducción automática
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(wrapperShort);
     </script>
 </body>
 </html>
