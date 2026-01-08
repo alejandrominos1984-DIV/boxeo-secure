@@ -18,7 +18,7 @@
         body { 
             margin: 0; 
             padding: 0; 
-            background: #000000; /* Fondo negro para mejor contraste */
+            background: #000000;
             font-family: 'Inter', sans-serif; 
             color: white; 
             overflow-x: hidden;
@@ -31,7 +31,7 @@
         /* --- CONTENEDOR PRINCIPAL VERTICAL (SHORT) --- */
         .short-container {
             width: 100%;
-            max-width: 360px; /* Ancho típico de un Short vertical */
+            max-width: 360px;
             position: relative;
             margin: 0 auto;
             background: #000;
@@ -44,87 +44,13 @@
         .video-box-short {
             position: relative;
             width: 100%;
-            aspect-ratio: 9/16; /* Relación vertical para Shorts */
+            aspect-ratio: 9/16;
             overflow: hidden;
             line-height: 0;
             z-index: 0;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
             background: #000;
-        }
-
-        /* --- FEEDBACK VISUAL PARA SHORTS --- */
-        .tap-feedback-short {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 102, 255, 0.08);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 5;
-            transition: opacity 0.3s ease;
-        }
-        .tap-feedback-short.left { 
-            left: 0; 
-            border-radius: 0;
-        }
-        .tap-feedback-short.right { 
-            right: 0; 
-            border-radius: 0;
-        }
-        .tap-icon-short { 
-            color: white; 
-            transform: scale(0.7); 
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-        }
-        .tap-feedback-short.animate { 
-            opacity: 1; 
-        }
-        .tap-feedback-short.animate .tap-icon-short { 
-            transform: scale(1.1); 
-        }
-
-        /* --- BOTÓN INICIO PARA SHORTS --- */
-        .start-screen-short {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            cursor: pointer;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        .start-screen-short.hidden { 
-            opacity: 0; 
-            visibility: hidden; 
-            pointer-events: none; 
-        }
-        
-        .big-play-btn-short { 
-            width: 100px;
-            height: 50px;
-            background: var(--brand-blue);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
-            border-radius: 0; /* Rectangular sin esquinas */
-            border: none;
-        }
-        
-        .big-play-btn-short svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
         }
 
         /* --- BANNER DE RECURSOS PARA SHORTS --- */
@@ -152,6 +78,44 @@
             pointer-events: none; 
         }
 
+        /* --- BARRA DE PROGRESO PERSONALIZADA --- */
+        .custom-progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 20;
+            cursor: pointer;
+        }
+        
+        .custom-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--brand-blue);
+            transition: width 0.1s linear;
+            position: relative;
+        }
+        
+        .custom-progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        
+        .custom-progress-container:hover .custom-progress-bar::after {
+            display: block;
+        }
+
         /* --- CONTROLES DE PLYR MODIFICADOS PARA SHORTS --- */
         .plyr__controls {
             background: linear-gradient(transparent, rgba(0,0,0,0.7)) !important;
@@ -159,12 +123,9 @@
             min-height: 50px !important;
         }
         
-        /* Barra de progreso más corta y centrada */
+        /* Ocultar barra de progreso de Plyr */
         .plyr__progress {
-            flex: 0 0 auto !important;
-            width: 60px !important;
-            margin: 0 auto !important;
-            order: 1;
+            display: none !important;
         }
         
         /* Duración visible y centrada */
@@ -179,7 +140,7 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 8px;
+            bottom: 12px;
         }
         
         /* Ocultar tiempo actual y otros controles no necesarios */
@@ -187,14 +148,13 @@
             display: none !important; 
         }
         
-        /* Botón de play más pequeño y centrado */
+        /* Ocultar botón de play */
         .plyr__control--play {
-            order: 0;
-            margin-right: 0 !important;
+            display: none !important;
         }
         
-        /* Ocultar otros controles que no necesitamos para Shorts */
-        .plyr__controls .plyr__controls__item:not(.plyr__control--play):not(.plyr__progress):not(.plyr__time--duration) {
+        /* Ocultar otros controles */
+        .plyr__controls .plyr__controls__item:not(.plyr__time--duration) {
             display: none !important;
         }
 
@@ -248,6 +208,22 @@
         .short-action-btn.primary:hover {
             background: #0052CC;
         }
+        
+        /* --- LOADING INDICATOR --- */
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 20px;
+            z-index: 25;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -255,30 +231,14 @@
     <div class="short-container">
         <div class="video-box-short" id="videoWrapperShort">
             
-            <!-- Feedback visual para doble toque -->
-            <div class="tap-feedback-short left" id="feedbackLeftShort">
-                <div class="tap-icon-short">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
-                        <path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
-                    </svg>
-                </div>
-            </div>
-            
-            <div class="tap-feedback-short right" id="feedbackRightShort">
-                <div class="tap-icon-short">
-                    <svg width="36" height="36" viewBox="0 0 24 24" fill="white">
-                        <path d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
-                    </svg>
-                </div>
+            <!-- Loading indicator -->
+            <div class="loading-indicator" id="loadingIndicator">
+                Cargando short...
             </div>
 
-            <!-- Overlay de inicio con botón rectangular azul -->
-            <div class="start-screen-short" id="startScreenShort">
-                <div class="big-play-btn-short">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                </div>
+            <!-- Barra de progreso personalizada -->
+            <div class="custom-progress-container" id="customProgress">
+                <div class="custom-progress-bar" id="customProgressBar"></div>
             </div>
 
             <!-- Banner de recursos azul -->
@@ -298,62 +258,57 @@
         <!-- Información del Short -->
         <div class="short-info">
             <h2 class="short-title">Técnica Rápida: Mejora tu Pronunciación</h2>
-            <p class="short-description">Aprende un ejercicio de 60 segundos para perfeccionar tu acento en japonés. Usa el doble toque a los lados para repetir fragmentos clave.</p>
+            <p class="short-description">Aprende un ejercicio de 60 segundos para perfeccionar tu acento en japonés. Usa la barra de progreso para navegar por el video.</p>
             <div class="short-actions">
-                <button class="short-action-btn primary">Guardar Short</button>
-                <button class="short-action-btn">Compartir</button>
+                <button class="short-action-btn primary" id="saveBtn">Guardar Short</button>
+                <button class="short-action-btn" id="shareBtn">Compartir</button>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // Inicializar reproductor para el Short
+        // Mostrar loading indicator
+        document.getElementById('loadingIndicator').style.display = 'block';
+        
+        // Inicializar reproductor para el Short con autoplay
         const playerShort = new Plyr('#playerShort', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: true },
-            ratio: '9:16', // Forzar relación vertical para Shorts
+            ratio: '9:16',
+            autoplay: true, // Reproducir automáticamente
+            muted: true, // Necesario para autoplay en algunos navegadores
             youtube: { 
                 noCookie: true, 
                 rel: 0, 
                 modestbranding: 1,
-                // Configuraciones específicas para Shorts
                 playsinline: 1
             }
         });
 
         // Referencias a elementos del DOM
         const bannerShort = document.getElementById('bannerMaterialShort');
-        const startScreenShort = document.getElementById('startScreenShort');
-        const wrapperShort = document.getElementById('videoWrapperShort');
+        const customProgress = document.getElementById('customProgress');
+        const customProgressBar = document.getElementById('customProgressBar');
+        const loadingIndicator = document.getElementById('loadingIndicator');
         let hideTimerShort;
-        let lastTapTimeShort = 0;
-        let hasStartedShort = false;
+        let isDragging = false;
 
-        // Controlar overlay de inicio
-        startScreenShort.addEventListener('click', () => { 
-            if (!hasStartedShort) {
-                playerShort.play(); 
+        // Ocultar loading cuando el video esté listo
+        playerShort.on('ready', () => {
+            loadingIndicator.style.display = 'none';
+            playerShort.muted = false; // Reactivar sonido después del autoplay
+        });
+
+        // Actualizar barra de progreso personalizada
+        playerShort.on('timeupdate', () => {
+            if (!isDragging && playerShort.duration) {
+                const percentage = (playerShort.currentTime / playerShort.duration) * 100;
+                customProgressBar.style.width = `${percentage}%`;
             }
         });
-        
-        playerShort.on('playing', () => { 
-            if (!hasStartedShort) { 
-                startScreenShort.classList.add('hidden'); 
-                hasStartedShort = true; 
-            } 
-        });
-        
-        playerShort.on('pause', () => {
-            // Mostrar overlay de inicio solo si no es una pausa momentánea
-            setTimeout(() => {
-                if (playerShort.paused && hasStartedShort) {
-                    startScreenShort.classList.remove('hidden');
-                }
-            }, 300);
-        });
 
-        // Controlar visibilidad del banner y controles
+        // Controlar visibilidad del banner
         playerShort.on('controlsshown', () => { 
             clearTimeout(hideTimerShort); 
             bannerShort.classList.remove('force-hide');
@@ -365,53 +320,101 @@
             }, 1500); 
         });
 
-        // Función para manejar el doble toque en Shorts
-        const handleDoubleActionShort = (e) => {
-            // No activar si se tocan los controles o el banner
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner-short')) return;
+        // Función para manejar clics en la barra de progreso
+        const handleProgressClick = (e) => {
+            if (!playerShort.duration) return;
             
-            const now = Date.now();
-            if (now - lastTapTimeShort < 300) {
-                e.preventDefault();
-                const rect = wrapperShort.getBoundingClientRect();
-                const x = (e.clientX || (e.changedTouches && e.changedTouches[0].clientX)) - rect.left;
+            const rect = customProgress.getBoundingClientRect();
+            const clickPosition = (e.clientX - rect.left) / rect.width;
+            const newTime = clickPosition * playerShort.duration;
+            
+            playerShort.currentTime = newTime;
+        };
+
+        // Función para manejar drag en la barra de progreso
+        const handleDragStart = (e) => {
+            isDragging = true;
+            document.addEventListener('mousemove', handleDragMove);
+            document.addEventListener('mouseup', handleDragEnd);
+            document.addEventListener('touchmove', handleDragMove);
+            document.addEventListener('touchend', handleDragEnd);
+        };
+
+        const handleDragMove = (e) => {
+            if (!isDragging || !playerShort.duration) return;
+            
+            const rect = customProgress.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            
+            if (clientX) {
+                const clickPosition = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                const newTime = clickPosition * playerShort.duration;
+                customProgressBar.style.width = `${clickPosition * 100}%`;
                 
-                if (x < rect.width / 2) { 
-                    // Tocar lado izquierdo: retroceder 5 segundos
-                    playerShort.rewind(5); 
-                    showFeedbackShort(document.getElementById('feedbackLeftShort'));
-                } else { 
-                    // Tocar lado derecho: avanzar 5 segundos
-                    playerShort.forward(5); 
-                    showFeedbackShort(document.getElementById('feedbackRightShort'));
-                }
+                // Solo actualizar el tiempo del video cada 100ms durante el drag para mejor rendimiento
+                clearTimeout(window.dragTimeout);
+                window.dragTimeout = setTimeout(() => {
+                    playerShort.currentTime = newTime;
+                }, 100);
             }
-            lastTapTimeShort = now;
         };
 
-        // Mostrar feedback visual
-        const showFeedbackShort = (el) => {
-            if (!el) return;
-            
-            el.classList.remove('animate'); 
-            void el.offsetWidth; // Forzar reflow
-            el.classList.add('animate');
-            
-            setTimeout(() => {
-                el.classList.remove('animate');
-            }, 500);
+        const handleDragEnd = () => {
+            isDragging = false;
+            document.removeEventListener('mousemove', handleDragMove);
+            document.removeEventListener('mouseup', handleDragEnd);
+            document.removeEventListener('touchmove', handleDragMove);
+            document.removeEventListener('touchend', handleDragEnd);
         };
 
-        // Event listeners para interacción táctil y de ratón
-        wrapperShort.addEventListener('click', handleDoubleActionShort);
-        wrapperShort.addEventListener('touchend', handleDoubleActionShort);
-        wrapperShort.addEventListener('dblclick', (e) => e.preventDefault(), true);
-        
-        // Reproducir automáticamente al hacer scroll en la vista (simulación)
+        // Event listeners para la barra de progreso
+        customProgress.addEventListener('click', handleProgressClick);
+        customProgress.addEventListener('mousedown', handleDragStart);
+        customProgress.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            handleDragStart(e);
+        });
+
+        // Deshabilitar doble toque para navegación
+        const wrapperShort = document.getElementById('videoWrapperShort');
+        wrapperShort.addEventListener('dblclick', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        wrapperShort.addEventListener('touchend', (e) => {
+            // Prevenir navegación por doble toque
+            if (e.touches.length === 0) {
+                e.stopPropagation();
+            }
+        });
+
+        // Funcionalidad de los botones
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            alert('Short guardado en tus favoritos');
+        });
+
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Divélun Short Educativo',
+                    text: 'Mira este short educativo de japonés',
+                    url: window.location.href
+                });
+            } else {
+                alert('Enlace copiado al portapapeles');
+                // Aquí podrías implementar copia al portapapeles
+            }
+        });
+
+        // Reproducir automáticamente cuando el video sea visible
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting && !hasStartedShort) {
-                    // playerShort.play(); // Descomentar para reproducción automática
+                if (entry.isIntersecting) {
+                    // Ya está en autoplay, pero asegurarnos
+                    if (playerShort.paused) {
+                        playerShort.play();
+                    }
                 }
             });
         }, { threshold: 0.5 });
