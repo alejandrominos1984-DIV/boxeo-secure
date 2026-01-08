@@ -53,6 +53,46 @@
             background: #000;
         }
 
+        /* --- BOTÓN DE REPRODUCCIÓN INICIAL --- */
+        .play-overlay-short {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            cursor: pointer;
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+        
+        .play-overlay-short.hidden { 
+            opacity: 0; 
+            visibility: hidden; 
+            pointer-events: none; 
+        }
+        
+        .play-btn-short { 
+            width: 100px;
+            height: 50px;
+            background: var(--brand-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 102, 255, 0.5);
+            border-radius: 0; /* Rectangular sin esquinas */
+            border: none;
+        }
+        
+        .play-btn-short svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
         /* --- BANNER DE RECURSOS PARA SHORTS --- */
         .premium-banner-short {
             position: absolute;
@@ -109,11 +149,12 @@
             background: white;
             border-radius: 50%;
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            display: none;
+            opacity: 0;
+            transition: opacity 0.2s;
         }
         
         .custom-progress-container:hover .custom-progress-bar::after {
-            display: block;
+            opacity: 1;
         }
 
         /* --- CONTROLES DE PLYR MODIFICADOS PARA SHORTS --- */
@@ -136,7 +177,6 @@
             font-weight: 700 !important;
             color: white !important;
             margin: 0 auto !important;
-            order: 2;
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
@@ -148,7 +188,7 @@
             display: none !important; 
         }
         
-        /* Ocultar botón de play */
+        /* Ocultar botón de play de Plyr */
         .plyr__control--play {
             display: none !important;
         }
@@ -208,22 +248,6 @@
         .short-action-btn.primary:hover {
             background: #0052CC;
         }
-        
-        /* --- LOADING INDICATOR --- */
-        .loading-indicator {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 0.9rem;
-            font-weight: 600;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
-            border-radius: 20px;
-            z-index: 25;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -231,9 +255,13 @@
     <div class="short-container">
         <div class="video-box-short" id="videoWrapperShort">
             
-            <!-- Loading indicator -->
-            <div class="loading-indicator" id="loadingIndicator">
-                Cargando short...
+            <!-- Overlay con botón de reproducción rectangular azul -->
+            <div class="play-overlay-short" id="playOverlayShort">
+                <div class="play-btn-short" id="playButtonShort">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </div>
             </div>
 
             <!-- Barra de progreso personalizada -->
@@ -268,16 +296,11 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // Mostrar loading indicator
-        document.getElementById('loadingIndicator').style.display = 'block';
-        
-        // Inicializar reproductor para el Short con autoplay
+        // Inicializar reproductor para el Short
         const playerShort = new Plyr('#playerShort', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: true },
             ratio: '9:16',
-            autoplay: true, // Reproducir automáticamente
-            muted: true, // Necesario para autoplay en algunos navegadores
             youtube: { 
                 noCookie: true, 
                 rel: 0, 
@@ -287,17 +310,40 @@
         });
 
         // Referencias a elementos del DOM
+        const playOverlayShort = document.getElementById('playOverlayShort');
+        const playButtonShort = document.getElementById('playButtonShort');
         const bannerShort = document.getElementById('bannerMaterialShort');
         const customProgress = document.getElementById('customProgress');
         const customProgressBar = document.getElementById('customProgressBar');
-        const loadingIndicator = document.getElementById('loadingIndicator');
         let hideTimerShort;
         let isDragging = false;
 
-        // Ocultar loading cuando el video esté listo
-        playerShort.on('ready', () => {
-            loadingIndicator.style.display = 'none';
-            playerShort.muted = false; // Reactivar sonido después del autoplay
+        // Controlar visibilidad del overlay de reproducción
+        playerShort.on('playing', () => {
+            playOverlayShort.classList.add('hidden');
+        });
+        
+        playerShort.on('pause', () => {
+            playOverlayShort.classList.remove('hidden');
+        });
+        
+        playerShort.on('ended', () => {
+            // Mostrar overlay cuando el video termina
+            setTimeout(() => {
+                playOverlayShort.classList.remove('hidden');
+            }, 500);
+        });
+
+        // Reproducir al hacer clic en el botón o overlay
+        playButtonShort.addEventListener('click', (e) => {
+            e.stopPropagation();
+            playerShort.play();
+        });
+        
+        playOverlayShort.addEventListener('click', (e) => {
+            if (e.target === playOverlayShort) {
+                playerShort.play();
+            }
         });
 
         // Actualizar barra de progreso personalizada
@@ -351,7 +397,7 @@
                 const newTime = clickPosition * playerShort.duration;
                 customProgressBar.style.width = `${clickPosition * 100}%`;
                 
-                // Solo actualizar el tiempo del video cada 100ms durante el drag para mejor rendimiento
+                // Solo actualizar el tiempo del video cada 100ms durante el drag
                 clearTimeout(window.dragTimeout);
                 window.dragTimeout = setTimeout(() => {
                     playerShort.currentTime = newTime;
@@ -403,23 +449,17 @@
                 });
             } else {
                 alert('Enlace copiado al portapapeles');
-                // Aquí podrías implementar copia al portapapeles
+                // En un caso real, implementarías copia al portapapeles aquí
             }
         });
 
-        // Reproducir automáticamente cuando el video sea visible
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Ya está en autoplay, pero asegurarnos
-                    if (playerShort.paused) {
-                        playerShort.play();
-                    }
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        observer.observe(wrapperShort);
+        // Intentar reproducción automática después de interacción del usuario
+        document.addEventListener('click', () => {
+            // Solo intentar reproducir si está en pausa
+            if (playerShort.paused && !playerShort.playing) {
+                playerShort.play();
+            }
+        }, { once: true }); // Solo una vez
     </script>
 </body>
 </html>
