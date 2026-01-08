@@ -53,6 +53,18 @@
             background: #000;
         }
 
+        /* --- OVERLAY PARA OCULTAR TÍTULO Y CANAL --- */
+        .title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; /* Cubre el área donde aparece el título y canal */
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
         /* --- BOTÓN DE REPRODUCCIÓN INICIAL --- */
         .play-overlay-short {
             position: absolute;
@@ -248,6 +260,30 @@
         .short-action-btn.primary:hover {
             background: #0052CC;
         }
+
+        /* --- INDICADOR DE BUCLE --- */
+        .loop-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--brand-blue);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            pointer-events: none;
+        }
+        
+        .loop-indicator svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--brand-blue);
+        }
     </style>
 </head>
 <body>
@@ -255,6 +291,17 @@
     <div class="short-container">
         <div class="video-box-short" id="videoWrapperShort">
             
+            <!-- Overlay para ocultar título y canal -->
+            <div class="title-overlay"></div>
+            
+            <!-- Indicador de bucle -->
+            <div class="loop-indicator" id="loopIndicator">
+                <svg viewBox="0 0 24 24">
+                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                </svg>
+                <span>BUCLE</span>
+            </div>
+
             <!-- Overlay con botón de reproducción rectangular azul -->
             <div class="play-overlay-short" id="playOverlayShort">
                 <div class="play-btn-short" id="playButtonShort">
@@ -286,7 +333,7 @@
         <!-- Información del Short -->
         <div class="short-info">
             <h2 class="short-title">Técnica Rápida: Mejora tu Pronunciación</h2>
-            <p class="short-description">Aprende un ejercicio de 60 segundos para perfeccionar tu acento en japonés. Usa la barra de progreso para navegar por el video.</p>
+            <p class="short-description">Aprende un ejercicio de 60 segundos para perfeccionar tu acento en japonés. El video se repetirá automáticamente. Usa la barra de progreso para navegar.</p>
             <div class="short-actions">
                 <button class="short-action-btn primary" id="saveBtn">Guardar Short</button>
                 <button class="short-action-btn" id="shareBtn">Compartir</button>
@@ -296,16 +343,20 @@
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        // Inicializar reproductor para el Short
+        // Inicializar reproductor para el Short con configuración para ocultar info
         const playerShort = new Plyr('#playerShort', {
             controls: ['play', 'progress', 'duration'], 
             fullscreen: { enabled: true },
             ratio: '9:16',
+            loop: { active: true }, // Activar bucle
             youtube: { 
                 noCookie: true, 
                 rel: 0, 
                 modestbranding: 1,
-                playsinline: 1
+                playsinline: 1,
+                // Configuraciones para ocultar título y información del video
+                showinfo: 0,
+                iv_load_policy: 3
             }
         });
 
@@ -315,6 +366,7 @@
         const bannerShort = document.getElementById('bannerMaterialShort');
         const customProgress = document.getElementById('customProgress');
         const customProgressBar = document.getElementById('customProgressBar');
+        const loopIndicator = document.getElementById('loopIndicator');
         let hideTimerShort;
         let isDragging = false;
 
@@ -328,10 +380,23 @@
         });
         
         playerShort.on('ended', () => {
-            // Mostrar overlay cuando el video termina
+            // El bucle se maneja automáticamente por Plyr
+            // Mostrar overlay brevemente antes de que se reinicie
+            playOverlayShort.classList.remove('hidden');
             setTimeout(() => {
-                playOverlayShort.classList.remove('hidden');
+                if (playerShort.playing) {
+                    playOverlayShort.classList.add('hidden');
+                }
             }, 500);
+        });
+
+        // Manejar el reinicio del bucle
+        playerShort.on('loop', () => {
+            // Mostrar indicador de reinicio
+            loopIndicator.style.opacity = '1';
+            setTimeout(() => {
+                loopIndicator.style.opacity = '0.7';
+            }, 1000);
         });
 
         // Reproducir al hacer clic en el botón o overlay
@@ -449,17 +514,24 @@
                 });
             } else {
                 alert('Enlace copiado al portapapeles');
-                // En un caso real, implementarías copia al portapapeles aquí
             }
         });
 
-        // Intentar reproducción automática después de interacción del usuario
-        document.addEventListener('click', () => {
-            // Solo intentar reproducir si está en pausa
-            if (playerShort.paused && !playerShort.playing) {
-                playerShort.play();
+        // Forzar ocultamiento de información de YouTube
+        // Esto se ejecuta después de que se carga el iframe de YouTube
+        setTimeout(() => {
+            const iframe = document.querySelector('.plyr__video-wrapper iframe');
+            if (iframe) {
+                // Intentar modificar el src para forzar ocultamiento
+                let src = iframe.src;
+                if (src.includes('?')) {
+                    src += '&showinfo=0&modestbranding=1&iv_load_policy=3';
+                } else {
+                    src += '?showinfo=0&modestbranding=1&iv_load_policy=3';
+                }
+                iframe.src = src;
             }
-        }, { once: true }); // Solo una vez
+        }, 2000);
     </script>
 </body>
 </html>
