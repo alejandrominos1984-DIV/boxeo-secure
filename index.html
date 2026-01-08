@@ -1,163 +1,692 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Academy Pro</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
-    
+    <title>Navy Elite - App View</title>
+
+    <!-- DEPENDENCIAS EXTERNAS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+
+    <!-- CONFIGURACIÓN DE INTEGRACIÓN -->
     <style>
         :root {
-            --brand-blue: #0066FF;
-            --brand-dark: #1A202C;
-            --brand-gray: #718096;
-            --border-color: #E2E8F0;
-            --plyr-color-main: var(--brand-blue);
+            --primary-accent: #0055ff;
+            --primary-navy: #0a0a1a;
+            --bg-black: #050505;
+            --text-main: #ffffff;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+
+    <!-- CONFIGURACIÓN TAILWIND -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "var(--primary-accent)", 
+                        "background-light": "#f3f4f6",
+                        "background-dark": "var(--bg-black)",
+                        "navy-base": "var(--primary-navy)",
+                        "card-dark": "#121212",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(0, 85, 255, 0.5)', 
+                        'neon-strong': '0 0 30px rgba(0, 85, 255, 0.6)',
+                        'neon-sm': '0 0 10px rgba(0, 85, 255, 0.4)',
+                    }
+                },
+            },
+        };
+    </script>
+
+    <!-- ESTILOS ESPECÍFICOS (APP MODE) -->
+    <style>
+        /* FONDO GLOBAL DE ESCRITORIO (NEUTRO) */
+        body {
+            background-color: #000000; /* Fondo negro puro fuera de la app */
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
         }
 
-        body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
-
-        /* VIDEO HERO SUPERIOR */
-        .hero-video-section { width: 100%; background: #000; position: relative; }
-        .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-
-        /* --- CAPAS DE ANIMACIÓN DOBLE TOQUE --- */
-        .tap-feedback {
-            position: absolute; top: 0; height: 100%; width: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 102, 255, 0.15); opacity: 0; pointer-events: none; z-index: 5;
-            transition: opacity 0.3s ease;
+        /* CONTENEDOR DE LA APP (MÓVIL SIMULADO) */
+        #view-dashboard {
+            width: 100%;
+            max-width: 480px; /* Ancho máximo estricto */
+            background-color: var(--bg-black);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 50px rgba(20, 20, 30, 0.5);
+            overflow-x: hidden;
         }
-        .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
-        .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
-        .tap-icon { color: white; text-align: center; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tap-icon svg { width: 50px; height: 50px; fill: white; }
-        .tap-icon span { display: block; font-size: 0.9rem; font-weight: 800; margin-top: 5px; }
-        .tap-feedback.animate { opacity: 1; }
-        .tap-feedback.animate .tap-icon { transform: scale(1.1); }
 
-        /* PANTALLA DE INICIO CON BOTÓN CURVO */
-        .start-screen-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; display: flex; align-items: center; justify-content: center;
-            z-index: 20; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        .start-screen-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .big-play-btn {
-            width: 88px; height: 62px; background: var(--brand-blue); border-radius: 18px; 
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-        }
-        .big-play-btn svg { width: 30px; height: 30px; fill: white; margin-left: 4px; }
+        /* SCROLLBAR OCULTO */
+        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
+        .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* BANNER RECURSOS (RESTAURADO A FORMATO ROBUSTO Y RECTANGULAR) */
-        .premium-banner {
-            position: absolute; 
-            bottom: 12px; 
-            right: 12px;
-            background: var(--brand-blue); color: #ffffff;
-            padding: 12px 22px; /* Más robusto */
-            display: flex; align-items: center; gap: 10px;
-            text-decoration: none; z-index: 15; 
-            border-radius: 4px; /* ESQUINAS RECTANGULARES COMO ANTES */
-            opacity: 1; transition: opacity 0.6s ease;
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            font-weight: 800; font-size: 0.8rem;
+        /* GLASS PANEL */
+        .dash-glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-        .premium-banner svg { width: 18px; height: 18px; stroke: #ffffff; }
+        .dark .dash-glass-panel {
+            background: linear-gradient(145deg, rgba(20,20,30,0.8) 0%, rgba(10,10,20,0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
 
-        /* CONTROLES */
-        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
-        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
+        /* UTILIDADES VISUALES */
+        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
+        .nav-glass {
+            background: rgba(10, 10, 26, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+        }
+        .pop-out-img {
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
         
-        /* DURACIÓN: AJUSTADA LIGERAMENTE A LA DERECHA */
-        .plyr__time--duration {
-            display: block !important; visibility: visible !important;
-            font-size: 0.75rem !important; font-weight: 700 !important;
-            margin-left: auto !important; 
-            margin-right: 145px !important; /* SEPARACIÓN ÓPTIMA DEL BANNER */
+        /* ANIMACIONES */
+        @keyframes pop-icon {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.15) translateY(-2px); }
+            100% { transform: scale(1) translateY(-4px); }
         }
-        .plyr__time--current { display: none !important; }
-
-        /* CONTENIDO */
-        .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; }
+        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body>
 
-    <div class="hero-video-section">
-        <div class="video-box" id="videoWrapper">
-            <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg><span>-10s</span></div></div>
-            <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg viewBox="0 0 24 24"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg><span>+10s</span></div></div>
+<body class="text-white selection:bg-primary selection:text-white">
 
-            <div class="start-screen-overlay" id="startScreen">
-                <div class="big-play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+    <!-- CONTENEDOR APP PRINCIPAL -->
+    <div id="view-dashboard" class="relative bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors duration-300">
+        
+        <!-- Background Effects (Dentro del móvil) -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] dark:bg-primary/15"></div>
+            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] dark:bg-indigo-900/20"></div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="relative z-10 w-full px-5 pb-32 pt-6">
+            
+            <!-- Header Section -->
+            <div class="flex justify-between items-center mb-8">
+                <!-- Status Chip -->
+                <div class="flex items-center gap-2 bg-white/50 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/5 rounded-full pl-2 pr-4 py-1.5 shadow-sm">
+                    <div class="w-2 h-2 rounded-full bg-primary shadow-neon animate-pulse ml-1"></div>
+                    <h3 class="text-[9px] font-bold tracking-[0.15em] text-gray-600 dark:text-gray-300 uppercase">Navy Elite</h3>
+                </div>
+
+                <!-- User Controls -->
+                <div class="flex items-center gap-3">
+                    <button class="dash-btn w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] shadow-sm border border-gray-200 dark:border-white/5 active:scale-95 transition-transform" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">light_mode</span>
+                    </button>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-[1.5px] relative group">
+                        <img alt="User" class="w-full h-full rounded-full object-cover border-2 border-background-light dark:border-background-dark" src="https://i.pravatar.cc/150?img=11"/>
+                    </div>
+                </div>
             </div>
 
-            <a href="material.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>RECURSOS</span>
-            </a>
-            
-            <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="TDv56whosPQ"></div>
+            <!-- Hero Title -->
+            <div class="mb-8 relative z-10">
+                <div>
+                    <div class="flex items-center gap-2 mb-3 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]" style="animation-fill-mode: forwards; animation-delay: 0.1s;">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+                        </span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-primary">Sistema activo • Día 12</span>
+                    </div>
+                    <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter text-gray-900 dark:text-white mb-2">
+                        Protocolo <br/>
+                        <span class="text-primary dash-text-glow relative inline-block">
+                             Elite
+                            <svg class="absolute -bottom-1 left-0 w-full h-2 text-primary opacity-50" preserveAspectRatio="none" viewBox="0 0 100 10">
+                                <path d="M0 5 Q 50 10 100 5" fill="none" stroke="currentColor" stroke-width="2"></path>
+                            </svg>
+                        </span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-br from-gray-800 to-gray-400 dark:from-white dark:to-gray-600">Ops</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Horizontal Scroll Cards (Rutinas Diarias) -->
+            <section class="mb-12">
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
+                    
+                    <!-- DÍA 1 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-primary/30 shadow-neon-sm">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-100"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-primary">Día 1</span>
+                                    <span class="material-symbols-outlined text-primary">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-primary">Power</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Cuádriceps &amp; Gemelos</p>
+                            </div>
+                            
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 65 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Intensidad Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 2 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 2</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Push <br/><span class="text-gray-400">Focus</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Pecho, Hombro, Tríceps</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 55 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Media-Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 3 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 3</span>
+                                    <span class="material-symbols-outlined text-gray-500">pool</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Active <br/><span class="text-gray-400">Rest</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Movilidad &amp; Cardio LISS</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 40 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Baja</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 4 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 4</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Pull <br/><span class="text-gray-400">Hyper</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Espalda &amp; Bíceps</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 60 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 5 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 5</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-gray-400">Posterior</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Femoral &amp; Glúteo</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 70 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Muy Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 6 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 6</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Upper <br/><span class="text-gray-400">Body</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Torso Completo</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 50 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Media</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 7 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 7</span>
+                                    <span class="material-symbols-outlined text-gray-500">spa</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Full <br/><span class="text-gray-400">Recovery</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Descanso Total</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> --
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Relax</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section (Rutinas Científicas) -->
+            <section class="mb-10">
+                <!-- Header Tech -->
+                <div class="flex flex-col mb-8 gap-2 relative z-10">
+                    <div class="flex items-center gap-2 mb-1 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-accent)]"></div>
+                        <span class="text-[9px] font-bold tracking-[0.25em] text-blue-200/70 uppercase">High Performance</span>
+                    </div>
+                    <div class="flex items-end gap-3">
+                         <h2 class="text-3xl font-black uppercase italic tracking-tighter text-white leading-none">
+                            Rutinas <br/>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent)] to-cyan-400 dash-text-glow">
+                                Científicas
+                            </span>
+                        </h2>
+                        <div class="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent mb-2 opacity-40"></div>
+                    </div>
+                </div>
+                
+                <!-- Scroll Horizontal con "Peek" Effect -->
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-12 pt-14 snap-x snap-mandatory -mx-5 px-5">
+                    
+                    <!-- Cat 1: Piernas -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute bottom-0 right-0 h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Piernas Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-blue-500/20 bg-blue-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-blue-500/20 text-[8px] font-bold text-blue-300 uppercase tracking-wider mb-1.5 border border-blue-500/30">Top Pick</span>
+                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Rutina <br/><span class="text-blue-400">Piernas</span></h3>
+                                <p class="text-[9px] font-medium text-blue-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 12
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 2: Abdomen -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="absolute bottom-0 right-0 h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Abdomen Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-purple-500/20 bg-purple-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-purple-500/20 text-[8px] font-bold text-purple-300 uppercase tracking-wider mb-1.5 border border-purple-500/30">Core</span>
+                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Abdomen <br/><span class="text-purple-400">Steel</span></h3>
+                                <p class="text-[9px] font-medium text-purple-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">local_fire_department</span> 8
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 3: Brazos -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Brazos Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-cyan-500/20 bg-cyan-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-cyan-500/20 text-[8px] font-bold text-cyan-300 uppercase tracking-wider mb-1.5 border border-cyan-500/30">Hypertrophy</span>
+                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Brazos <br/><span class="text-cyan-400">Massive</span></h3>
+                                <p class="text-[9px] font-medium text-cyan-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 10
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 4: Espalda -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Espalda Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-indigo-500/20 bg-indigo-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-indigo-500/20 text-[8px] font-bold text-indigo-300 uppercase tracking-wider mb-1.5 border border-indigo-500/30">Width</span>
+                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Espalda <br/><span class="text-indigo-400">Cobra</span></h3>
+                                <p class="text-[9px] font-medium text-indigo-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">fitness_center</span> 14
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 5: Ciencia Fitness -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="absolute bottom-0 right-[-10px] h-[130%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img" alt="Educación Model" />
+
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-emerald-500/20 bg-emerald-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-[8px] font-bold text-emerald-300 uppercase tracking-wider mb-1.5 border border-emerald-500/30">Edu</span>
+                                <h3 class="text-xl font-black italic text-white uppercase leading-none mb-1">Ciencia <br/><span class="text-emerald-400">Fitness</span></h3>
+                                <p class="text-[9px] font-medium text-emerald-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[10px]">school</span> 15
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECCIÓN NUEVA: Body Focus (Centrado en el cuerpo) -->
+            <section class="mb-10">
+                <!-- Título Sección -->
+                <div class="flex items-center gap-2 mb-6 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.2s;">
+                    <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">
+                        Enfoque <span class="text-primary dash-text-glow">Corporal</span>
+                    </h2>
+                    <div class="h-[1px] flex-1 bg-white/10 ml-2"></div>
+                </div>
+
+                <!-- Filtros (Tabs Scrollables) -->
+                <div class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
+                    <!-- Tab Activo -->
+                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon">
+                        Abdominales
+                    </button>
+                    <!-- Tabs Inactivos -->
+                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                        Brazo
+                    </button>
+                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                        Pecho
+                    </button>
+                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                        Piernas
+                    </button>
+                    <button class="flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-colors">
+                        Espalda
+                    </button>
+                </div>
+
+                <!-- Lista Vertical de Rutinas -->
+                <div class="flex flex-col gap-4">
+                    
+                    <!-- Item 1: Abdominales Principiante -->
+                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
+                        <!-- Imagen (Izquierda) -->
+                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="w-full h-full object-cover object-top opacity-90 group-hover:scale-110 transition-transform duration-500" alt="Abs Beginner">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        
+                        <!-- Info (Derecha) -->
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Principiante</h3>
+                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
+                                <span>15 min</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                                <span>16 Ejercicios</span>
+                            </div>
+                            <!-- Intensidad (Rayos) -->
+                            <div class="flex gap-0.5">
+                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-gray-700">bolt</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Icono Arrow -->
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2: Abdominales Intermedio -->
+                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
+                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                            <!-- Usando imagen de pecho como placeholder visual diferente, ajustado con object-position -->
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="w-full h-full object-cover object-center opacity-90 group-hover:scale-110 transition-transform duration-500" alt="Abs Intermediate">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Intermedio</h3>
+                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
+                                <span>24 min</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                                <span>21 Ejercicios</span>
+                            </div>
+                            <div class="flex gap-0.5">
+                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-primary fill-current">bolt</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3: Abdominales Avanzado -->
+                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30">
+                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                            <!-- Reutilizando fit3 con otro estilo -->
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="w-full h-full object-cover object-left opacity-90 group-hover:scale-110 transition-transform duration-500 grayscale-[50%]" alt="Abs Advanced">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-white mb-1 truncate">Abdominales Avanzado</h3>
+                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
+                                <span>27 min</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
+                                <span>21 Ejercicios</span>
+                            </div>
+                            <div class="flex gap-0.5">
+                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
+                                <span class="material-symbols-outlined text-[14px] text-red-500 fill-current">bolt</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation (Fixed and centered) -->
+        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
+            <nav id="nav-bar" class="nav-glass rounded-[2rem] p-2.5 px-5 flex justify-between items-center shadow-2xl shadow-black/80">
+                
+                <!-- Nav Item 1: Inicio -->
+                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group cursor-pointer relative" href="#">
+                    <div class="absolute -top-1 right-0 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#1a1a1a] z-10"></div>
+                    <div class="icon-container w-9 h-9 rounded-xl bg-primary shadow-neon text-white -translate-y-1 flex items-center justify-center transition-all duration-300">
+                        <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                    </div>
+                    <span class="text-label text-[8px] font-bold text-primary uppercase tracking-wide mt-0.5 transition-colors duration-300">Inicio</span>
+                </a>
+                
+                <!-- Nav Item 2: Biblioteca -->
+                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+                    </div>
+                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Biblio</span>
+                </a>
+                
+                <!-- Nav Item 3: Creador -->
+                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                    </div>
+                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Crear</span>
+                </a>
+                
+                <!-- Nav Item 4: Progreso -->
+                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined text-[20px]">bar_chart</span>
+                    </div>
+                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Datos</span>
+                </a>
+                
+                <!-- Nav Item 5: IA Coach -->
+                <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+                    </div>
+                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">IA</span>
+                </a>
+
+            </nav>
         </div>
     </div>
 
-    <div class="content-container">
-        <h1 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 20px;">Estrategias Avanzadas de Comunicación</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Bienvenido a tu clase. Utiliza el doble toque para navegar y descarga tus recursos desde el banner azul.</p>
-        <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
-    </div>
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <!-- SCRIPTS -->
     <script>
-        const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'duration'], 
-            fullscreen: { enabled: false },
-            youtube: { noCookie: true, rel: 0, iv_load_policy: 3, modestbranding: 1 }
-        });
+        // Función para selección de Menú Inferior
+        function selectNav(clickedElement) {
+            const allNavItems = document.querySelectorAll('.nav-item');
+            
+            allNavItems.forEach(item => {
+                item.classList.add('opacity-50');
+                const iconContainer = item.querySelector('.icon-container');
+                iconContainer.classList.remove('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1', 'animate-pop');
+                iconContainer.classList.add('text-gray-500', 'dark:text-gray-400');
+                
+                const textLabel = item.querySelector('.text-label');
+                textLabel.classList.remove('text-primary');
+                textLabel.classList.add('text-gray-500', 'dark:text-gray-400');
+            });
 
-        const banner = document.getElementById('bannerMaterial');
-        const startScreen = document.getElementById('startScreen');
-        const wrapper = document.getElementById('videoWrapper');
-        const feedbackLeft = document.getElementById('feedbackLeft');
-        const feedbackRight = document.getElementById('feedbackRight');
-        
-        let hideTimer;
-        let lastTapTime = 0;
-        let hasStarted = false;
+            clickedElement.classList.remove('opacity-50');
+            const activeIconContainer = clickedElement.querySelector('.icon-container');
+            activeIconContainer.classList.remove('text-gray-500', 'dark:text-gray-400');
+            activeIconContainer.classList.add('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1');
+            
+            requestAnimationFrame(() => {
+                activeIconContainer.classList.add('animate-pop');
+            });
 
-        startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
-        player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
+            const activeTextLabel = clickedElement.querySelector('.text-label');
+            activeTextLabel.classList.remove('text-gray-500', 'dark:text-gray-400');
+            activeTextLabel.classList.add('text-primary');
+        }
 
-        // BANNER CON RETRASO DE 2 SEGUNDOS PARA SEGURIDAD TOTAL
-        player.on('controlsshown', () => { clearTimeout(hideTimer); banner.classList.remove('force-hide'); });
-        player.on('controlshidden', () => { hideTimer = setTimeout(() => { banner.classList.add('force-hide'); }, 2000); });
+        // Función para animación de botón "Comenzar" (Cambio a Verde)
+        function animateStart(btn) {
+            // Cambiar estilos base a verde
+            btn.classList.remove('bg-primary', 'shadow-neon');
+            btn.classList.add('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
 
-        const handleDoubleAction = (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-            const now = Date.now();
-            if (now - lastTapTime < 300) {
-                e.preventDefault();
-                const rect = wrapper.getBoundingClientRect();
-                const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
-                if (x < rect.width / 2) { player.rewind(10); showFeedback(feedbackLeft); }
-                else { player.forward(10); showFeedback(feedbackRight); }
-            }
-            lastTapTime = now;
-        };
+            // Cambiar texto e icono
+            const textSpan = btn.querySelector('.btn-text');
+            const iconSpan = btn.querySelector('.btn-icon');
 
-        const showFeedback = (el) => {
-            el.classList.remove('animate'); void el.offsetWidth;
-            el.classList.add('animate');
-            setTimeout(() => el.classList.remove('animate'), 500);
-        };
+            if (textSpan) textSpan.textContent = '¡Iniciando!';
+            if (iconSpan) iconSpan.textContent = 'check_circle';
 
-        wrapper.addEventListener('click', handleDoubleAction);
-        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
+            // Resetear después de 2 segundos (opcional, para demo)
+            setTimeout(() => {
+                btn.classList.add('bg-primary', 'shadow-neon');
+                btn.classList.remove('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
+                if (textSpan) textSpan.textContent = 'Comenzar';
+                if (iconSpan) iconSpan.textContent = 'arrow_forward';
+            }, 2000);
+        }
     </script>
 </body>
 </html>
