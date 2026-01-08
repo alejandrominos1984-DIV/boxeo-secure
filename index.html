@@ -5,24 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Divélun Pro - Boxing Analytics</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        'brand-bg': '#000000',
-                        'brand-card': '#111111',
-                        'brand-red': '#ff0033', 
-                        'brand-text': '#ffffff',
+                        'brand-dark': '#050505',
+                        'brand-panel': '#121212',
+                        'brand-red': '#ff1f1f', /* Rojo Láser */
+                        'brand-gray': '#2a2a2a',
                     },
                     fontFamily: {
                         sans: ['Oswald', 'sans-serif'],
-                        mono: ['Roboto Mono', 'monospace'],
+                        tech: ['Chakra Petch', 'monospace'], // Fuente técnica para números
                     },
-                    boxShadow: {
-                        'neon': '0 0 15px rgba(255, 0, 51, 0.5)',
+                    backgroundImage: {
+                        'grid-pattern': "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23222\" fill-opacity=\"0.4\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"/%3E%3C/g%3E%3C/svg%3E')",
                     }
                 }
             }
@@ -30,124 +30,164 @@
     </script>
     
     <style>
-        body { background-color: #000; color: white; }
+        body { background-color: #050505; color: white; }
         
         /* Ocultar scrollbar */
         ::-webkit-scrollbar { width: 0px; background: transparent; }
 
-        .btn-pulse {
-            animation: pulse-red 2s infinite;
+        /* Efecto Glitch sutil para botón activo */
+        .btn-active {
+            box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
+            border-color: #ff1f1f;
         }
 
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(255, 0, 51, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(255, 0, 51, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 0, 51, 0); }
+        /* Gradiente ambiental */
+        .ambient-light {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,31,31,0.1) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
         }
     </style>
 </head>
-<body class="bg-black min-h-screen flex flex-col items-center justify-start sm:justify-center p-0">
+<body class="bg-brand-dark min-h-screen flex flex-col items-center justify-start sm:justify-center p-0 font-sans relative">
 
-    <!-- Contenedor Principal (Estilo App Móvil) -->
-    <div class="w-full max-w-md bg-brand-card min-h-screen sm:min-h-0 sm:h-auto sm:rounded-[30px] sm:border border-gray-800 shadow-2xl flex flex-col relative overflow-hidden">
+    <!-- Fondo con patrón y luz -->
+    <div class="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+    <div class="ambient-light top-[-100px] left-[-100px]"></div>
+    
+    <!-- Contenedor Principal -->
+    <div class="w-full max-w-md bg-brand-panel min-h-screen sm:min-h-0 sm:h-auto sm:rounded-[32px] border border-white/5 shadow-2xl flex flex-col relative overflow-hidden z-10 backdrop-blur-sm">
 
-        <!-- 1. HEADER (Título) -->
-        <div class="p-5 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent z-20 absolute top-0 w-full">
-            <div class="flex items-center gap-2">
-                <div class="w-1 h-6 bg-brand-red shadow-neon"></div>
-                <h1 class="text-xl font-bold italic tracking-wider">DIVÉLUN <span class="text-brand-red">PRO</span></h1>
+        <!-- 1. HEADER -->
+        <div class="px-6 py-4 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent z-20 absolute top-0 w-full">
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col">
+                    <h1 class="text-xl font-bold italic tracking-wide leading-none">DIVÉLUN <span class="text-brand-red">AI</span></h1>
+                    <span class="text-[9px] text-gray-400 tracking-[0.2em] uppercase">Boxing Analytics</span>
+                </div>
             </div>
-            <div class="bg-black/50 px-2 py-1 rounded border border-white/10">
-                <span class="text-[10px] text-gray-300 font-mono tracking-widest">DRILL #01</span>
+            <!-- Badge de Nivel -->
+            <div class="flex items-center gap-2 bg-white/5 backdrop-blur px-3 py-1 rounded-full border border-white/10">
+                <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                <span class="text-[10px] text-gray-200 font-bold uppercase tracking-wider">Nivel Básico</span>
             </div>
         </div>
 
-        <!-- 2. VIDEO PLAYER (Autoplay Independiente) -->
-        <div class="relative w-full aspect-video bg-black mt-0 sm:mt-0 shadow-lg z-10">
-            <!-- Añadido autoplay para iniciar solo -->
+        <!-- 2. VIDEO PLAYER (Hero Section) -->
+        <div class="relative w-full aspect-video bg-black shadow-2xl z-10 group">
             <video id="exerciseVideo" 
-                   class="w-full h-full object-contain" 
+                   class="w-full h-full object-contain opacity-90 transition-opacity duration-500" 
                    autoplay muted playsinline loop>
                 <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
                 <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
             </video>
             
-            <!-- Gradiente para que el texto se lea bien -->
-            <div class="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-brand-card to-transparent pointer-events-none"></div>
+            <!-- Overlay Gradiente -->
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-panel via-transparent to-black/40 pointer-events-none"></div>
 
-            <!-- Título del Ejercicio -->
-            <div class="absolute bottom-4 left-5 z-20">
-                <h2 class="text-3xl font-bold italic text-white drop-shadow-md">JAB <span class="text-brand-red">MASTER</span></h2>
+            <!-- Título Flotante -->
+            <div class="absolute bottom-6 left-6 z-20">
+                <h2 class="text-4xl font-bold italic text-white drop-shadow-lg leading-none">JAB <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-orange-600">MASTER</span></h2>
+                <p class="text-xs text-gray-300 font-tech mt-1 uppercase tracking-wider">Drill #01 • Fundamentals</p>
             </div>
+            
+            <!-- Botón Instrucciones (Flotante sobre video) -->
+            <button onclick="playInstructionsOnly()" class="absolute top-20 right-4 z-30 bg-black/60 backdrop-blur-md hover:bg-brand-red border border-white/10 text-white p-2 rounded-full transition-all duration-300 group shadow-lg" title="Escuchar Instrucciones">
+                <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            </button>
         </div>
 
-        <!-- 3. PANEL DE CONTROL (Debajo del video) -->
-        <div class="flex-1 p-6 flex flex-col gap-6 bg-brand-card relative z-20">
+        <!-- 3. DASHBOARD DE CONTROL -->
+        <div class="flex-1 px-6 pb-8 pt-4 flex flex-col gap-6 relative z-20 -mt-4 bg-brand-panel rounded-t-3xl border-t border-white/5">
             
-            <!-- Botón Específico para Instrucciones (Audio Solo) -->
-            <button onclick="playInstructionsOnly()" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-gray-700 bg-gray-900/50 hover:bg-gray-800 transition-colors text-gray-300 text-sm uppercase tracking-wider font-sans mb-2">
-                <svg class="w-4 h-4 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                Escuchar Instrucciones
-            </button>
+            <!-- Decorador Central -->
+            <div class="w-12 h-1 bg-gray-800 rounded-full mx-auto mb-2 opacity-50"></div>
 
-            <!-- Tarjetas de Métricas -->
+            <!-- Grid de Métricas -->
             <div class="grid grid-cols-2 gap-4">
-                <!-- Cronómetro (Cuenta Regresiva con Ajuste) -->
-                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center relative group">
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Tiempo Restante</span>
-                    <div class="text-3xl font-mono font-bold text-white tracking-tighter mb-2" id="timerDisplay">01:00</div>
+                
+                <!-- Tarjeta Cronómetro (Hero) -->
+                <div class="col-span-2 bg-gradient-to-br from-brand-gray/50 to-brand-panel border border-white/5 rounded-2xl p-5 flex flex-col items-center relative shadow-lg">
+                    <span class="text-[10px] text-gray-500 uppercase tracking-[0.2em] mb-2">Tiempo Restante</span>
                     
-                    <!-- Controles de Tiempo (NUEVO) -->
-                    <div class="flex gap-2 w-full justify-center">
-                        <button onclick="adjustTime(-10)" class="text-[10px] bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded transition-colors">-10s</button>
-                        <button onclick="adjustTime(30)" class="text-[10px] bg-brand-red/20 border border-brand-red/50 hover:bg-brand-red text-white px-2 py-1 rounded transition-colors">+30s</button>
+                    <div class="flex items-center gap-6 w-full justify-center">
+                        <!-- Botón Restar -->
+                        <button onclick="adjustTime(-10)" class="w-10 h-10 rounded-full bg-black/40 border border-white/10 flex items-center justify-center hover:border-brand-red/50 hover:text-brand-red transition-all active:scale-95 group">
+                            <span class="text-[10px] font-tech font-bold">-10</span>
+                        </button>
+
+                        <!-- Display Tiempo -->
+                        <div class="text-6xl font-tech font-bold text-white tracking-tighter tabular-nums drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]" id="timerDisplay">01:00</div>
+
+                        <!-- Botón Sumar -->
+                        <button onclick="adjustTime(30)" class="w-10 h-10 rounded-full bg-brand-red/10 border border-brand-red/30 flex items-center justify-center hover:bg-brand-red hover:text-white transition-all active:scale-95 text-brand-red group">
+                            <span class="text-[10px] font-tech font-bold">+30</span>
+                        </button>
+                    </div>
+
+                    <!-- Estado Texto -->
+                    <p id="statusText" class="mt-2 text-[10px] font-mono uppercase tracking-widest text-gray-500">Listo para comenzar</p>
+                </div>
+
+                <!-- Tarjeta Calorías (Compacta) -->
+                <div class="bg-black/30 border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <span class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Quema Est.</span>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-2xl font-tech font-bold text-brand-red">45</span>
+                        <span class="text-[10px] text-gray-400 font-bold">KCAL</span>
                     </div>
                 </div>
 
-                <!-- Calorías (Fijas) -->
-                <div class="bg-black/40 rounded-2xl p-4 border border-white/5 flex flex-col items-center justify-center">
-                    <span class="text-[10px] text-gray-500 uppercase tracking-widest mb-1">Quema Estimada</span>
-                    <div class="flex items-baseline gap-1">
-                        <!-- Valor fijo -->
-                        <span class="text-3xl font-mono font-bold text-brand-red tracking-tighter">45</span>
-                        <span class="text-xs text-gray-400">KCAL</span>
+                <!-- Tarjeta Info Adicional (Compacta) -->
+                <div class="bg-black/30 border border-white/5 rounded-xl p-4 flex flex-col items-center justify-center">
+                    <span class="text-[9px] text-gray-500 uppercase tracking-widest mb-1">Intensidad</span>
+                    <div class="flex items-center gap-1">
+                        <div class="w-2 h-4 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
+                        <div class="w-2 h-4 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
+                        <div class="w-2 h-4 bg-gray-700 rounded-sm skew-x-[-10deg]"></div>
+                        <span class="text-xs text-white ml-1 font-bold">ALTA</span>
                     </div>
                 </div>
             </div>
 
-            <!-- BOTÓN PRINCIPAL (Controla SOLO el Cronómetro) -->
+            <!-- BOTÓN DE ACCIÓN PRINCIPAL -->
             <div class="mt-2">
-                <button id="mainBtn" onclick="toggleTimer()" class="w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all rounded-2xl shadow-neon flex items-center justify-center gap-3 group relative overflow-hidden">
-                    <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <button id="mainBtn" onclick="toggleTimer()" class="w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-xl shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-3 group relative overflow-hidden border border-red-500/50">
+                    
+                    <!-- Efecto brillo hover -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
+                    
                     <span id="btnIcon">
-                        <!-- Icono Play -->
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     </span>
-                    <span id="btnText" class="text-white font-bold text-lg tracking-widest uppercase">INICIAR ASALTO</span>
+                    <span id="btnText" class="text-white font-bold text-lg tracking-[0.15em] uppercase italic">INICIAR ASALTO</span>
                 </button>
-                <p id="statusText" class="text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest">Listo para comenzar</p>
             </div>
 
             <!-- Navegación Inferior -->
-            <div class="mt-auto grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                <button class="py-3 rounded-lg text-gray-500 hover:text-white text-xs uppercase tracking-widest font-bold transition-colors">
-                    &larr; Anterior
+            <div class="mt-auto pt-4 flex gap-4">
+                <button class="flex-1 py-3 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 text-[10px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Anterior
                 </button>
-                <button class="py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-xs uppercase tracking-widest font-bold transition-colors">
-                    Siguiente &rarr;
+                <button class="flex-1 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-[10px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
+                    Siguiente
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>
-
         </div>
     </div>
 
     <script>
         // --- CONFIGURACIÓN ---
-        const DRILL_TIME = 60; // 60 segundos cuenta regresiva inicial
+        const DRILL_TIME = 60; // 60 segundos
         
         const coachScript = "¡Guardia arriba! Vamos a pulir ese Jab. Pies firmes. Dispara ese brazo delantero recto como una flecha. Gira el puño al final para cortar. Exhala fuerte al golpear. ¡Shhh! Y regresa la mano rápido a la cara. ¡Vamos, con fuerza!";
-        // Audio final actualizado según petición
-        const finishScript = "¡Terminó el tiempo campeón! ¿Quieren agregar más tiempo o continuar a la siguiente lección?";
+        const finishScript = "¡Terminó el tiempo! ¿Quieren agregar más tiempo o continuar a la siguiente lección?";
 
         // DOM Elements
         const timerDisplay = document.getElementById('timerDisplay');
@@ -160,7 +200,7 @@
         // Estado
         let timeLeft = DRILL_TIME;
         let isRunning = false;
-        let isFinished = false; // Nuevo estado para saber si terminó
+        let isFinished = false; 
         let timerInterval;
         let synth = window.speechSynthesis;
         let utterance = null;
@@ -170,12 +210,12 @@
         const iconPause = '<svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
         const iconReset = '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
 
-        // Asegurar que el video se reproduzca al cargar
+        // Asegurar autoplay
         window.onload = function() {
             video.play().catch(e => console.log("Autoplay handled by browser/user interaction"));
         };
 
-        // 1. SOLO ESCUCHAR INSTRUCCIONES
+        // 1. INSTRUCCIONES
         function playInstructionsOnly() {
             if (synth.speaking) {
                 synth.cancel();
@@ -184,43 +224,37 @@
             }
         }
 
-        // 2. AJUSTAR TIEMPO (NUEVA FUNCIÓN)
+        // 2. AJUSTAR TIEMPO
         function adjustTime(seconds) {
             timeLeft += seconds;
             if (timeLeft < 0) timeLeft = 0;
             
             updateTimerUI();
 
-            // Si se agrega tiempo cuando ya había terminado, reseteamos el estado "Terminado"
             if (isFinished && timeLeft > 0) {
                 isFinished = false;
-                // Restauramos botón a estado inicial o Play
-                btnText.innerText = "REANUDAR CRONÓMETRO";
+                btnText.innerText = "REANUDAR";
                 btnIcon.innerHTML = iconPlay;
                 statusText.innerText = "Tiempo añadido";
-                statusText.className = "text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest";
-                mainBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                mainBtn.classList.add('bg-brand-red');
+                statusText.className = "mt-2 text-[10px] font-mono uppercase tracking-widest text-gray-500";
+                
+                mainBtn.className = "w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-xl shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-3 group relative overflow-hidden border border-red-500/50";
             }
         }
 
         // 3. CONTROL DEL CRONÓMETRO
         function toggleTimer() {
-            // Si terminó y no se ha agregado tiempo, es un reset completo
             if (timeLeft <= 0 && isFinished) {
                 resetTimer();
                 return;
             }
 
-            // Si está corriendo, pausamos
             if (isRunning) {
                 pauseTimer();
             } else {
-                // Si no está corriendo, iniciamos
                 if (timeLeft > 0) {
                     startTimer();
                 } else {
-                    // Caso borde: 0 tiempo pero usuario quiere iniciar
                     resetTimer();
                 }
             }
@@ -231,14 +265,14 @@
             isFinished = false;
             
             // UI Update
-            btnText.innerText = "PAUSAR CRONÓMETRO";
+            btnText.innerText = "PAUSAR";
             btnIcon.innerHTML = iconPause;
-            statusText.innerText = "Cronómetro corriendo...";
-            statusText.className = "text-center text-[10px] text-brand-red mt-3 font-mono uppercase tracking-widest animate-pulse";
-            mainBtn.classList.remove('bg-brand-red');
-            mainBtn.classList.add('bg-gray-800', 'border', 'border-gray-600');
+            statusText.innerText = "Cronómetro corriendo";
+            statusText.className = "mt-2 text-[10px] font-mono uppercase tracking-widest text-brand-red animate-pulse";
+            
+            // Botón Estilo Activo (Dark)
+            mainBtn.className = "w-full py-5 bg-gray-900 border border-gray-700 hover:bg-gray-800 active:scale-[0.98] transition-all duration-200 rounded-xl flex items-center justify-center gap-3 group relative overflow-hidden";
 
-            // Timer Logic
             timerInterval = setInterval(() => {
                 if (timeLeft > 0) {
                     timeLeft--;
@@ -257,26 +291,25 @@
             btnText.innerText = "REANUDAR";
             btnIcon.innerHTML = iconPlay;
             statusText.innerText = "Pausado";
-            statusText.classList.remove('text-brand-red', 'animate-pulse');
-            statusText.classList.add('text-gray-500');
+            statusText.className = "mt-2 text-[10px] font-mono uppercase tracking-widest text-gray-500";
             
-            mainBtn.classList.add('bg-brand-red');
-            mainBtn.classList.remove('bg-gray-800', 'border', 'border-gray-600');
+            mainBtn.className = "w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-xl shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-3 group relative overflow-hidden border border-red-500/50";
         }
 
         function finishTimer() {
-            pauseTimer(); // Detener intervalo
+            pauseTimer(); 
             timeLeft = 0;
             isFinished = true;
             updateTimerUI();
             
             // UI Final
-            btnText.innerText = "REINICIAR ASALTO";
+            btnText.innerText = "REINICIAR";
             btnIcon.innerHTML = iconReset;
-            statusText.innerText = "¡ASALTO COMPLETADO!";
-            statusText.className = "text-center text-[12px] text-green-500 mt-3 font-bold uppercase tracking-widest";
-            mainBtn.classList.add('bg-green-600', 'hover:bg-green-700');
-            mainBtn.classList.remove('bg-brand-red');
+            statusText.innerText = "¡Entrenamiento Completado!";
+            statusText.className = "mt-2 text-[10px] font-bold uppercase tracking-widest text-green-500";
+            
+            // Botón Verde
+            mainBtn.className = "w-full py-5 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all duration-200 rounded-xl shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-3 group relative overflow-hidden border border-green-500/50";
 
             speak(finishScript);
         }
@@ -286,19 +319,27 @@
             isFinished = false;
             updateTimerUI();
             
-            mainBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
-            mainBtn.classList.add('bg-brand-red');
+            mainBtn.className = "w-full py-5 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-xl shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-3 group relative overflow-hidden border border-red-500/50";
+            btnText.innerText = "INICIAR ASALTO";
+            btnIcon.innerHTML = iconPlay;
+
             statusText.innerText = "Listo para comenzar";
-            statusText.className = "text-center text-[10px] text-gray-500 mt-3 font-mono uppercase tracking-widest";
+            statusText.className = "mt-2 text-[10px] font-mono uppercase tracking-widest text-gray-500";
             
             startTimer();
         }
 
-        // 4. ACTUALIZACIONES DE UI
+        // 4. ACTUALIZAR UI
         function updateTimerUI() {
             const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
             const s = (timeLeft % 60).toString().padStart(2, '0');
             timerDisplay.innerText = `${m}:${s}`;
+            
+            if (timeLeft < 10 && timeLeft > 0) {
+                timerDisplay.classList.add('text-brand-red');
+            } else {
+                timerDisplay.classList.remove('text-brand-red');
+            }
         }
 
         // 5. MOTOR DE VOZ
@@ -308,7 +349,6 @@
             utterance.lang = 'es-MX';
             utterance.rate = 1.1;
             
-            // Intentar voz de Google
             const voices = synth.getVoices();
             const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
             if (googleVoice) utterance.voice = googleVoice;
@@ -316,7 +356,6 @@
             synth.speak(utterance);
         }
 
-        // Cargar voces
         window.speechSynthesis.onvoiceschanged = () => {};
 
     </script>
