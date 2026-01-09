@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIT AI | Navy Elite V5</title>
+    <title>FIT AI | Navy Elite System</title>
     
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -25,10 +25,11 @@
     <style>
         :root {
             --primary-accent: #0055ff;
+            --primary-navy: #001a33;
             --bg-black: #000000;
             --text-main: #ffffff;
             --text-dim: #94a3b8;
-            --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp'); /* IMAGEN TUYA RESTAURADA */
+            --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp');
         }
 
         * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
@@ -44,12 +45,17 @@
         /* ESTILOS LOGIN (VIEJO) */
         .auth-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--auth-bg-img); background-size: cover; background-position: center; z-index: -2; filter: brightness(0.6) contrast(1.05); }
         .auth-overlay-dark { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,10,30,0.3) 50%, rgba(0, 26, 51, 0.95) 100%); z-index: -1; }
-        .welcome-title { font-size: 3.4rem; font-weight: 900; line-height: 0.95; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 85, 255, 0.4); margin-top: auto; }
-        .btn-get-started { background: rgba(10, 20, 40, 0.9); border-radius: 50px; height: 80px; display: flex; align-items: center; padding: 10px; cursor: pointer; border: 1px solid rgba(0, 85, 255, 0.2); width: 100%; margin-bottom: 50px; }
+        .welcome-content { margin-top: auto; text-align: center; padding-bottom: 50px; }
+        .welcome-title { font-size: 3.4rem; font-weight: 900; line-height: 0.95; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 85, 255, 0.4); }
+        .btn-get-started { background: rgba(10, 20, 40, 0.9); border-radius: 50px; height: 80px; display: flex; align-items: center; padding: 10px; cursor: pointer; border: 1px solid rgba(0, 85, 255, 0.2); width: 100%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
         .btn-circle { width: 60px; height: 60px; background: var(--primary-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .btn-text { flex-grow: 1; text-align: center; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; }
-        input.modern { width: 100%; padding: 24px; background: rgba(0, 26, 51, 0.6); border: 1px solid rgba(0, 85, 255, 0.3); border-radius: 22px; color: #fff; font-size: 1rem; margin-bottom: 15px; }
-        .btn-primary { width: 100%; padding: 24px; background: var(--primary-accent); color: #fff; border: none; border-radius: 22px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; }
+        .login-link-container { margin-top: 30px; font-size: 1rem; color: var(--text-dim); }
+        .auth-form-container { margin-top: auto; margin-bottom: 40px; }
+        input.modern { width: 100%; padding: 24px; background: rgba(0, 26, 51, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(0, 85, 255, 0.15); border-radius: 22px; color: #fff; font-size: 1rem; margin-bottom: 15px; }
+        .btn-primary { width: 100%; padding: 24px; background: var(--primary-accent); color: #fff; border: none; border-radius: 22px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 30px var(--primary-accent-glow); }
+        .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-transform: uppercase; }
+        .error { color: var(--error-red); font-size: 0.85rem; padding: 12px; text-align: center; display: none; margin-bottom: 12px; font-weight: 700; border: 1px solid rgba(255, 59, 48, 0.4); border-radius: 14px; background: rgba(255, 59, 48, 0.08); }
         
         /* ESTILOS DASHBOARD (NUEVO) */
         .dash-no-scrollbar::-webkit-scrollbar { display: none; }
@@ -96,7 +102,7 @@
                 <div class="btn-circle"><span class="material-symbols-outlined" style="color:white;">arrow_forward</span></div>
                 <div class="btn-text">Empieza ahora</div>
             </button>
-            <div style="text-align:center;">¿Ya eres miembro? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Acceder</span></div>
+            <div class="login-link-container">¿Ya eres miembro? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Acceder</span></div>
         </div>
     </div>
 
@@ -105,12 +111,15 @@
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px;">IDENTIDAD</h2>
             <p style="color: var(--text-dim);">Protocolo de acceso seguro.</p>
         </div>
-        <div style="margin-top:auto; margin-bottom:40px;">
-            <div id="login-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
+        <div class="auth-form-container">
+            <div id="login-msg" class="error"></div>
             <input type="email" id="login-email" class="modern" placeholder="Correo electrónico">
-            <input type="password" id="login-pass" class="modern" placeholder="Contraseña">
+            <div style="position:relative;">
+                <input type="password" id="login-pass" class="modern" placeholder="Contraseña">
+                <button class="eye-btn" onclick="togglePassword('login-pass', this)" style="position:absolute; right:20px; top:20px; background:none; border:none; color:white;">👁️</button>
+            </div>
             <button class="btn-primary" onclick="handleLogin()">Entrar</button>
-            <div id="login-load" style="display:none; text-align:center; color:var(--primary-accent); margin-top:10px;">Cargando...</div>
+            <div id="login-load" class="loading">Verificando...</div>
             <div style="text-align: center; margin-top: 20px;">
                 <span onclick="nav('view-recover')" style="cursor:pointer; color:var(--primary-accent); font-weight:700;">Recuperar Acceso</span>
             </div>
@@ -123,12 +132,12 @@
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px;">ALTA</h2>
             <p style="color: var(--text-dim);">Inicia tu transformación.</p>
         </div>
-        <div style="margin-top:auto; margin-bottom:40px;">
-            <div id="reg-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
+        <div class="auth-form-container">
+            <div id="reg-msg" class="error"></div>
             <input type="email" id="reg-email" class="modern" placeholder="Correo electrónico">
             <input type="password" id="reg-pass" class="modern" placeholder="Crea tu clave maestra">
             <button class="btn-primary" onclick="handleRegister()">Crear Perfil</button>
-            <div id="reg-load" style="display:none; text-align:center; color:var(--primary-accent); margin-top:10px;">Creando...</div>
+            <div id="reg-load" class="loading">Creando...</div>
         </div>
         <div style="text-align:center;">¿Ya tienes perfil? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Entrar</span></div>
     </div>
@@ -355,7 +364,7 @@
             modernNav.style.display = 'none';
         }
         else {
-            // En perfil u otras vistas internas, mostramos el viejo (si quieres) o el nuevo
+            // En perfil u otras vistas internas, mostramos el viejo
             legacyNav.style.display = 'flex'; // Mostrar viejo
             modernNav.style.display = 'none'; // Ocultar nuevo
         }
@@ -436,7 +445,7 @@
 
     function logout() { localStorage.clear(); nav('view-welcome'); }
 
-    // --- Lógica Dashboard (TUS IMÁGENES ORIGINALES) ---
+    // --- Lógica Dashboard (TUS IMÁGENES ORIGINALES RESTAURADAS) ---
     const workoutsDB = {
         'routine_fullbody': [
             { title: "Total Strength", time: "45 min", ex: "8 Ejercicios", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
