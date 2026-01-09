@@ -1,19 +1,52 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIT AI | Navy Elite Training</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    
-    <!-- Solo incluyo Material Symbols para el nuevo dashboard -->
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 
+    <!-- TAILWIND CSS (REQUERIDO PARA EL NUEVO DISEÑO) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700;1,900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    
+    <!-- DEPENDENCIAS ORIGINALES -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <!-- CONFIGURACIÓN TAILWIND -->
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#0055ff", 
+                        "background-light": "#f3f4f6",
+                        "background-dark": "#000000",
+                        "navy-base": "#0a0a1a",
+                        "card-dark": "#121212",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 20px rgba(0, 85, 255, 0.5)', 
+                        'neon-strong': '0 0 30px rgba(0, 85, 255, 0.6)',
+                        'neon-sm': '0 0 10px rgba(0, 85, 255, 0.4)',
+                    }
+                },
+            },
+        };
+    </script>
+
+    <!-- ESTILOS ORIGINALES (CON AJUSTES PARA NO ROMPER TAILWIND) -->
     <style>
         :root {
-            --primary-accent: #0055ff; /* Azul Marino Vibrante */
-            --primary-navy: #001a33;  /* Base Azul Marino */
+            --primary-accent: #0055ff;
+            --primary-navy: #001a33;
             --primary-accent-glow: rgba(0, 85, 255, 0.5);
             --bg-black: #000000;
             --card-dark: rgba(10, 15, 25, 0.85);
@@ -24,18 +57,26 @@
             --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp');
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        /* ESTILOS GLOBALES AJUSTADOS PARA COMPATIBILIDAD */
+        * { 
+            box-sizing: border-box; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent; 
+        }
 
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-black);
             color: var(--text-main); 
-            margin: 0; padding: 0; 
+            margin: 0; 
+            padding: 0; 
             min-height: 100vh;
-            display: flex; justify-content: center;
+            display: flex; 
+            justify-content: center;
             overflow-x: hidden;
         }
 
+        /* CONTENEDOR PRINCIPAL */
         .container { 
             width: 100%;
             max-width: 480px;
@@ -47,14 +88,23 @@
 
         /* --- AUTH BACKGROUND --- */
         .auth-bg {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
             background: var(--auth-bg-img);
-            background-size: cover; background-position: center;
+            background-size: cover; 
+            background-position: center;
             z-index: -2;
             filter: brightness(0.6) contrast(1.05);
         }
         .auth-overlay-dark {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
             background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,10,30,0.3) 50%, rgba(0, 26, 51, 0.95) 100%);
             z-index: -1;
         }
@@ -70,9 +120,206 @@
             min-height: 100vh;
         }
         .view.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(15px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        /* --- WELCOME VIEW (NAVY NEON STYLE) --- */
+        /* --- AUTH FORMS (MANTENIDOS ORIGINALES) --- */
+        .auth-form-container {
+            margin-top: auto;
+            margin-bottom: 40px;
+        }
+        input.modern {
+            width: 100%;
+            padding: 24px;
+            background: rgba(0, 26, 51, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 22px;
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+        input.modern:focus {
+            border-color: var(--primary-accent);
+            background: rgba(0, 85, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
+        }
+        .password-wrap { position: relative; }
+        .eye-btn {
+            position: absolute; 
+            right: 22px; 
+            top: 28px;
+            background: none; 
+            border: none; 
+            color: var(--text-dim); 
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 24px;
+            background: var(--primary-accent);
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px var(--primary-accent-glow);
+            letter-spacing: 1px;
+        }
+        .btn-primary:active { transform: scale(0.97); filter: brightness(1.2); }
+
+        /* --- ELEMENTOS COMPATIBILIDAD --- */
+        .loading { 
+            color: var(--primary-accent); 
+            text-align: center; 
+            font-size: 0.95rem; 
+            margin-top: 20px; 
+            display: none; 
+            font-weight: 800; 
+            text-shadow: 0 0 10px var(--primary-accent-glow); 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+        }
+        .error { 
+            color: var(--error-red); 
+            font-size: 0.85rem; 
+            padding: 12px; 
+            text-align: center; 
+            display: none; 
+            margin-bottom: 12px; 
+            font-weight: 700; 
+            border: 1px solid rgba(255, 59, 48, 0.4); 
+            border-radius: 14px; 
+            background: rgba(255, 59, 48, 0.08); 
+        }
+
+        /* PAYMENT OVERLAY */
+        #payment-verify-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0;
+            background: rgba(0,5,15,0.98);
+            backdrop-filter: blur(25px);
+            z-index: 9999; 
+            display: none;
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            text-align: center; 
+            padding: 40px;
+        }
+        .diamond-neon { 
+            font-size: 70px; 
+            filter: drop-shadow(0 0 30px var(--primary-accent)); 
+            animation: float 3.5s ease-in-out infinite; 
+        }
+        @keyframes float { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-20px) rotate(5deg); } 
+        }
+
+        /* NAVIGATION ORIGINAL (SE MANTIENE) */
+        .bottom-nav { 
+            position: fixed; 
+            bottom: 30px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 88%; 
+            max-width: 420px; 
+            background: rgba(5, 10, 20, 0.96); 
+            backdrop-filter: blur(25px); 
+            border-radius: 45px; 
+            display: none; 
+            justify-content: space-around; 
+            padding: 10px; 
+            border: 1px solid var(--card-border); 
+            z-index: 1000; 
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9); 
+        }
+        .nav-item { 
+            color: var(--text-dim); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            cursor: pointer; 
+            padding: 15px 25px; 
+            transition: 0.3s; 
+            border-radius: 35px; 
+        }
+        .nav-item.active { 
+            color: var(--primary-accent); 
+            background: rgba(0, 85, 255, 0.12); 
+        }
+        .nav-item svg { 
+            width: 24px; 
+            height: 24px; 
+            fill: none; 
+            stroke: currentColor; 
+            stroke-width: 2.5; 
+            filter: drop-shadow(0 0 8px currentColor); 
+        }
+
+        /* ESTILOS ESPECÍFICOS DEL NUEVO DASHBOARD */
+        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
+        .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .dash-glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .dark .dash-glass-panel {
+            background: linear-gradient(145deg, rgba(20,20,30,0.4) 0%, rgba(10,10,20,0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
+        
+        .nav-glass {
+            background: rgba(10, 10, 26, 0.75);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .pop-out-img {
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+        
+        /* ANIMACIONES DASHBOARD */
+        @keyframes pop-icon {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.15) translateY(-2px); }
+            100% { transform: scale(1) translateY(-4px); }
+        }
+        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes listFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-list-item {
+            animation: listFade 0.3s ease-out forwards;
+        }
+
+        /* WELCOME VIEW (ESTILOS ORIGINALES) */
         .welcome-content {
             margin-top: auto;
             text-align: center;
@@ -153,133 +400,33 @@
             text-shadow: 0 0 10px var(--primary-accent-glow);
         }
 
-        /* --- AUTH FORMS --- */
-        .auth-form-container {
-            margin-top: auto;
-            margin-bottom: 40px;
+        .link-text-neon { 
+            color: var(--primary-accent); 
+            font-weight: 700; 
+            text-decoration: none; 
+            text-shadow: 0 0 8px var(--primary-accent-glow); 
+            transition: 0.3s; 
         }
-        input.modern {
-            width: 100%;
-            padding: 24px;
-            background: rgba(0, 26, 51, 0.3);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 85, 255, 0.15);
-            border-radius: 22px;
-            color: #fff;
-            font-size: 1rem;
-            transition: 0.3s;
-            margin-bottom: 15px;
-        }
-        input.modern:focus {
-            border-color: var(--primary-accent);
-            background: rgba(0, 85, 255, 0.05);
-            box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
-        }
-        .password-wrap { position: relative; }
-        .eye-btn {
-            position: absolute; right: 22px; top: 28px;
-            background: none; border: none; color: var(--text-dim); cursor: pointer;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 24px;
-            background: var(--primary-accent);
-            color: #fff;
-            border: none;
-            border-radius: 22px;
-            font-weight: 900;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.3s;
-            box-shadow: 0 10px 30px var(--primary-accent-glow);
-            letter-spacing: 1px;
-        }
-        .btn-primary:active { transform: scale(0.97); filter: brightness(1.2); }
-
-        /* --- NAVIGATION --- */
-        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 88%; max-width: 420px; background: rgba(5, 10, 20, 0.96); backdrop-filter: blur(25px); border-radius: 45px; display: none; justify-content: space-around; padding: 10px; border: 1px solid var(--card-border); z-index: 1000; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9); }
-        .nav-item { color: var(--text-dim); display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 15px 25px; transition: 0.3s; border-radius: 35px; }
-        .nav-item.active { color: var(--primary-accent); background: rgba(0, 85, 255, 0.12); }
-        .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; filter: drop-shadow(0 0 8px currentColor); }
-
-        .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-shadow: 0 0 10px var(--primary-accent-glow); text-transform: uppercase; letter-spacing: 1.5px; }
-        .error { color: var(--error-red); font-size: 0.85rem; padding: 12px; text-align: center; display: none; margin-bottom: 12px; font-weight: 700; border: 1px solid rgba(255, 59, 48, 0.4); border-radius: 14px; background: rgba(255, 59, 48, 0.08); }
-
-        /* PAYMENT OVERLAY */
-        #payment-verify-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,5,15,0.98);
-            backdrop-filter: blur(25px);
-            z-index: 9999; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 40px;
-        }
-        .diamond-neon { font-size: 70px; filter: drop-shadow(0 0 30px var(--primary-accent)); animation: float 3.5s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
-
-        /* ESTILOS ESPECÍFICOS PARA EL NUEVO DASHBOARD */
-        .dash-glass-panel {
-            background: linear-gradient(145deg, rgba(20,20,30,0.4) 0%, rgba(10,10,20,0.6) 100%);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
-        
-        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
-        .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .nav-glass {
-            background: rgba(10, 10, 26, 0.75);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        
-        .pop-out-img {
-            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
-        }
-        
-        /* ANIMACIONES PARA EL DASHBOARD */
-        @keyframes pop-icon {
-            0% { transform: scale(1) translateY(0); }
-            50% { transform: scale(1.15) translateY(-2px); }
-            100% { transform: scale(1) translateY(-4px); }
-        }
-        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        
-        @keyframes dash-fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes listFade {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-list-item {
-            animation: listFade 0.3s ease-out forwards;
-        }
+        .link-text-neon:hover { opacity: 0.7; filter: brightness(1.2); }
     </style>
 </head>
 
-<body>
+<body class="text-white selection:bg-primary selection:text-white">
 
+<!-- OVERLAY DE VERIFICACIÓN DE PAGO -->
 <div id="payment-verify-overlay">
     <div class="diamond-neon">💎</div>
     <h2 style="font-weight: 900; margin-bottom: 12px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: 2px;">Protocolo Navy Pro</h2>
     <p style="opacity: 0.7; letter-spacing: 1.5px; font-weight: 500;">Sincronizando acceso de élite...</p>
 </div>
 
+<!-- FONDOS PARA AUTH -->
 <div id="auth-visuals">
     <div class="auth-bg"></div>
     <div class="auth-overlay-dark"></div>
 </div>
 
+<!-- CONTENEDOR PRINCIPAL -->
 <div class="container">
 
     <!-- 1. WELCOME VIEW -->
@@ -352,7 +499,7 @@
         </div>
     </div>
 
-    <!-- 4. RECOVERY -->
+    <!-- 4. RECOVERY VIEW -->
     <div id="view-recover" class="view">
         <h2 style="font-size: 2.8rem; font-weight: 900; margin-top: 60px; margin-bottom: 10px; text-transform: uppercase;">RESET</h2>
         <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600;">Restablece tu conexión Navy.</p>
@@ -366,7 +513,7 @@
         <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase;">← VOLVER</button>
     </div>
 
-    <!-- 5. PAYMENT -->
+    <!-- 5. PAYMENT VIEW -->
     <div id="view-payment-stripe" class="view" style="justify-content: center; text-align: center;">
         <div class="diamond-neon">⚡</div>
         <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 10px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: -1px;">UPGRADE</h2>
@@ -382,163 +529,337 @@
         <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">CERRAR SESIÓN</button>
     </div>
 
-    <!-- 6. DASHBOARD NUEVO -->
+    <!-- 6. DASHBOARD VIEW (NUEVO DISEÑO INTEGRADO) -->
     <div id="view-dashboard" class="view" style="padding: 0;">
         <!-- Background Effects -->
-        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 0;">
-            <div style="position: absolute; top: -10%; right: -20%; width: 300px; height: 300px; background: rgba(0, 85, 255, 0.2); border-radius: 50%; filter: blur(80px);"></div>
-            <div style="position: absolute; bottom: -10%; left: -20%; width: 300px; height: 300px; background: rgba(128, 0, 128, 0.1); border-radius: 50%; filter: blur(80px);"></div>
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] dark:bg-primary/15"></div>
+            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] dark:bg-indigo-900/20"></div>
         </div>
 
         <!-- MAIN CONTENT (DASHBOARD) -->
-        <main style="position: relative; z-index: 10; width: 100%; padding: 0 20px 140px 20px;">
+        <main class="relative z-10 w-full px-5 pb-32 pt-6">
             
             <!-- Header Section -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-top: 24px;">
-                <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9999px; padding: 6px 16px 6px 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-                    <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-accent); box-shadow: 0 0 10px var(--primary-accent); animation: pulse 2s infinite; margin-left: 4px;"></div>
-                    <h3 style="font-size: 9px; font-weight: 700; letter-spacing: 0.15em; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; margin: 0;">Navy Elite</h3>
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-2 bg-white/50 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/5 rounded-full pl-2 pr-4 py-1.5 shadow-sm">
+                    <div class="w-2 h-2 rounded-full bg-primary shadow-neon animate-pulse ml-1"></div>
+                    <h3 class="text-[9px] font-bold tracking-[0.15em] text-gray-600 dark:text-gray-300 uppercase">Navy Elite</h3>
                 </div>
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <button style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); transition: transform 0.2s; transform: scale(1);" 
-                            onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
-                        <span class="material-symbols-outlined" style="color: rgba(255, 255, 255, 0.7); font-size: 18px;">light_mode</span>
+                <div class="flex items-center gap-3">
+                    <button class="dash-btn w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] shadow-sm border border-gray-200 dark:border-white/5 active:scale-95 transition-transform" onclick="document.documentElement.classList.toggle('dark')">
+                        <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">light_mode</span>
                     </button>
-                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)); padding: 1.5px; position: relative;">
-                        <img alt="User" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-black);" src="https://i.pravatar.cc/150?img=11"/>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-[1.5px] relative group">
+                        <img alt="User" class="w-full h-full rounded-full object-cover border-2 border-background-light dark:border-background-dark" src="https://i.pravatar.cc/150?img=11"/>
                     </div>
                 </div>
             </div>
 
             <!-- Hero Title -->
-            <div style="margin-bottom: 32px; position: relative; z-index: 10;">
+            <div class="mb-8 relative z-10">
                 <div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; opacity: 0; animation: dash-fadeIn 0.5s ease-out forwards; animation-delay: 0.1s;">
-                        <span style="display: flex; height: 10px; width: 10px; position: relative;">
-                            <span style="animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; position: absolute; top: 0; left: 0; height: 100%; width: 100%; border-radius: 9999px; background-color: var(--primary-accent); opacity: 0.75;"></span>
-                            <span style="position: relative; display: inline-flex; border-radius: 9999px; height: 10px; width: 10px; background-color: var(--primary-accent);"></span>
+                    <div class="flex items-center gap-2 mb-3 opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]" style="animation-fill-mode: forwards; animation-delay: 0.1s;">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
                         </span>
-                        <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-accent);">Sistema activo • Día 12</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-primary">Sistema activo • Día 12</span>
                     </div>
-                    <h1 style="font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.85; letter-spacing: -0.05em; color: white; margin-bottom: 8px;">
+                    <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter text-gray-900 dark:text-white mb-2">
                         Protocolo <br/>
-                        <span style="color: var(--primary-accent); text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); position: relative; display: inline-block;">
+                        <span class="text-primary dash-text-glow relative inline-block">
                              Elite
-                            <svg style="position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px; color: var(--primary-accent); opacity: 0.5;" preserveAspectRatio="none" viewBox="0 0 100 10">
+                            <svg class="absolute -bottom-1 left-0 w-full h-2 text-primary opacity-50" preserveAspectRatio="none" viewBox="0 0 100 10">
                                 <path d="M0 5 Q 50 10 100 5" fill="none" stroke="currentColor" stroke-width="2"></path>
                             </svg>
                         </span>
-                        <span style="color: transparent; background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4)); -webkit-background-clip: text; background-clip: text;">Ops</span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-br from-gray-800 to-gray-400 dark:from-white dark:to-gray-600">Ops</span>
                     </h1>
                 </div>
             </div>
 
             <!-- Horizontal Scroll Cards (Rutinas Diarias) -->
-            <section style="margin-bottom: 48px;">
-                <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 24px; -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; margin: 0 -20px; padding-left: 20px; padding-right: 20px;">
+            <section class="mb-12">
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
                     
                     <!-- DÍA 1 -->
-                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 85%; position: relative;">
-                        <div class="dash-glass-panel" style="height: 22rem; border-radius: 1.5rem; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border: 1px solid rgba(0, 85, 255, 0.3); box-shadow: 0 0 10px rgba(0, 85, 255, 0.4); transition: all 0.3s;">
-                            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0, 85, 255, 0.1), transparent); opacity: 1;"></div>
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-primary/30 shadow-neon-sm">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-100"></div>
                             
-                            <div style="position: relative; z-index: 10;">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-                                    <span style="padding: 4px 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-accent);">Día 1</span>
-                                    <span class="material-symbols-outlined" style="color: var(--primary-accent);">fitness_center</span>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-primary">Día 1</span>
+                                    <span class="material-symbols-outlined text-primary">fitness_center</span>
                                 </div>
-                                <h4 style="font-size: 2rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Leg Day <br/><span style="color: var(--primary-accent);">Power</span></h4>
-                                <p style="font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.1em;">Cuádriceps & Gemelos</p>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-primary">Power</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Cuádriceps &amp; Gemelos</p>
                             </div>
                             
-                            <div style="position: relative; z-index: 10; margin-top: auto;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.6); font-size: 10px; font-weight: 600;">
-                                    <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 65 min
-                                    <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 65 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
                                     <span>Intensidad Alta</span>
                                 </div>
-                                <button onclick="animateStart(this)" style="width: 100%; padding: 14px; border-radius: 12px; background: var(--primary-accent); color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
                                     <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined btn-icon" style="font-size: 14px;">arrow_forward</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
                                 </button>
                             </div>
-                            <div style="position: absolute; bottom: -40px; right: -40px; width: 128px; height: 128px; background: rgba(0, 85, 255, 0.2); border-radius: 50%; filter: blur(48px);"></div>
+                            <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
                         </div>
                     </div>
 
                     <!-- DÍA 2 -->
-                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 85%; position: relative;">
-                        <div class="dash-glass-panel" style="height: 22rem; border-radius: 1.5rem; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s;">
-                            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(128, 0, 255, 0.05), transparent);"></div>
-                            <div style="position: relative; z-index: 10;">
-                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-                                    <span style="padding: 4px 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.6);">Día 2</span>
-                                    <span class="material-symbols-outlined" style="color: rgba(255, 255, 255, 0.5);">fitness_center</span>
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 2</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
                                 </div>
-                                <h4 style="font-size: 2rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Push <br/><span style="color: rgba(255, 255, 255, 0.6);">Focus</span></h4>
-                                <p style="font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.1em;">Pecho, Hombro, Tríceps</p>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Push <br/><span class="text-gray-400">Focus</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Pecho, Hombro, Tríceps</p>
                             </div>
-                            <div style="position: relative; z-index: 10; margin-top: auto;">
-                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.6); font-size: 10px; font-weight: 600;">
-                                    <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 55 min
-                                    <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 55 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
                                     <span>Media-Alta</span>
                                 </div>
-                                <button onclick="animateStart(this)" style="width: 100%; padding: 14px; border-radius: 12px; background: var(--primary-accent); color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
                                     <span class="btn-text">Comenzar</span>
-                                    <span class="material-symbols-outlined btn-icon" style="font-size: 14px;">arrow_forward</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
                                 </button>
                             </div>
                         </div>
                     </div>
 
+                    <!-- DÍA 3 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 3</span>
+                                    <span class="material-symbols-outlined text-gray-500">pool</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Active <br/><span class="text-gray-400">Rest</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Movilidad &amp; Cardio LISS</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 40 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Baja</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 4 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 4</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Pull <br/><span class="text-gray-400">Hyper</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Espalda &amp; Bíceps</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 60 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 5 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 5</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-gray-400">Posterior</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Femoral &amp; Glúteo</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 70 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Muy Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 6 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 6</span>
+                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Upper <br/><span class="text-gray-400">Body</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Torso Completo</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> 50 min
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Media</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DÍA 7 -->
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden active:scale-[0.98] transition-all duration-300 border-white/5">
+                            <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent"></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-start mb-4">
+                                    <span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 7</span>
+                                    <span class="material-symbols-outlined text-gray-500">spa</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Full <br/><span class="text-gray-400">Recovery</span></h4>
+                                <p class="text-[10px] font-medium text-gray-400 uppercase tracking-wide">Descanso Total</p>
+                            </div>
+                            <div class="relative z-10 mt-auto">
+                                <div class="flex items-center gap-2 mb-4 text-gray-400 text-[10px] font-semibold">
+                                    <span class="material-symbols-outlined text-[14px]">schedule</span> --
+                                    <span class="w-1 h-1 bg-gray-600 rounded-full"></span>
+                                    <span>Relax</span>
+                                </div>
+                                <button onclick="animateStart(this)" class="w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 border border-transparent">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined text-[14px] btn-icon">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <!-- Categories Section (Rutinas Científicas) -->
-            <section style="margin-bottom: 8px;">
+            <section class="mb-2">
                 <!-- Header Tech -->
-                <div style="display: flex; flex-direction: column; margin-bottom: 16px; gap: 8px; position: relative; z-index: 10;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; opacity: 0; animation: dash-fadeIn 0.8s ease-out forwards;">
-                        <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary-accent); box-shadow: 0 0 10px var(--primary-accent);"></div>
-                        <span style="font-size: 9px; font-weight: 700; letter-spacing: 0.25em; color: rgba(173, 216, 230, 0.7); text-transform: uppercase;">High Performance</span>
+                <div class="flex flex-col mb-4 gap-2 relative z-10">
+                    <div class="flex items-center gap-2 mb-1 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_10px_var(--primary-accent)]"></div>
+                        <span class="text-[9px] font-bold tracking-[0.25em] text-blue-200/70 uppercase">High Performance</span>
                     </div>
-                    <div style="display: flex; align-items: flex-end; gap: 12px;">
-                         <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.05em; color: white; line-height: 1;">
-                            Rutinas <span style="color: transparent; background: linear-gradient(to right, var(--primary-accent), rgba(0, 255, 255, 0.8)); -webkit-background-clip: text; background-clip: text; text-shadow: 0 0 20px rgba(0, 85, 255, 0.7);">Científicas</span>
+                    <div class="flex items-end gap-3">
+                         <h2 class="text-3xl font-black uppercase italic tracking-tighter text-white leading-none">
+                            Rutinas <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent)] to-cyan-400 dash-text-glow">Científicas</span>
                         </h2>
-                        <div style="height: 1px; flex: 1; background: linear-gradient(to right, rgba(0, 85, 255, 0.5), transparent); margin-bottom: 8px; opacity: 0.4;"></div>
+                        <div class="h-[1px] flex-1 bg-gradient-to-r from-primary/50 to-transparent mb-2 opacity-40"></div>
                     </div>
                 </div>
                 
                 <!-- Scroll Horizontal con "Peek" Effect -->
-                <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 24px; padding-top: 56px; -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; margin: 0 -20px; padding-left: 20px; padding-right: 20px;">
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 pt-14 snap-x snap-mandatory -mx-5 px-5">
                     
                     <!-- Cat 1: Piernas -->
-                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 75%; position: relative; cursor: pointer;">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" style="position: absolute; bottom: 0; right: 0; height: 115%; width: auto; z-index: 20; pointer-events: none; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); transition: transform 0.5s ease-out;" alt="Piernas Model" />
-                        <div class="dash-glass-panel" style="height: 176px; border-radius: 1.5rem; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(0, 85, 255, 0.2); background: rgba(0, 0, 255, 0.05);">
-                            <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0, 85, 255, 0.2), transparent); z-index: 0;"></div>
-                            <div style="position: relative; z-index: 30; width: 60%;">
-                                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(0, 85, 255, 0.2); font-size: 12px; font-weight: 700; color: rgba(0, 170, 255, 0.8); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; border: 1px solid rgba(0, 85, 255, 0.3);">Top Pick</span>
-                                <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Rutina <br/><span style="color: rgba(0, 170, 255, 0.8);">Piernas</span></h3>
-                                <p style="font-size: 14px; font-weight: 500; color: rgba(173, 216, 230, 0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
-                                    <span class="material-symbols-outlined" style="font-size: 14px;">fitness_center</span> 12
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute bottom-0 right-0 h-[115%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-3" alt="Piernas Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-blue-500/20 bg-blue-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-blue-500/20 text-xs font-bold text-blue-300 uppercase tracking-wider mb-1.5 border border-blue-500/30">Top Pick</span>
+                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Rutina <br/><span class="text-blue-400">Piernas</span></h3>
+                                <p class="text-sm font-medium text-blue-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">fitness_center</span> 12
                                 </p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Cat 2: Abdomen -->
-                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 75%; position: relative; cursor: pointer;">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" style="position: absolute; bottom: 0; right: 0; height: 115%; width: auto; z-index: 20; pointer-events: none; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); transition: transform 0.5s ease-out;" alt="Abdomen Model" />
-                        <div class="dash-glass-panel" style="height: 176px; border-radius: 1.5rem; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(128, 0, 128, 0.2); background: rgba(128, 0, 128, 0.05);">
-                            <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(128, 0, 128, 0.2), transparent); z-index: 0;"></div>
-                            <div style="position: relative; z-index: 30; width: 60%;">
-                                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(128, 0, 128, 0.2); font-size: 12px; font-weight: 700; color: rgba(216, 180, 254, 0.8); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; border: 1px solid rgba(128, 0, 128, 0.3);">Core</span>
-                                <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Abdomen <br/><span style="color: rgba(216, 180, 254, 0.8);">Steel</span></h3>
-                                <p style="font-size: 14px; font-weight: 500; color: rgba(216, 180, 254, 0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
-                                    <span class="material-symbols-outlined" style="font-size: 14px;">local_fire_department</span> 8
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" class="absolute bottom-0 right-0 h-[115%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-3" alt="Abdomen Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-purple-500/20 bg-purple-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-purple-500/20 text-xs font-bold text-purple-300 uppercase tracking-wider mb-1.5 border border-purple-500/30">Core</span>
+                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Abdomen <br/><span class="text-purple-400">Steel</span></h3>
+                                <p class="text-sm font-medium text-purple-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">local_fire_department</span> 8
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 3: Brazos -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute bottom-0 right-[-10px] h-[115%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-3" alt="Brazos Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-cyan-500/20 bg-cyan-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-cyan-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-cyan-500/20 text-xs font-bold text-cyan-300 uppercase tracking-wider mb-1.5 border border-cyan-500/30">Hypertrophy</span>
+                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Brazos <br/><span class="text-cyan-400">Massive</span></h3>
+                                <p class="text-sm font-medium text-cyan-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">fitness_center</span> 10
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 4: Espalda -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp" class="absolute bottom-0 right-[-10px] h-[115%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-3" alt="Espalda Model" />
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-indigo-500/20 bg-indigo-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-indigo-500/20 text-xs font-bold text-indigo-300 uppercase tracking-wider mb-1.5 border border-indigo-500/30">Width</span>
+                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Espalda <br/><span class="text-indigo-400">Cobra</span></h3>
+                                <p class="text-sm font-medium text-indigo-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">fitness_center</span> 14
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 5: Ciencia Fitness -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="absolute bottom-0 right-[-10px] h-[115%] w-auto z-20 pointer-events-none object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] pop-out-img transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-translate-y-3" alt="Educación Model" />
+
+                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-emerald-500/20 bg-emerald-900/10">
+                            <div class="absolute inset-0 bg-gradient-to-r from-emerald-600/20 to-transparent z-0"></div>
+                            <div class="relative z-30 w-[60%]">
+                                <span class="inline-block px-1.5 py-0.5 rounded bg-emerald-500/20 text-xs font-bold text-emerald-300 uppercase tracking-wider mb-1.5 border border-emerald-500/30">Edu</span>
+                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Ciencia <br/><span class="text-emerald-400">Fitness</span></h3>
+                                <p class="text-sm font-medium text-emerald-200/70 uppercase tracking-wide mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">school</span> 15
                                 </p>
                             </div>
                         </div>
@@ -547,94 +868,268 @@
                 </div>
             </section>
 
-            <!-- SECCIÓN NUEVA: Rutinas Populares -->
-            <section style="margin-bottom: 40px;">
+            <!-- SECCIÓN NUEVA: Rutinas Populares (Actualizado: Rutinas de Fuerza) -->
+            <section class="mb-10">
                 <!-- Título Sección -->
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; opacity: 0; animation: dash-fadeIn 0.8s ease-out forwards; animation-delay: 0.2s;">
-                    <h2 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.05em; color: white;">
-                        Rutinas <span style="color: var(--primary-accent); text-shadow: 0 0 20px rgba(0, 85, 255, 0.7);">Populares</span>
+                <div class="flex items-center gap-2 mb-6 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.2s;">
+                    <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">
+                        Rutinas <span class="text-primary dash-text-glow">Populares</span>
                     </h2>
-                    <div style="height: 1px; flex: 1; background: rgba(255, 255, 255, 0.1); margin-left: 8px;"></div>
+                    <div class="h-[1px] flex-1 bg-white/10 ml-2"></div>
                 </div>
 
                 <!-- Filtros (Tabs Scrollables) -->
-                <div id="body-focus-filters" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 24px; -ms-overflow-style: none; scrollbar-width: none; margin: 0 -20px 24px -20px; padding-left: 20px; padding-right: 20px;">
-                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn active" style="flex-shrink: 0; padding: 8px 20px; border-radius: 9999px; background: var(--primary-accent); color: white; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; transition: all 0.3s;">
+                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
+                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn active flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon transition-all duration-300">
                         Full Body
                     </button>
-                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn" style="flex-shrink: 0; padding: 8px 20px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.6); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s;">
+                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
                         Torso
+                    </button>
+                    <button onclick="filterBodyFocus('routine_pierna', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
+                        Pierna
+                    </button>
+                    <button onclick="filterBodyFocus('routine_gluteo', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
+                        Glúteo
+                    </button>
+                    <button onclick="filterBodyFocus('routine_core', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase tracking-wider hover:bg-white/10 transition-all duration-300">
+                        Core
                     </button>
                 </div>
 
                 <!-- Lista Vertical de Rutinas (Contenedor Dinámico) -->
-                <div id="body-focus-list" style="display: flex; flex-direction: column; gap: 16px;">
+                <div id="body-focus-list" class="flex flex-col gap-4">
                     <!-- El contenido se inyecta vía JS al cargar -->
                 </div>
             </section>
 
-            <!-- Bottom Navigation (Fixed and centered) - NUEVO MENÚ -->
-            <div style="position: fixed; bottom: 24px; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 480px; padding: 0 16px; z-index: 50;">
-                <nav id="nav-bar" class="nav-glass" style="border-radius: 2rem; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);">
-                    
-                    <!-- Nav Item 1: Inicio -->
-                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; position: relative;" href="#">
-                        <div style="position: absolute; top: -4px; right: 0; width: 6px; height: 6px; background: #ff3b30; border-radius: 50%; border: 1px solid #1a1a1a; z-index: 10;"></div>
-                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; background: var(--primary-accent); box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); color: white; transform: translateY(-4px); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">grid_view</span>
-                        </div>
-                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: var(--primary-accent); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Inicio</span>
-                    </a>
-                    
-                    <!-- Nav Item 2: Biblioteca -->
-                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
-                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">fitness_center</span>
-                        </div>
-                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Biblio</span>
-                    </a>
-                    
-                    <!-- Nav Item 3: Creador -->
-                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
-                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">add_circle</span>
-                        </div>
-                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Crear</span>
-                    </a>
-                    
-                    <!-- Nav Item 4: Progreso -->
-                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
-                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">bar_chart</span>
-                        </div>
-                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Datos</span>
-                    </a>
-                    
-                    <!-- Nav Item 5: IA Coach -->
-                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
-                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
-                            <span class="material-symbols-outlined" style="font-size: 20px;">auto_awesome</span>
-                        </div>
-                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">IA</span>
-                    </a>
+            <!-- SECCIÓN NUEVA: Descubre con Navy AI -->
+            <section class="mb-4">
+                <!-- Cabecera con Icono Animado -->
+                <div class="flex items-center gap-2 mb-6 px-1 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.3s;">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-cyan-400 flex items-center justify-center shadow-neon animate-pulse">
+                        <span class="material-symbols-outlined text-white text-[18px]">auto_awesome</span>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black uppercase italic tracking-tighter text-white leading-none">
+                            Descubre con <br/>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Navy AI</span>
+                        </h2>
+                    </div>
+                </div>
 
-                </nav>
-            </div>
+                <!-- Scroll Horizontal Cards AI -->
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-4 -mx-5 px-5 snap-x snap-mandatory">
+                    
+                    <!-- Card 1 -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
+                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-emerald-500/20 bg-gradient-to-b from-emerald-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/20 rounded-full blur-3xl group-hover:bg-emerald-500/30 transition-colors"></div>
+                            <div class="mb-6 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-[24px]">psychology</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Cómo el ejercicio cambia tu cerebro</h3>
+                                <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Neurociencia
+                                </p>
+                            </div>
+                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-emerald-600 hover:border-emerald-500 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                                <span>Pregunta a Navy AI</span>
+                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Card 2 -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
+                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-orange-500/20 bg-gradient-to-b from-orange-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-orange-500/20 rounded-full blur-3xl group-hover:bg-orange-500/30 transition-colors"></div>
+                            <div class="mb-6 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-4 shadow-lg shadow-orange-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-[24px]">monitor_weight</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Mitos de pérdida de peso</h3>
+                                <p class="text-[10px] font-bold text-orange-400 uppercase tracking-wider flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> Realidad vs Ficción
+                                </p>
+                            </div>
+                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-orange-600 hover:border-orange-500 hover:shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                                <span>Pregunta a Navy AI</span>
+                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
+                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-purple-500/20 bg-gradient-to-b from-purple-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/20 rounded-full blur-3xl group-hover:bg-purple-500/30 transition-colors"></div>
+                            <div class="mb-6 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-4 shadow-lg shadow-purple-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-[24px]">model_training</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white leading-tight mb-2">¿Por qué saltas los entrenamientos?</h3>
+                                <p class="text-[10px] font-bold text-purple-400 uppercase tracking-wider flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span> Psicología
+                                </p>
+                            </div>
+                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-purple-600 hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                                <span>Pregunta a Navy AI</span>
+                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="snap-center flex-shrink-0 w-[75%] relative group">
+                        <div class="dash-glass-panel p-5 rounded-[1.5rem] h-full flex flex-col justify-between border-cyan-500/20 bg-gradient-to-b from-cyan-900/10 to-transparent relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-3xl group-hover:bg-cyan-500/30 transition-colors"></div>
+                            <div class="mb-6 relative z-10">
+                                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 to-cyan-600 flex items-center justify-center mb-4 shadow-lg shadow-cyan-500/20 text-white transform group-hover:-translate-y-1 transition-transform duration-300">
+                                    <span class="material-symbols-outlined text-[24px]">self_improvement</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-white leading-tight mb-2">Supera la ansiedad con ejercicio</h3>
+                                <p class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span> Bienestar Mental
+                                </p>
+                            </div>
+                            <button class="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white text-[10px] font-bold uppercase tracking-wider hover:bg-cyan-600 hover:border-cyan-500 hover:shadow-[0_0_15px_rgba(34,211,238,0.4)] transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                                <span>Pregunta a Navy AI</span>
+                                <span class="material-symbols-outlined text-[14px] group-hover/btn:rotate-12 transition-transform">chat_bubble</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECCIÓN NUEVA: Cardio Express -->
+            <section class="mb-28">
+                <!-- Título Sección -->
+                <div class="flex items-center gap-2 mb-6 opacity-0 animate-[fadeIn_0.8s_ease-out_forwards]" style="animation-delay: 0.4s;">
+                    <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">
+                        Cardio <span class="text-primary dash-text-glow">Express</span>
+                    </h2>
+                    <div class="h-[1px] flex-1 bg-white/10 ml-2"></div>
+                </div>
+
+                <!-- Scroll Horizontal Cards -->
+                <div class="flex gap-5 overflow-x-auto dash-no-scrollbar pb-8 -mx-5 px-5 snap-x snap-mandatory">
+                    
+                    <!-- Card 1: HIIT -->
+                    <div class="snap-center flex-shrink-0 w-[80%] relative group">
+                        <div class="relative h-[26rem] rounded-[2rem] overflow-hidden active:scale-[0.98] transition-transform duration-300">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc1.webp" class="absolute inset-0 w-full h-full object-cover" alt="HIIT Challenge">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-[1.5rem] p-4">
+                                <div class="grid grid-cols-3 gap-2 mb-4 divide-x divide-white/10">
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Duración</p>
+                                        <p class="text-sm font-bold text-white">30min</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Descanso</p>
+                                        <p class="text-sm font-bold text-white">20s</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Reps</p>
+                                        <p class="text-sm font-bold text-white">12</p>
+                                    </div>
+                                </div>
+                                <button class="w-full py-3.5 rounded-xl bg-primary hover:bg-blue-600 text-white font-black uppercase tracking-widest text-[11px] shadow-neon flex items-center justify-center gap-2 transition-all">
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Dance Cardio -->
+                    <div class="snap-center flex-shrink-0 w-[80%] relative group">
+                        <div class="relative h-[26rem] rounded-[2rem] overflow-hidden active:scale-[0.98] transition-transform duration-300">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc2.webp" class="absolute inset-0 w-full h-full object-cover" alt="Dance Challenge">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+                            <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-[1.5rem] p-4">
+                                <div class="grid grid-cols-3 gap-2 mb-4 divide-x divide-white/10">
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Duración</p>
+                                        <p class="text-sm font-bold text-white">45min</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Ritmo</p>
+                                        <p class="text-sm font-bold text-white">Alto</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Kcal</p>
+                                        <p class="text-sm font-bold text-white">450</p>
+                                    </div>
+                                </div>
+                                <button class="w-full py-3.5 rounded-xl bg-primary hover:bg-blue-600 text-white font-black uppercase tracking-widest text-[11px] shadow-neon flex items-center justify-center gap-2 transition-all">
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Box Cardio -->
+                    <div class="snap-center flex-shrink-0 w-[80%] relative group">
+                        <div class="relative h-[26rem] rounded-[2rem] overflow-hidden active:scale-[0.98] transition-transform duration-300">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc3.webp" class="absolute inset-0 w-full h-full object-cover object-top" alt="Box Cardio Challenge">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+
+                            <div class="absolute bottom-2 left-2 right-2 bg-black/60 backdrop-blur-xl border border-white/10 rounded-[1.5rem] p-4">
+                                <div class="grid grid-cols-3 gap-2 mb-4 divide-x divide-white/10">
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Duración</p>
+                                        <p class="text-sm font-bold text-white">35min</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Rounds</p>
+                                        <p class="text-sm font-bold text-white">10</p>
+                                    </div>
+                                    <div class="text-center px-1">
+                                        <p class="text-[9px] text-gray-400 uppercase tracking-wide mb-1">Kcal</p>
+                                        <p class="text-sm font-bold text-white">500</p>
+                                    </div>
+                                </div>
+
+                                <button class="w-full py-3.5 rounded-xl bg-primary hover:bg-blue-600 text-white font-black uppercase tracking-widest text-[11px] shadow-neon flex items-center justify-center gap-2 transition-all">
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
         </main>
     </div>
 
-    <!-- 7. PROFILE (VISTA ELIMINADA - CONTENIDO REMOVIDO) -->
-    <div id="view-profile" class="view"></div>
+    <!-- 7. PROFILE VIEW (MANTENIDO ORIGINAL) -->
+    <div id="view-profile" class="view">
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden; box-shadow: 0 0 30px var(--primary-accent-glow);"><img src="https://i.pravatar.cc/150?u=fit" style="width:100%; height:100%; object-fit:cover;"></div>
+            <h2 id="profile-name" style="margin:0; font-weight:900; font-size: 2rem; letter-spacing: -1px; text-transform: uppercase;">USUARIO</h2>
+            <p style="opacity:0.8; font-weight: 800; color: var(--primary-accent); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 3px; margin-top: 8px;">Navy Elite Member</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:50px;">
+            <div class="stat-card-neon" style="background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid var(--card-border);"><span style="display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; text-shadow: 0 0 15px var(--primary-accent-glow);">24</span><span style="font-size:0.75rem; opacity:0.6; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px;">SESIONES</span></div>
+            <div class="stat-card-neon" style="background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid var(--card-border);"><span style="display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; text-shadow: 0 0 15px var(--primary-accent-glow);">12k</span><span style="font-size:0.75rem; opacity:0.6; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px;">KCAL</span></div>
+            <div class="stat-card-neon" style="background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid var(--card-border);"><span style="display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; text-shadow: 0 0 15px var(--primary-accent-glow);">PRO</span><span style="font-size:0.75rem; opacity:0.6; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px;">RANK</span></div>
+        </div>
+        <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;">CERRAR SESIÓN NAVY</div>
+    </div>
 
     <!-- DOCK NAVIGATION ORIGINAL -->
     <nav class="bottom-nav" id="main-nav">
         <div class="nav-item active" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
         <div class="nav-item" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
-        <div class="nav-item" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+        <div class="nav-item" onclick="nav('view-profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
     </nav>
 
 </div>
 
+<!-- JAVASCRIPT COMBINADO -->
 <script>
 /* =========================================
    🎛️ PANEL DE CONTROL DEL DUEÑO (EDITA AQUÍ TUS DATOS)
@@ -645,7 +1140,7 @@
    const PAYMENT_TOKEN = "AZ82_XJ91_LQ00_PRO_DIVE"; 
 
 /* =========================================
-   ⛔ NO TOQUES NADA DEBAJO DE ESTA LÍNEA (LÓGICA DEL SISTEMA)
+   ⛔ NO TOQUES NADA DEBAJO DE ESTA LÍNEA (LÓGICA DEL SISTEMA ORIGINAL)
    ========================================= */
 
     async function checkPaymentToken() {
@@ -689,7 +1184,9 @@
     function updateUserDisplay(email) {
         if(!email) return;
         const name = email.split('@')[0].toUpperCase();
-        document.getElementById('user-display').innerText = name;
+        // Actualizar nombre en el dashboard si existe el elemento
+        const userDisplay = document.getElementById('user-display');
+        if (userDisplay) userDisplay.innerText = name;
         document.getElementById('profile-name').innerText = name;
     }
 
@@ -799,13 +1296,13 @@
             updateUserDisplay(session);
             nav('view-dashboard');
         }
-        
         // Inicializar el dashboard
-        const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
-        if (firstBtn) {
-            filterBodyFocus('routine_fullbody', firstBtn);
-        }
+        initializeDashboard();
     };
+
+/* =========================================
+   🎯 LÓGICA DEL NUEVO DASHBOARD (CÓDIGO B)
+   ========================================= */
 
     // --- BASE DE DATOS ACTUALIZADA: RUTINAS DE FUERZA ---
     const workoutsDB = {
@@ -840,25 +1337,17 @@
     function filterBodyFocus(category, btnElement) {
         const buttons = document.querySelectorAll('#body-focus-filters .filter-btn');
         buttons.forEach(btn => {
-            btn.classList.remove('active');
-            btn.style.background = 'rgba(255, 255, 255, 0.05)';
-            btn.style.color = 'rgba(255, 255, 255, 0.6)';
-            btn.style.boxShadow = 'none';
-            btn.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            btn.classList.remove('bg-primary', 'text-white', 'shadow-neon');
+            btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
         });
 
         if(btnElement) {
-            btnElement.classList.add('active');
-            btnElement.style.background = 'var(--primary-accent)';
-            btnElement.style.color = 'white';
-            btnElement.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
-            btnElement.style.border = 'none';
+            btnElement.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
+            btnElement.classList.add('bg-primary', 'text-white', 'shadow-neon');
         }
 
         const listContainer = document.getElementById('body-focus-list');
-        if (!listContainer) return;
-        
-        listContainer.innerHTML = '';
+        listContainer.innerHTML = ''; 
 
         const routines = workoutsDB[category];
         
@@ -867,32 +1356,32 @@
                 let boltsHtml = '';
                 for(let i=0; i<3; i++) {
                     const colorClass = i < routine.intensity 
-                        ? (routine.intensity === 3 ? '#ff3b30' : 'var(--primary-accent)') 
-                        : 'rgba(255, 255, 255, 0.3)';
-                    boltsHtml += `<span class="material-symbols-outlined" style="font-size: 14px; color: ${colorClass}; fill: currentColor;">bolt</span>`;
+                        ? (routine.intensity === 3 ? 'text-red-500' : 'text-primary') 
+                        : 'text-gray-700';
+                    boltsHtml += `<span class="material-symbols-outlined text-[14px] ${colorClass} fill-current">bolt</span>`;
                 }
 
                 const itemHtml = `
-                    <div class="dash-glass-panel" style="padding: 12px; border-radius: 1rem; display: flex; align-items: center; gap: 16px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); animation: listFade 0.3s ease-out forwards; animation-delay: ${index * 0.1}s">
-                        <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, 0.1);">
-                            <img src="${routine.img}" style="width: 100%; height: 100%; object-fit: cover; ${routine.align}; opacity: 0.9; transition: transform 0.5s; ${routine.grayscale ? 'filter: grayscale(50%)' : ''}" alt="${routine.title}">
-                            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
+                    <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30 animate-list-item" style="animation-delay: ${index * 0.1}s">
+                        <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
+                            <img src="${routine.img}" class="w-full h-full object-cover ${routine.align} opacity-90 group-hover:scale-110 transition-transform duration-500 ${routine.grayscale ? 'grayscale-[50%]' : ''}" alt="${routine.title}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         </div>
                         
-                        <div style="flex: 1; min-width: 0;">
-                            <h3 style="font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${routine.title}</h3>
-                            <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: rgba(255, 255, 255, 0.6); margin-bottom: 8px;">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-bold text-white mb-1 truncate">${routine.title}</h3>
+                            <div class="flex items-center gap-2 text-[10px] text-gray-400 mb-2">
                                 <span>${routine.time}</span>
-                                <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                                <span class="w-1 h-1 rounded-full bg-gray-600"></span>
                                 <span>${routine.ex}</span>
                             </div>
-                            <div style="display: flex; gap: 2px;">
+                            <div class="flex gap-0.5">
                                 ${boltsHtml}
                             </div>
                         </div>
                         
-                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.6);">
-                            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+                        <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400 group-hover:text-primary group-hover:bg-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                         </div>
                     </div>
                 `;
@@ -901,45 +1390,16 @@
         }
     }
 
-    function selectNav(clickedElement) {
-        const allNavItems = document.querySelectorAll('#nav-bar a');
-        
-        allNavItems.forEach(item => {
-            item.style.opacity = '0.5';
-            const iconContainer = item.querySelector('.icon-container');
-            if (iconContainer) {
-                iconContainer.style.background = 'transparent';
-                iconContainer.style.boxShadow = 'none';
-                iconContainer.style.color = 'rgba(255, 255, 255, 0.5)';
-                iconContainer.style.transform = 'translateY(0)';
-            }
-            
-            const textLabel = item.querySelector('.text-label');
-            if (textLabel) {
-                textLabel.style.color = 'rgba(255, 255, 255, 0.5)';
-            }
-        });
-
-        clickedElement.style.opacity = '1';
-        const activeIconContainer = clickedElement.querySelector('.icon-container');
-        if (activeIconContainer) {
-            activeIconContainer.style.background = 'var(--primary-accent)';
-            activeIconContainer.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
-            activeIconContainer.style.color = 'white';
-            activeIconContainer.style.transform = 'translateY(-4px)';
-        }
-
-        const activeTextLabel = clickedElement.querySelector('.text-label');
-        if (activeTextLabel) {
-            activeTextLabel.style.color = 'var(--primary-accent)';
+    function initializeDashboard() {
+        const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+        if (firstBtn) {
+            filterBodyFocus('routine_fullbody', firstBtn);
         }
     }
 
     function animateStart(btn) {
-        btn.style.background = '#22c55e';
-        btn.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.6)';
-        btn.style.border = '1px solid #4ade80';
-        btn.style.transform = 'scale(0.95)';
+        btn.classList.remove('bg-primary', 'shadow-neon');
+        btn.classList.add('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
 
         const textSpan = btn.querySelector('.btn-text');
         const iconSpan = btn.querySelector('.btn-icon');
@@ -948,28 +1408,12 @@
         if (iconSpan) iconSpan.textContent = 'check_circle';
 
         setTimeout(() => {
-            btn.style.background = 'var(--primary-accent)';
-            btn.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
-            btn.style.border = 'none';
-            btn.style.transform = 'scale(1)';
+            btn.classList.add('bg-primary', 'shadow-neon');
+            btn.classList.remove('bg-green-500', 'shadow-[0_0_20px_rgba(34,197,94,0.6)]', 'border-green-400', 'scale-[0.95]');
             if (textSpan) textSpan.textContent = 'Comenzar';
             if (iconSpan) iconSpan.textContent = 'arrow_forward';
         }, 2000);
     }
-
-    // Animación de ping
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes ping {
-            0% { transform: scale(1); opacity: 0.75; }
-            100% { transform: scale(2); opacity: 0; }
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-    `;
-    document.head.appendChild(style);
 </script>
 
 </body>
