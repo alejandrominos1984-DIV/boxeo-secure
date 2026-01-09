@@ -1,38 +1,19 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIT AI | Navy Elite v2.0</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIT AI | Navy Elite Training</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#0055ff", 
-                        "background-dark": "#000000",
-                        "navy-base": "#0a0a1a",
-                    },
-                    boxShadow: {
-                        'neon': '0 0 20px rgba(0, 85, 255, 0.5)',
-                    }
-                },
-            },
-        };
-    </script>
+    
+    <!-- Solo incluyo Material Symbols para el nuevo dashboard -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --primary-accent: #0055ff;
-            --primary-navy: #001a33;
+            --primary-accent: #0055ff; /* Azul Marino Vibrante */
+            --primary-navy: #001a33;  /* Base Azul Marino */
             --primary-accent-glow: rgba(0, 85, 255, 0.5);
             --bg-black: #000000;
             --card-dark: rgba(10, 15, 25, 0.85);
@@ -64,7 +45,7 @@
             flex-direction: column;
         }
 
-        /* --- ESTILOS VIEJOS (LOGIN/REGISTER) --- */
+        /* --- AUTH BACKGROUND --- */
         .auth-bg {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: var(--auth-bg-img);
@@ -78,76 +59,215 @@
             z-index: -1;
         }
 
+        /* --- VIEWS --- */
         .view { 
             display: none; 
             opacity: 0; 
             animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
             flex-direction: column;
             width: 100%;
+            padding: 30px;
             min-height: 100vh;
         }
-        
-        #view-welcome, #view-login, #view-register, #view-recover, #view-payment-stripe, #view-profile {
-            padding: 30px;
-        }
-
         .view.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Estilos generales Login */
-        .welcome-content { margin-top: auto; text-align: center; padding-bottom: 50px; }
-        .welcome-title { font-size: 3.4rem; font-weight: 900; line-height: 0.95; margin-bottom: 40px; letter-spacing: -2px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 85, 255, 0.4); }
-        .btn-get-started { background: rgba(10, 20, 40, 0.9); border-radius: 50px; height: 80px; display: flex; align-items: center; padding: 10px; cursor: pointer; transition: 0.4s; position: relative; text-decoration: none; width: 100%; border: 1px solid rgba(0, 85, 255, 0.2); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
-        .btn-get-started:hover { border-color: var(--primary-accent); box-shadow: 0 0 25px var(--primary-accent-glow); transform: translateY(-2px); }
-        .btn-get-started:active { transform: scale(0.96); }
-        .btn-circle { width: 60px; height: 60px; background: var(--primary-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px var(--primary-accent-glow); }
-        .btn-circle svg { width: 26px; height: 26px; color: #fff; }
-        .btn-text { flex-grow: 1; text-align: center; color: #fff; font-weight: 800; font-size: 1.2rem; margin-right: 45px; text-transform: uppercase; letter-spacing: 1.5px; }
-        .btn-arrows { position: absolute; right: 30px; display: flex; gap: 3px; opacity: 0.7; color: var(--primary-accent); }
-        .login-link-container { margin-top: 30px; font-size: 1rem; color: var(--text-dim); letter-spacing: 0.5px; }
-        .login-link-container span { color: var(--primary-accent); font-weight: 800; cursor: pointer; text-decoration: none; text-shadow: 0 0 10px var(--primary-accent-glow); }
-        .auth-form-container { margin-top: auto; margin-bottom: 40px; }
-        input.modern { width: 100%; padding: 24px; background: rgba(0, 26, 51, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(0, 85, 255, 0.15); border-radius: 22px; color: #fff; font-size: 1rem; transition: 0.3s; margin-bottom: 15px; }
-        input.modern:focus { border-color: var(--primary-accent); background: rgba(0, 85, 255, 0.05); box-shadow: 0 0 20px rgba(0, 85, 255, 0.2); }
-        .password-wrap { position: relative; }
-        .eye-btn { position: absolute; right: 22px; top: 28px; background: none; border: none; color: var(--text-dim); cursor: pointer; }
-        .btn-primary { width: 100%; padding: 24px; background: var(--primary-accent); color: #fff; border: none; border-radius: 22px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; transition: 0.3s; box-shadow: 0 10px 30px var(--primary-accent-glow); letter-spacing: 1px; }
-        .btn-primary:active { transform: scale(0.97); filter: brightness(1.2); }
+        /* --- WELCOME VIEW (NAVY NEON STYLE) --- */
+        .welcome-content {
+            margin-top: auto;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+        .welcome-title {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 40px;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(0, 85, 255, 0.4);
+        }
         
+        .btn-get-started {
+            background: rgba(10, 20, 40, 0.9);
+            border-radius: 50px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            text-decoration: none;
+            width: 100%;
+            border: 1px solid rgba(0, 85, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        .btn-get-started:hover {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 25px var(--primary-accent-glow);
+            transform: translateY(-2px);
+        }
+        .btn-get-started:active { transform: scale(0.96); }
+        .btn-circle {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--primary-accent-glow);
+        }
+        .btn-circle svg { width: 26px; height: 26px; color: #fff; }
+        .btn-text {
+            flex-grow: 1;
+            text-align: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-right: 45px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .btn-arrows {
+            position: absolute;
+            right: 30px;
+            display: flex;
+            gap: 3px;
+            opacity: 0.7;
+            color: var(--primary-accent);
+        }
+
+        .login-link-container {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+        .login-link-container span {
+            color: var(--primary-accent);
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            text-shadow: 0 0 10px var(--primary-accent-glow);
+        }
+
+        /* --- AUTH FORMS --- */
+        .auth-form-container {
+            margin-top: auto;
+            margin-bottom: 40px;
+        }
+        input.modern {
+            width: 100%;
+            padding: 24px;
+            background: rgba(0, 26, 51, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 22px;
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+        input.modern:focus {
+            border-color: var(--primary-accent);
+            background: rgba(0, 85, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
+        }
+        .password-wrap { position: relative; }
+        .eye-btn {
+            position: absolute; right: 22px; top: 28px;
+            background: none; border: none; color: var(--text-dim); cursor: pointer;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 24px;
+            background: var(--primary-accent);
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px var(--primary-accent-glow);
+            letter-spacing: 1px;
+        }
+        .btn-primary:active { transform: scale(0.97); filter: brightness(1.2); }
+
+        /* --- NAVIGATION --- */
+        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 88%; max-width: 420px; background: rgba(5, 10, 20, 0.96); backdrop-filter: blur(25px); border-radius: 45px; display: none; justify-content: space-around; padding: 10px; border: 1px solid var(--card-border); z-index: 1000; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9); }
+        .nav-item { color: var(--text-dim); display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 15px 25px; transition: 0.3s; border-radius: 35px; }
+        .nav-item.active { color: var(--primary-accent); background: rgba(0, 85, 255, 0.12); }
+        .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; filter: drop-shadow(0 0 8px currentColor); }
+
         .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-shadow: 0 0 10px var(--primary-accent-glow); text-transform: uppercase; letter-spacing: 1.5px; }
         .error { color: var(--error-red); font-size: 0.85rem; padding: 12px; text-align: center; display: none; margin-bottom: 12px; font-weight: 700; border: 1px solid rgba(255, 59, 48, 0.4); border-radius: 14px; background: rgba(255, 59, 48, 0.08); }
 
-        #payment-verify-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,5,15,0.98); backdrop-filter: blur(25px); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px; }
+        /* PAYMENT OVERLAY */
+        #payment-verify-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,5,15,0.98);
+            backdrop-filter: blur(25px);
+            z-index: 9999; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px;
+        }
         .diamond-neon { font-size: 70px; filter: drop-shadow(0 0 30px var(--primary-accent)); animation: float 3.5s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+
+        /* ESTILOS ESPECÍFICOS PARA EL NUEVO DASHBOARD */
+        .dash-glass-panel {
+            background: linear-gradient(145deg, rgba(20,20,30,0.4) 0%, rgba(10,10,20,0.6) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
         
-        /* ESTILOS DE PERFIL ANTIGUO (PARA COMPATIBILIDAD) */
-        .stat-card-neon { background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid var(--card-border); }
-        .stat-card-neon span:first-child { display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; text-shadow: 0 0 15px var(--primary-accent-glow); }
-        .stat-card-neon span:last-child { font-size:0.75rem; opacity:0.6; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
-        .link-text-neon { color: var(--primary-accent); font-weight: 700; text-decoration: none; text-shadow: 0 0 8px var(--primary-accent-glow); transition: 0.3s; }
-
-
-        /* --- ESTILOS DEL NUEVO DASHBOARD --- */
+        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
+        
         .dash-no-scrollbar::-webkit-scrollbar { display: none; }
         .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .dash-glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .dash-text-glow { text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); }
-        .nav-glass { background: rgba(10, 10, 26, 0.85); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); }
-        @keyframes pop-icon { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        .animate-pop { animation: pop-icon 0.4s ease forwards; }
-        @keyframes listFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-list-item { animation: listFade 0.4s ease-out forwards; }
         
-        #view-dashboard .bottom-nav { display: none !important; }
+        .nav-glass {
+            background: rgba(10, 10, 26, 0.75);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
         
-        /* INDICADOR DE VERSIÓN NUEVA (BORRAR DESPUÉS) */
-        .version-tag { position:fixed; top:0; right:0; background:red; color:white; font-size:10px; padding:2px 5px; z-index:99999; }
+        .pop-out-img {
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+        
+        /* ANIMACIONES PARA EL DASHBOARD */
+        @keyframes pop-icon {
+            0% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.15) translateY(-2px); }
+            100% { transform: scale(1) translateY(-4px); }
+        }
+        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        
+        @keyframes dash-fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes listFade {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-list-item {
+            animation: listFade 0.3s ease-out forwards;
+        }
     </style>
 </head>
-<body>
 
-<div class="version-tag">VERSIÓN NUEVA V2</div>
+<body>
 
 <div id="payment-verify-overlay">
     <div class="diamond-neon">💎</div>
@@ -162,23 +282,34 @@
 
 <div class="container">
 
+    <!-- 1. WELCOME VIEW -->
     <div id="view-welcome" class="view active">
         <div class="welcome-content">
             <h1 class="welcome-title">Ascend<br>To <span style="color:var(--primary-accent)">NAVY ELITE</span></h1>
+            
             <button class="btn-get-started" onclick="nav('view-register')">
-                <div class="btn-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></div>
+                <div class="btn-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
                 <div class="btn-text">Empieza ahora</div>
-                <div class="btn-arrows"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg></div>
+                <div class="btn-arrows">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                </div>
             </button>
-            <div class="login-link-container">¿Ya eres miembro? <span onclick="nav('view-login')">Acceder</span></div>
+
+            <div class="login-link-container">
+                ¿Ya eres miembro? <span onclick="nav('view-login')">Acceder</span>
+            </div>
         </div>
     </div>
 
+    <!-- 2. LOGIN VIEW -->
     <div id="view-login" class="view">
         <div style="margin-top: 60px;">
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">IDENTIDAD</h2>
             <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600; letter-spacing: 0.5px;">Protocolo de acceso seguro.</p>
         </div>
+
         <div class="auth-form-container">
             <div id="login-msg" class="error"></div>
             <input type="email" id="login-email" class="modern" placeholder="Correo electrónico">
@@ -197,11 +328,13 @@
         <button onclick="nav('view-welcome')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase; letter-spacing: 2px;">← CANCELAR</button>
     </div>
 
+    <!-- 3. REGISTER VIEW -->
     <div id="view-register" class="view">
         <div style="margin-top: 60px;">
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">ALTA</h2>
             <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600; letter-spacing: 0.5px;">Inicia tu transformación Navy.</p>
         </div>
+
         <div class="auth-form-container">
             <div id="reg-msg" class="error"></div>
             <input type="email" id="reg-email" class="modern" placeholder="Correo electrónico">
@@ -214,9 +347,12 @@
             <button class="btn-primary" onclick="handleRegister()">Crear Perfil Pro</button>
             <div id="reg-load" class="loading">Iniciando Sincronización...</div>
         </div>
-        <div class="login-link-container" style="text-align:center;">¿Ya tienes perfil? <span onclick="nav('view-login')">Entrar</span></div>
+        <div class="login-link-container" style="text-align:center;">
+            ¿Ya tienes perfil? <span onclick="nav('view-login')">Entrar</span>
+        </div>
     </div>
 
+    <!-- 4. RECOVERY -->
     <div id="view-recover" class="view">
         <h2 style="font-size: 2.8rem; font-weight: 900; margin-top: 60px; margin-bottom: 10px; text-transform: uppercase;">RESET</h2>
         <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600;">Restablece tu conexión Navy.</p>
@@ -230,6 +366,7 @@
         <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase;">← VOLVER</button>
     </div>
 
+    <!-- 5. PAYMENT -->
     <div id="view-payment-stripe" class="view" style="justify-content: center; text-align: center;">
         <div class="diamond-neon">⚡</div>
         <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 10px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: -1px;">UPGRADE</h2>
@@ -245,124 +382,256 @@
         <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">CERRAR SESIÓN</button>
     </div>
 
-    <div id="view-dashboard" class="view w-full min-h-screen bg-black text-white relative overflow-x-hidden p-0">
-        
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-blue-600/20 rounded-full blur-[80px]"></div>
-            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-900/20 rounded-full blur-[80px]"></div>
+    <!-- 6. DASHBOARD NUEVO -->
+    <div id="view-dashboard" class="view" style="padding: 0;">
+        <!-- Background Effects -->
+        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; pointer-events: none; z-index: 0;">
+            <div style="position: absolute; top: -10%; right: -20%; width: 300px; height: 300px; background: rgba(0, 85, 255, 0.2); border-radius: 50%; filter: blur(80px);"></div>
+            <div style="position: absolute; bottom: -10%; left: -20%; width: 300px; height: 300px; background: rgba(128, 0, 128, 0.1); border-radius: 50%; filter: blur(80px);"></div>
         </div>
 
-        <main class="relative z-10 w-full px-5 pb-32 pt-6">
+        <!-- MAIN CONTENT (DASHBOARD) -->
+        <main style="position: relative; z-index: 10; width: 100%; padding: 0 20px 140px 20px;">
             
-            <div class="flex justify-between items-center mb-8">
-                <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full pl-2 pr-4 py-1.5">
-                    <div class="w-2 h-2 rounded-full bg-blue-500 shadow-neon animate-pulse ml-1"></div>
-                    <h3 class="text-[10px] font-bold tracking-widest text-gray-300 uppercase">Navy Elite</h3>
+            <!-- Header Section -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; padding-top: 24px;">
+                <div style="display: flex; align-items: center; gap: 8px; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 9999px; padding: 6px 16px 6px 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--primary-accent); box-shadow: 0 0 10px var(--primary-accent); animation: pulse 2s infinite; margin-left: 4px;"></div>
+                    <h3 style="font-size: 9px; font-weight: 700; letter-spacing: 0.15em; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; margin: 0;">Navy Elite</h3>
                 </div>
-                <div class="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-br from-gray-700 to-gray-900">
-                    <img src="https://i.pravatar.cc/150?u=navy" class="w-full h-full rounded-full object-cover border-2 border-black" onclick="nav('view-profile')">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button style="width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); transition: transform 0.2s; transform: scale(1);" 
+                            onmousedown="this.style.transform='scale(0.95)'" onmouseup="this.style.transform='scale(1)'">
+                        <span class="material-symbols-outlined" style="color: rgba(255, 255, 255, 0.7); font-size: 18px;">light_mode</span>
+                    </button>
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1)); padding: 1.5px; position: relative;">
+                        <img alt="User" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-black);" src="https://i.pravatar.cc/150?img=11"/>
+                    </div>
                 </div>
             </div>
 
-            <div class="mb-8">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-2 block">Sistema Activo</span>
-                <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter">
-                    Protocolo <br/>
-                    <span class="text-blue-600 dash-text-glow">Elite</span> Ops
-                </h1>
+            <!-- Hero Title -->
+            <div style="margin-bottom: 32px; position: relative; z-index: 10;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; opacity: 0; animation: dash-fadeIn 0.5s ease-out forwards; animation-delay: 0.1s;">
+                        <span style="display: flex; height: 10px; width: 10px; position: relative;">
+                            <span style="animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite; position: absolute; top: 0; left: 0; height: 100%; width: 100%; border-radius: 9999px; background-color: var(--primary-accent); opacity: 0.75;"></span>
+                            <span style="position: relative; display: inline-flex; border-radius: 9999px; height: 10px; width: 10px; background-color: var(--primary-accent);"></span>
+                        </span>
+                        <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-accent);">Sistema activo • Día 12</span>
+                    </div>
+                    <h1 style="font-size: 3rem; font-weight: 900; font-style: italic; text-transform: uppercase; line-height: 0.85; letter-spacing: -0.05em; color: white; margin-bottom: 8px;">
+                        Protocolo <br/>
+                        <span style="color: var(--primary-accent); text-shadow: 0 0 20px rgba(0, 85, 255, 0.7); position: relative; display: inline-block;">
+                             Elite
+                            <svg style="position: absolute; bottom: -4px; left: 0; width: 100%; height: 8px; color: var(--primary-accent); opacity: 0.5;" preserveAspectRatio="none" viewBox="0 0 100 10">
+                                <path d="M0 5 Q 50 10 100 5" fill="none" stroke="currentColor" stroke-width="2"></path>
+                            </svg>
+                        </span>
+                        <span style="color: transparent; background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4)); -webkit-background-clip: text; background-clip: text;">Ops</span>
+                    </h1>
+                </div>
             </div>
 
-            <section class="mb-12">
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
+            <!-- Horizontal Scroll Cards (Rutinas Diarias) -->
+            <section style="margin-bottom: 48px;">
+                <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 24px; -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; margin: 0 -20px; padding-left: 20px; padding-right: 20px;">
                     
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden border-blue-500/30">
-                            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between mb-4">
-                                    <span class="px-2 py-1 rounded bg-blue-500/20 text-[9px] font-bold text-blue-300 uppercase">Día 1</span>
-                                    <span class="material-symbols-outlined text-blue-500">fitness_center</span>
+                    <!-- DÍA 1 -->
+                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 85%; position: relative;">
+                        <div class="dash-glass-panel" style="height: 22rem; border-radius: 1.5rem; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border: 1px solid rgba(0, 85, 255, 0.3); box-shadow: 0 0 10px rgba(0, 85, 255, 0.4); transition: all 0.3s;">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0, 85, 255, 0.1), transparent); opacity: 1;"></div>
+                            
+                            <div style="position: relative; z-index: 10;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                                    <span style="padding: 4px 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-accent);">Día 1</span>
+                                    <span class="material-symbols-outlined" style="color: var(--primary-accent);">fitness_center</span>
                                 </div>
-                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1">Leg Day <br/><span class="text-blue-500">Power</span></h4>
-                                <p class="text-[10px] text-gray-400 uppercase tracking-wide">Cuádriceps & Gemelos</p>
+                                <h4 style="font-size: 2rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Leg Day <br/><span style="color: var(--primary-accent);">Power</span></h4>
+                                <p style="font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.1em;">Cuádriceps & Gemelos</p>
                             </div>
-                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-blue-600 text-white font-bold uppercase tracking-wider text-[10px] shadow-neon flex items-center justify-center gap-2 active:scale-95 transition-transform">
-                                <span>Comenzar</span> <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
-                            </button>
+                            
+                            <div style="position: relative; z-index: 10; margin-top: auto;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.6); font-size: 10px; font-weight: 600;">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 65 min
+                                    <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                                    <span>Intensidad Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" style="width: 100%; padding: 14px; border-radius: 12px; background: var(--primary-accent); color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined btn-icon" style="font-size: 14px;">arrow_forward</span>
+                                </button>
+                            </div>
+                            <div style="position: absolute; bottom: -40px; right: -40px; width: 128px; height: 128px; background: rgba(0, 85, 255, 0.2); border-radius: 50%; filter: blur(48px);"></div>
                         </div>
                     </div>
 
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden">
-                            <div class="absolute inset-0 bg-gradient-to-br from-purple-600/10 to-transparent"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between mb-4">
-                                    <span class="px-2 py-1 rounded bg-white/10 text-[9px] font-bold text-gray-300 uppercase">Día 2</span>
-                                    <span class="material-symbols-outlined text-gray-500">fitness_center</span>
+                    <!-- DÍA 2 -->
+                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 85%; position: relative;">
+                        <div class="dash-glass-panel" style="height: 22rem; border-radius: 1.5rem; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s;">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(128, 0, 255, 0.05), transparent);"></div>
+                            <div style="position: relative; z-index: 10;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                                    <span style="padding: 4px 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.6);">Día 2</span>
+                                    <span class="material-symbols-outlined" style="color: rgba(255, 255, 255, 0.5);">fitness_center</span>
                                 </div>
-                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1">Push <br/><span class="text-gray-500">Focus</span></h4>
-                                <p class="text-[10px] text-gray-400 uppercase tracking-wide">Pecho & Tríceps</p>
+                                <h4 style="font-size: 2rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Push <br/><span style="color: rgba(255, 255, 255, 0.6);">Focus</span></h4>
+                                <p style="font-size: 10px; font-weight: 500; color: rgba(255, 255, 255, 0.6); text-transform: uppercase; letter-spacing: 0.1em;">Pecho, Hombro, Tríceps</p>
                             </div>
-                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-white/10 border border-white/10 text-white font-bold uppercase tracking-wider text-[10px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
-                                <span>Ver Rutina</span>
-                            </button>
+                            <div style="position: relative; z-index: 10; margin-top: auto;">
+                                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 16px; color: rgba(255, 255, 255, 0.6); font-size: 10px; font-weight: 600;">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">schedule</span> 55 min
+                                    <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                                    <span>Media-Alta</span>
+                                </div>
+                                <button onclick="animateStart(this)" style="width: 100%; padding: 14px; border-radius: 12px; background: var(--primary-accent); color: white; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.3s;">
+                                    <span class="btn-text">Comenzar</span>
+                                    <span class="material-symbols-outlined btn-icon" style="font-size: 14px;">arrow_forward</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
                 </div>
             </section>
 
-            <section class="mb-10">
-                <div class="flex items-center gap-2 mb-6">
-                    <h2 class="text-xl font-black uppercase italic tracking-tighter">Rutinas <span class="text-blue-500">Pro</span></h2>
-                    <div class="h-[1px] flex-1 bg-white/10"></div>
-                </div>
-
-                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
-                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn px-5 py-2 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase shadow-neon">Full Body</button>
-                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Torso</button>
-                    <button onclick="filterBodyFocus('routine_pierna', this)" class="filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Pierna</button>
-                </div>
-
-                <div id="body-focus-list" class="flex flex-col gap-4">
+            <!-- Categories Section (Rutinas Científicas) -->
+            <section style="margin-bottom: 8px;">
+                <!-- Header Tech -->
+                <div style="display: flex; flex-direction: column; margin-bottom: 16px; gap: 8px; position: relative; z-index: 10;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px; opacity: 0; animation: dash-fadeIn 0.8s ease-out forwards;">
+                        <div style="width: 6px; height: 6px; border-radius: 50%; background: var(--primary-accent); box-shadow: 0 0 10px var(--primary-accent);"></div>
+                        <span style="font-size: 9px; font-weight: 700; letter-spacing: 0.25em; color: rgba(173, 216, 230, 0.7); text-transform: uppercase;">High Performance</span>
                     </div>
+                    <div style="display: flex; align-items: flex-end; gap: 12px;">
+                         <h2 style="font-size: 1.5rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.05em; color: white; line-height: 1;">
+                            Rutinas <span style="color: transparent; background: linear-gradient(to right, var(--primary-accent), rgba(0, 255, 255, 0.8)); -webkit-background-clip: text; background-clip: text; text-shadow: 0 0 20px rgba(0, 85, 255, 0.7);">Científicas</span>
+                        </h2>
+                        <div style="height: 1px; flex: 1; background: linear-gradient(to right, rgba(0, 85, 255, 0.5), transparent); margin-bottom: 8px; opacity: 0.4;"></div>
+                    </div>
+                </div>
+                
+                <!-- Scroll Horizontal con "Peek" Effect -->
+                <div style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 24px; padding-top: 56px; -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; margin: 0 -20px; padding-left: 20px; padding-right: 20px;">
+                    
+                    <!-- Cat 1: Piernas -->
+                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 75%; position: relative; cursor: pointer;">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" style="position: absolute; bottom: 0; right: 0; height: 115%; width: auto; z-index: 20; pointer-events: none; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); transition: transform 0.5s ease-out;" alt="Piernas Model" />
+                        <div class="dash-glass-panel" style="height: 176px; border-radius: 1.5rem; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(0, 85, 255, 0.2); background: rgba(0, 0, 255, 0.05);">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(0, 85, 255, 0.2), transparent); z-index: 0;"></div>
+                            <div style="position: relative; z-index: 30; width: 60%;">
+                                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(0, 85, 255, 0.2); font-size: 12px; font-weight: 700; color: rgba(0, 170, 255, 0.8); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; border: 1px solid rgba(0, 85, 255, 0.3);">Top Pick</span>
+                                <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Rutina <br/><span style="color: rgba(0, 170, 255, 0.8);">Piernas</span></h3>
+                                <p style="font-size: 14px; font-weight: 500; color: rgba(173, 216, 230, 0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">fitness_center</span> 12
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cat 2: Abdomen -->
+                    <div style="scroll-snap-align: center; flex-shrink: 0; width: 75%; position: relative; cursor: pointer;">
+                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png" style="position: absolute; bottom: 0; right: 0; height: 115%; width: auto; z-index: 20; pointer-events: none; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); transition: transform 0.5s ease-out;" alt="Abdomen Model" />
+                        <div class="dash-glass-panel" style="height: 176px; border-radius: 1.5rem; padding: 20px; display: flex; flex-direction: column; justify-content: center; position: relative; overflow: hidden; border: 1px solid rgba(128, 0, 128, 0.2); background: rgba(128, 0, 128, 0.05);">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(to right, rgba(128, 0, 128, 0.2), transparent); z-index: 0;"></div>
+                            <div style="position: relative; z-index: 30; width: 60%;">
+                                <span style="display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(128, 0, 128, 0.2); font-size: 12px; font-weight: 700; color: rgba(216, 180, 254, 0.8); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; border: 1px solid rgba(128, 0, 128, 0.3);">Core</span>
+                                <h3 style="font-size: 1.5rem; font-weight: 900; font-style: italic; color: white; text-transform: uppercase; line-height: 1; margin-bottom: 4px;">Abdomen <br/><span style="color: rgba(216, 180, 254, 0.8);">Steel</span></h3>
+                                <p style="font-size: 14px; font-weight: 500; color: rgba(216, 180, 254, 0.7); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">local_fire_department</span> 8
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </section>
 
+            <!-- SECCIÓN NUEVA: Rutinas Populares -->
+            <section style="margin-bottom: 40px;">
+                <!-- Título Sección -->
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 24px; opacity: 0; animation: dash-fadeIn 0.8s ease-out forwards; animation-delay: 0.2s;">
+                    <h2 style="font-size: 1.25rem; font-weight: 900; text-transform: uppercase; font-style: italic; letter-spacing: -0.05em; color: white;">
+                        Rutinas <span style="color: var(--primary-accent); text-shadow: 0 0 20px rgba(0, 85, 255, 0.7);">Populares</span>
+                    </h2>
+                    <div style="height: 1px; flex: 1; background: rgba(255, 255, 255, 0.1); margin-left: 8px;"></div>
+                </div>
+
+                <!-- Filtros (Tabs Scrollables) -->
+                <div id="body-focus-filters" style="display: flex; gap: 12px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 24px; -ms-overflow-style: none; scrollbar-width: none; margin: 0 -20px 24px -20px; padding-left: 20px; padding-right: 20px;">
+                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn active" style="flex-shrink: 0; padding: 8px 20px; border-radius: 9999px; background: var(--primary-accent); color: white; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); border: none; transition: all 0.3s;">
+                        Full Body
+                    </button>
+                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn" style="flex-shrink: 0; padding: 8px 20px; border-radius: 9999px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.6); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; transition: all 0.3s;">
+                        Torso
+                    </button>
+                </div>
+
+                <!-- Lista Vertical de Rutinas (Contenedor Dinámico) -->
+                <div id="body-focus-list" style="display: flex; flex-direction: column; gap: 16px;">
+                    <!-- El contenido se inyecta vía JS al cargar -->
+                </div>
+            </section>
+
+            <!-- Bottom Navigation (Fixed and centered) - NUEVO MENÚ -->
+            <div style="position: fixed; bottom: 24px; left: 0; right: 0; margin: 0 auto; width: 100%; max-width: 480px; padding: 0 16px; z-index: 50;">
+                <nav id="nav-bar" class="nav-glass" style="border-radius: 2rem; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);">
+                    
+                    <!-- Nav Item 1: Inicio -->
+                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; position: relative;" href="#">
+                        <div style="position: absolute; top: -4px; right: 0; width: 6px; height: 6px; background: #ff3b30; border-radius: 50%; border: 1px solid #1a1a1a; z-index: 10;"></div>
+                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; background: var(--primary-accent); box-shadow: 0 0 20px rgba(0, 85, 255, 0.5); color: white; transform: translateY(-4px); display: flex; align-items: center; justify-content: center; transition: all 0.3s;">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">grid_view</span>
+                        </div>
+                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: var(--primary-accent); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Inicio</span>
+                    </a>
+                    
+                    <!-- Nav Item 2: Biblioteca -->
+                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
+                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">fitness_center</span>
+                        </div>
+                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Biblio</span>
+                    </a>
+                    
+                    <!-- Nav Item 3: Creador -->
+                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
+                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">add_circle</span>
+                        </div>
+                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Crear</span>
+                    </a>
+                    
+                    <!-- Nav Item 4: Progreso -->
+                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
+                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">bar_chart</span>
+                        </div>
+                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">Datos</span>
+                    </a>
+                    
+                    <!-- Nav Item 5: IA Coach -->
+                    <a onclick="selectNav(this)" style="display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; opacity: 0.5;" href="#">
+                        <div class="icon-container" style="width: 36px; height: 36px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; color: rgba(255, 255, 255, 0.5);">
+                            <span class="material-symbols-outlined" style="font-size: 20px;">auto_awesome</span>
+                        </div>
+                        <span class="text-label" style="font-size: 8px; font-weight: 700; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; transition: color 0.3s;">IA</span>
+                    </a>
+
+                </nav>
+            </div>
         </main>
-
-        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
-            <nav class="nav-glass rounded-[2rem] p-2 flex justify-between items-center shadow-2xl">
-                <div class="flex flex-col items-center gap-1 cursor-pointer" onclick="nav('view-dashboard')">
-                    <div class="w-9 h-9 rounded-xl bg-blue-600 shadow-neon flex items-center justify-center text-white -translate-y-1">
-                        <span class="material-symbols-outlined text-[20px]">grid_view</span>
-                    </div>
-                </div>
-                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50 hover:opacity-100" onclick="nav('view-dashboard')"> <span class="material-symbols-outlined text-gray-400">fitness_center</span>
-                </div>
-                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50 hover:opacity-100" onclick="nav('view-dashboard')"> <span class="material-symbols-outlined text-gray-400">auto_awesome</span>
-                </div>
-                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50 hover:opacity-100" onclick="nav('view-profile')">
-                    <span class="material-symbols-outlined text-gray-400">person</span>
-                </div>
-            </nav>
-        </div>
-
     </div>
 
-    <div id="view-profile" class="view">
-        <div style="text-align: center; margin-top: 40px;">
-            <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden; box-shadow: 0 0 30px var(--primary-accent-glow);"><img src="https://i.pravatar.cc/150?u=navy" style="width:100%; height:100%; object-fit:cover;"></div>
-            <h2 id="profile-name" style="margin:0; font-weight:900; font-size: 2rem; letter-spacing: -1px; text-transform: uppercase;">USUARIO</h2>
-            <p style="opacity:0.8; font-weight: 800; color: var(--primary-accent); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 3px; margin-top: 8px;">Navy Elite Member</p>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:50px;">
-            <div class="stat-card-neon"><span>24</span><span>SESIONES</span></div>
-            <div class="stat-card-neon"><span>12k</span><span>KCAL</span></div>
-            <div class="stat-card-neon"><span>PRO</span><span>RANK</span></div>
-        </div>
-        <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;">CERRAR SESIÓN NAVY</div>
-        <button onclick="nav('view-dashboard')" style="margin-top:20px; background:none; border:none; color:var(--text-dim); text-align:center; padding: 15px; font-weight: 800; cursor:pointer; text-transform: uppercase;">← VOLVER AL DASHBOARD</button>
-    </div>
+    <!-- 7. PROFILE (VISTA ELIMINADA - CONTENIDO REMOVIDO) -->
+    <div id="view-profile" class="view"></div>
+
+    <!-- DOCK NAVIGATION ORIGINAL -->
+    <nav class="bottom-nav" id="main-nav">
+        <div class="nav-item active" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+        <div class="nav-item" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></div>
+        <div class="nav-item" onclick="nav('view-dashboard')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
+    </nav>
 
 </div>
 
@@ -420,44 +689,34 @@
     function updateUserDisplay(email) {
         if(!email) return;
         const name = email.split('@')[0].toUpperCase();
-        const displayEl = document.getElementById('user-display');
-        const profileEl = document.getElementById('profile-name');
-        if(displayEl) displayEl.innerText = name;
-        if(profileEl) profileEl.innerText = name;
+        document.getElementById('user-display').innerText = name;
+        document.getElementById('profile-name').innerText = name;
     }
 
     function nav(viewId) {
-        // Ocultar todas las vistas
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-        
-        // Mostrar la vista objetivo
         const targetView = document.getElementById(viewId);
         if(targetView) targetView.classList.add('active');
         
-        // Manejo de la navegación vieja vs nueva
         const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
         const navBar = document.getElementById('main-nav');
         const authVis = document.getElementById('auth-visuals');
 
-        // Si es el dashboard nuevo, NO mostramos la barra vieja
-        if (viewId === 'view-dashboard') {
-            if(navBar) navBar.style.display = 'none';
-        } else if (publicViews.includes(viewId)) {
-            if(navBar) navBar.style.display = 'none';
+        if (publicViews.includes(viewId)) {
+            navBar.style.display = 'none';
             if(authVis) authVis.style.display = 'block';
         } else {
-            // Otras vistas internas (perfil, etc) usan la nav vieja si quieres
-            if(navBar) navBar.style.display = 'none'; 
+            navBar.style.display = 'flex';
             if(authVis) authVis.style.display = 'none';
         }
 
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(viewId)) {
+                item.classList.add('active');
+            }
+        });
         window.scrollTo(0,0);
-        
-        // Inicializar dashboard si entramos a él
-        if(viewId === 'view-dashboard') {
-            const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
-            if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
-        }
     }
 
     async function postData(action, data) {
@@ -533,63 +792,6 @@
 
     function logout() { localStorage.clear(); nav('view-welcome'); }
 
-    /* =========================================
-       🧠 LÓGICA DEL NUEVO DASHBOARD
-       ========================================= */
-
-    // Base de datos de rutinas
-    const workoutsDB = {
-        'routine_fullbody': [
-            { title: "Total Strength", time: "45 min", ex: "8 Ejercicios", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
-            { title: "Metabolic Burn", time: "30 min", ex: "Circuitos", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" }
-        ],
-        'routine_torso': [
-            { title: "Pecho & Espalda", time: "50 min", ex: "Super-series", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" },
-            { title: "Hombros 3D", time: "35 min", ex: "12 Sets", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" }
-        ],
-        'routine_pierna': [
-            { title: "Cuádriceps Focus", time: "45 min", ex: "15 Sets", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
-            { title: "Glúteo Pump", time: "40 min", ex: "Aislamiento", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" }
-        ]
-    };
-
-    // Función para filtrar rutinas
-    function filterBodyFocus(category, btnElement) {
-        document.querySelectorAll('#body-focus-filters .filter-btn').forEach(btn => {
-            btn.className = 'filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase transition-all';
-        });
-
-        if(btnElement) {
-            btnElement.className = 'filter-btn px-5 py-2 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase shadow-neon transition-all scale-105';
-        }
-
-        const listContainer = document.getElementById('body-focus-list');
-        if(!listContainer) return;
-        
-        listContainer.innerHTML = ''; 
-        
-        const routines = workoutsDB[category] || [];
-        routines.forEach((routine, index) => {
-            const itemHtml = `
-                <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 active:scale-95 transition-transform cursor-pointer animate-list-item" style="animation-delay: ${index * 0.1}s">
-                    <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-800 shrink-0">
-                        <img src="${routine.img}" class="w-full h-full object-cover opacity-90">
-                    </div>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-bold text-white mb-1">${routine.title}</h3>
-                        <div class="flex items-center gap-2 text-[10px] text-gray-400">
-                            <span>${routine.time}</span> <span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${routine.ex}</span>
-                        </div>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400">
-                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-                    </div>
-                </div>
-            `;
-            listContainer.insertAdjacentHTML('beforeend', itemHtml);
-        });
-    }
-
     window.onload = function() {
         checkPaymentToken();
         const session = localStorage.getItem('cyberfit_session');
@@ -597,7 +799,177 @@
             updateUserDisplay(session);
             nav('view-dashboard');
         }
+        
+        // Inicializar el dashboard
+        const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+        if (firstBtn) {
+            filterBodyFocus('routine_fullbody', firstBtn);
+        }
     };
+
+    // --- BASE DE DATOS ACTUALIZADA: RUTINAS DE FUERZA ---
+    const workoutsDB = {
+        'routine_fullbody': [
+            { title: "Total Body Strength", time: "45 min", ex: "8 Ejercicios", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+            { title: "Metabolic Conditioning", time: "30 min", ex: "Circuitos", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: true },
+            { title: "Fuerza Funcional", time: "40 min", ex: "10 Ejercicios", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-top", grayscale: false }
+        ],
+        'routine_torso': [
+            { title: "Pecho y Espalda", time: "50 min", ex: "Super-series", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" },
+            { title: "Hombros 3D", time: "35 min", ex: "12 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-top" },
+            { title: "Upper Body Power", time: "60 min", ex: "Fuerza Max", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" }
+        ],
+        'routine_pierna': [
+            { title: "Cuádriceps Focus", time: "45 min", ex: "15 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+            { title: "Sentadilla Maestra", time: "30 min", ex: "Técnica", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" },
+            { title: "Leg Day Destruction", time: "70 min", ex: "Alto Volumen", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" }
+        ],
+        'routine_gluteo': [
+            { title: "Glúteo Pump", time: "40 min", ex: "Aislamiento", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+            { title: "Cadena Posterior", time: "50 min", ex: "Isquios/Glúteo", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit5%20(2).webp", align: "object-center" },
+            { title: "Hip Thrust Pro", time: "25 min", ex: "Fuerza", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-center" }
+        ],
+        'routine_core': [
+            { title: "Six Pack Attack", time: "15 min", ex: "Circuito", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-top" },
+            { title: "Oblicuos de Acero", time: "20 min", ex: "Rotaciones", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-center" },
+            { title: "Core Stability", time: "25 min", ex: "Isométricos", intensity: 1, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit3.png", align: "object-center" }
+        ]
+    };
+
+    // --- LÓGICA DE FILTRADO ---
+    function filterBodyFocus(category, btnElement) {
+        const buttons = document.querySelectorAll('#body-focus-filters .filter-btn');
+        buttons.forEach(btn => {
+            btn.classList.remove('active');
+            btn.style.background = 'rgba(255, 255, 255, 0.05)';
+            btn.style.color = 'rgba(255, 255, 255, 0.6)';
+            btn.style.boxShadow = 'none';
+            btn.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+        });
+
+        if(btnElement) {
+            btnElement.classList.add('active');
+            btnElement.style.background = 'var(--primary-accent)';
+            btnElement.style.color = 'white';
+            btnElement.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
+            btnElement.style.border = 'none';
+        }
+
+        const listContainer = document.getElementById('body-focus-list');
+        if (!listContainer) return;
+        
+        listContainer.innerHTML = '';
+
+        const routines = workoutsDB[category];
+        
+        if (routines) {
+            routines.forEach((routine, index) => {
+                let boltsHtml = '';
+                for(let i=0; i<3; i++) {
+                    const colorClass = i < routine.intensity 
+                        ? (routine.intensity === 3 ? '#ff3b30' : 'var(--primary-accent)') 
+                        : 'rgba(255, 255, 255, 0.3)';
+                    boltsHtml += `<span class="material-symbols-outlined" style="font-size: 14px; color: ${colorClass}; fill: currentColor;">bolt</span>`;
+                }
+
+                const itemHtml = `
+                    <div class="dash-glass-panel" style="padding: 12px; border-radius: 1rem; display: flex; align-items: center; gap: 16px; cursor: pointer; border: 1px solid rgba(255, 255, 255, 0.1); animation: listFade 0.3s ease-out forwards; animation-delay: ${index * 0.1}s">
+                        <div style="position: relative; width: 80px; height: 80px; flex-shrink: 0; border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, 0.1);">
+                            <img src="${routine.img}" style="width: 100%; height: 100%; object-fit: cover; ${routine.align}; opacity: 0.9; transition: transform 0.5s; ${routine.grayscale ? 'filter: grayscale(50%)' : ''}" alt="${routine.title}">
+                            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);"></div>
+                        </div>
+                        
+                        <div style="flex: 1; min-width: 0;">
+                            <h3 style="font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${routine.title}</h3>
+                            <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: rgba(255, 255, 255, 0.6); margin-bottom: 8px;">
+                                <span>${routine.time}</span>
+                                <span style="width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);"></span>
+                                <span>${routine.ex}</span>
+                            </div>
+                            <div style="display: flex; gap: 2px;">
+                                ${boltsHtml}
+                            </div>
+                        </div>
+                        
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(255, 255, 255, 0.05); display: flex; align-items: center; justify-content: center; color: rgba(255, 255, 255, 0.6);">
+                            <span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+                        </div>
+                    </div>
+                `;
+                listContainer.insertAdjacentHTML('beforeend', itemHtml);
+            });
+        }
+    }
+
+    function selectNav(clickedElement) {
+        const allNavItems = document.querySelectorAll('#nav-bar a');
+        
+        allNavItems.forEach(item => {
+            item.style.opacity = '0.5';
+            const iconContainer = item.querySelector('.icon-container');
+            if (iconContainer) {
+                iconContainer.style.background = 'transparent';
+                iconContainer.style.boxShadow = 'none';
+                iconContainer.style.color = 'rgba(255, 255, 255, 0.5)';
+                iconContainer.style.transform = 'translateY(0)';
+            }
+            
+            const textLabel = item.querySelector('.text-label');
+            if (textLabel) {
+                textLabel.style.color = 'rgba(255, 255, 255, 0.5)';
+            }
+        });
+
+        clickedElement.style.opacity = '1';
+        const activeIconContainer = clickedElement.querySelector('.icon-container');
+        if (activeIconContainer) {
+            activeIconContainer.style.background = 'var(--primary-accent)';
+            activeIconContainer.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
+            activeIconContainer.style.color = 'white';
+            activeIconContainer.style.transform = 'translateY(-4px)';
+        }
+
+        const activeTextLabel = clickedElement.querySelector('.text-label');
+        if (activeTextLabel) {
+            activeTextLabel.style.color = 'var(--primary-accent)';
+        }
+    }
+
+    function animateStart(btn) {
+        btn.style.background = '#22c55e';
+        btn.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.6)';
+        btn.style.border = '1px solid #4ade80';
+        btn.style.transform = 'scale(0.95)';
+
+        const textSpan = btn.querySelector('.btn-text');
+        const iconSpan = btn.querySelector('.btn-icon');
+
+        if (textSpan) textSpan.textContent = '¡Iniciando!';
+        if (iconSpan) iconSpan.textContent = 'check_circle';
+
+        setTimeout(() => {
+            btn.style.background = 'var(--primary-accent)';
+            btn.style.boxShadow = '0 0 20px rgba(0, 85, 255, 0.5)';
+            btn.style.border = 'none';
+            btn.style.transform = 'scale(1)';
+            if (textSpan) textSpan.textContent = 'Comenzar';
+            if (iconSpan) iconSpan.textContent = 'arrow_forward';
+        }, 2000);
+    }
+
+    // Animación de ping
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ping {
+            0% { transform: scale(1); opacity: 0.75; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 
 </body>
