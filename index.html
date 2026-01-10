@@ -229,11 +229,7 @@
         .program-card:hover img { opacity: 0.7; scale: 1.05; }
         .tag-neon { background: var(--primary-accent); color: #fff; padding:5px 12px; border-radius:10px; font-size:0.75rem; font-weight:900; box-shadow: 0 0 15px var(--primary-accent-glow); text-transform: uppercase; }
 
-        /* --- NAVIGATION --- */
-        .bottom-nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 88%; max-width: 420px; background: rgba(5, 10, 20, 0.96); backdrop-filter: blur(25px); border-radius: 45px; display: none; justify-content: space-around; padding: 10px; border: 1px solid var(--card-border); z-index: 1000; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.9); }
-        .nav-item { color: var(--text-dim); display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 15px 25px; transition: 0.3s; border-radius: 35px; }
-        .nav-item.active { color: var(--primary-accent); background: rgba(0, 85, 255, 0.12); }
-        .nav-item svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2.5; filter: drop-shadow(0 0 8px currentColor); }
+        /* --- NAVIGATION ELIMINADO --- */
 
         .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-shadow: 0 0 10px var(--primary-accent-glow); text-transform: uppercase; letter-spacing: 1.5px; }
         .error { color: var(--error-red); font-size: 0.85rem; padding: 12px; text-align: center; display: none; margin-bottom: 12px; font-weight: 700; border: 1px solid rgba(255, 59, 48, 0.4); border-radius: 14px; background: rgba(255, 59, 48, 0.08); }
@@ -273,7 +269,6 @@
 
 <div class="container">
 
-    <!-- 1. WELCOME VIEW -->
     <div id="view-welcome" class="view active">
         <div class="welcome-content">
             <h1 class="welcome-title">Ascend<br>To <span style="color:var(--primary-accent)">NAVY ELITE</span></h1>
@@ -294,7 +289,6 @@
         </div>
     </div>
 
-    <!-- 2. LOGIN VIEW -->
     <div id="view-login" class="view">
         <div style="margin-top: 60px;">
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">IDENTIDAD</h2>
@@ -319,7 +313,6 @@
         <button onclick="nav('view-welcome')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase; letter-spacing: 2px;">← CANCELAR</button>
     </div>
 
-    <!-- 3. REGISTER VIEW -->
     <div id="view-register" class="view">
         <div style="margin-top: 60px;">
             <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">ALTA</h2>
@@ -343,7 +336,6 @@
         </div>
     </div>
 
-    <!-- 4. RECOVERY -->
     <div id="view-recover" class="view">
         <h2 style="font-size: 2.8rem; font-weight: 900; margin-top: 60px; margin-bottom: 10px; text-transform: uppercase;">RESET</h2>
         <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600;">Restablece tu conexión Navy.</p>
@@ -357,7 +349,6 @@
         <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase;">← VOLVER</button>
     </div>
 
-    <!-- 5. PAYMENT -->
     <div id="view-payment-stripe" class="view" style="justify-content: center; text-align: center;">
         <div class="diamond-neon">⚡</div>
         <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 10px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: -1px;">UPGRADE</h2>
@@ -373,7 +364,6 @@
         <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">CERRAR SESIÓN</button>
     </div>
 
-    <!-- 6. DASHBOARD -->
     <div id="view-dashboard" class="view">
         <div class="header-profile">
             <div style="display: flex; align-items: center; gap: 15px;">
@@ -411,7 +401,6 @@
         </div>
     </div>
 
-    <!-- 7. PROFILE -->
     <div id="view-profile" class="view">
         <div style="text-align: center; margin-top: 40px;">
             <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden; box-shadow: 0 0 30px var(--primary-accent-glow);"><img src="https://i.pravatar.cc/150?u=fit" style="width:100%; height:100%; object-fit:cover;"></div>
@@ -425,6 +414,7 @@
         </div>
         <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;">CERRAR SESIÓN NAVY</div>
     </div>
+
 </div>
 
 <script>
@@ -491,23 +481,14 @@
         if(targetView) targetView.classList.add('active');
         
         const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
-        const navBar = document.getElementById('main-nav');
         const authVis = document.getElementById('auth-visuals');
 
         if (publicViews.includes(viewId)) {
-            navBar.style.display = 'none';
             if(authVis) authVis.style.display = 'block';
         } else {
-            navBar.style.display = 'flex';
             if(authVis) authVis.style.display = 'none';
         }
 
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(viewId)) {
-                item.classList.add('active');
-            }
-        });
         window.scrollTo(0,0);
     }
 
