@@ -1,1 +1,457 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIT AI | Navy Elite System</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: { primary: "#0055ff", "background-dark": "#000000", "navy-base": "#0a0a1a" },
+                    boxShadow: { 'neon': '0 0 20px rgba(0, 85, 255, 0.5)' }
+                },
+            },
+        };
+    </script>
+
+    <style>
+        :root {
+            --primary-accent: #0055ff;
+            --bg-black: #000000;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            /* TU IMAGEN DE FONDO ORIGINAL */
+            --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp');
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
+        .container { width: 100%; max-width: 480px; min-height: 100vh; position: relative; display: flex; flex-direction: column; }
+
+        /* LÓGICA DE VISTAS */
+        .view { display: none; opacity: 0; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; flex-direction: column; width: 100%; min-height: 100vh; }
+        .view.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ESTILOS DEL LOGIN (VIEJO) */
+        #view-welcome, #view-login, #view-register, #view-recover, #view-payment-stripe, #view-profile { padding: 30px; }
+        .auth-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--auth-bg-img); background-size: cover; background-position: center; z-index: -2; filter: brightness(0.6) contrast(1.05); }
+        .auth-overlay-dark { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,10,30,0.3) 50%, rgba(0, 26, 51, 0.95) 100%); z-index: -1; }
+        
+        .welcome-content { margin-top: auto; text-align: center; padding-bottom: 50px; }
+        .welcome-title { font-size: 3.4rem; font-weight: 900; line-height: 0.95; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 85, 255, 0.4); }
+        .btn-get-started { background: rgba(10, 20, 40, 0.9); border-radius: 50px; height: 80px; display: flex; align-items: center; padding: 10px; cursor: pointer; border: 1px solid rgba(0, 85, 255, 0.2); width: 100%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
+        .btn-circle { width: 60px; height: 60px; background: var(--primary-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .btn-text { flex-grow: 1; text-align: center; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; }
+        
+        input.modern { width: 100%; padding: 24px; background: rgba(0, 26, 51, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(0, 85, 255, 0.15); border-radius: 22px; color: #fff; font-size: 1rem; margin-bottom: 15px; }
+        .btn-primary { width: 100%; padding: 24px; background: var(--primary-accent); color: #fff; border: none; border-radius: 22px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 30px var(--primary-accent-glow); }
+        
+        /* ESTILOS DEL DASHBOARD (NUEVO) */
+        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
+        .dash-glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-glass { background: rgba(10, 10, 26, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); }
+        .animate-list-item { animation: listFade 0.4s ease-out forwards; }
+        @keyframes listFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ESTILOS ESPECIFICOS PERFIL */
+        .stat-card-neon { background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid rgba(0, 85, 255, 0.25); }
+        .stat-card-neon span:first-child { display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; }
+    </style>
+</head>
+<body>
+
+<div id="payment-verify-overlay" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,5,15,0.98); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+    <div style="font-size:70px;">💎</div>
+    <h2 style="font-weight: 900; color: var(--primary-accent);">Protocolo Navy</h2>
+</div>
+
+<div id="auth-visuals">
+    <div class="auth-bg"></div>
+    <div class="auth-overlay-dark"></div>
+</div>
+
+<div class="container">
+<div id="view-welcome" class="view active">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Ascend<br>To <span style="color:var(--primary-accent)">NAVY ELITE</span></h1>
+            <button class="btn-get-started" onclick="nav('view-register')">
+                <div class="btn-circle"><span class="material-symbols-outlined" style="color:white;">arrow_forward</span></div>
+                <div class="btn-text">Empieza ahora</div>
+            </button>
+            <div style="text-align:center;">¿Ya eres miembro? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Acceder</span></div>
+        </div>
+    </div>
+
+    <div id="view-login" class="view">
+        <div style="margin-top: 60px;">
+            <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px;">IDENTIDAD</h2>
+            <p style="color: var(--text-dim);">Protocolo de acceso seguro.</p>
+        </div>
+        <div class="auth-form-container">
+            <div id="login-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
+            <input type="email" id="login-email" class="modern" placeholder="Correo electrónico">
+            <input type="password" id="login-pass" class="modern" placeholder="Contraseña">
+            <button class="btn-primary" onclick="handleLogin()">Entrar</button>
+            <div id="login-load" style="display:none; text-align:center; color:var(--primary-accent); margin-top:10px;">Cargando...</div>
+            <div style="text-align: center; margin-top: 20px;">
+                <span onclick="nav('view-recover')" style="cursor:pointer; color:var(--primary-accent); font-weight:700;">Recuperar Acceso</span>
+            </div>
+        </div>
+        <button onclick="nav('view-welcome')" style="background:none; border:none; color:var(--text-dim); padding: 20px; font-weight: 800;">← CANCELAR</button>
+    </div>
+
+    <div id="view-register" class="view">
+        <div style="margin-top: 60px;">
+            <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px;">ALTA</h2>
+            <p style="color: var(--text-dim);">Inicia tu transformación.</p>
+        </div>
+        <div class="auth-form-container">
+            <div id="reg-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
+            <input type="email" id="reg-email" class="modern" placeholder="Correo electrónico">
+            <input type="password" id="reg-pass" class="modern" placeholder="Crea tu clave maestra">
+            <button class="btn-primary" onclick="handleRegister()">Crear Perfil</button>
+            <div id="reg-load" style="display:none; text-align:center; color:var(--primary-accent); margin-top:10px;">Creando...</div>
+        </div>
+        <div style="text-align:center;">¿Ya tienes perfil? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Entrar</span></div>
+    </div>
+
+    <div id="view-payment-stripe" class="view" style="justify-content: center; text-align: center;">
+        <div style="font-size:70px;">⚡</div>
+        <h2 style="font-size: 3rem; font-weight: 900; color: var(--primary-accent);">UPGRADE</h2>
+        <p style="opacity: 0.7; margin-bottom: 45px; font-weight: 700;">Desbloquea el Potencial Navy IA.</p>
+        <button onclick="openPaymentLink()" class="btn-primary">ADQUIRIR ÉLITE</button>
+        <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); margin-top:20px; cursor:pointer; font-weight: 800;">CERRAR SESIÓN</button>
+    </div>
+
+    <div id="view-recover" class="view">
+        <h2 style="font-size: 2.8rem; font-weight: 900; margin-top: 60px;">RESET</h2>
+        <input type="email" id="recover-email" class="modern" placeholder="Email registrado" style="margin-top:20px;">
+        <button class="btn-primary" onclick="handleRecoverPassword()">Enviar Clave</button>
+        <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); margin-top:20px; font-weight: 800;">← VOLVER</button>
+    </div>
+<div id="view-dashboard" class="view w-full min-h-screen bg-black text-white relative overflow-x-hidden p-0">
+        
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-blue-600/20 rounded-full blur-[80px]"></div>
+            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-900/20 rounded-full blur-[80px]"></div>
+        </div>
+
+        <main class="relative z-10 w-full px-5 pb-32 pt-6">
+            <div class="flex justify-between items-center mb-8">
+                <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full pl-2 pr-4 py-1.5">
+                    <div class="w-2 h-2 rounded-full bg-blue-500 shadow-neon animate-pulse ml-1"></div>
+                    <h3 class="text-[10px] font-bold tracking-widest text-gray-300 uppercase">Navy Elite</h3>
+                </div>
+                <div class="w-10 h-10 rounded-full p-[1.5px] bg-gradient-to-br from-gray-700 to-gray-900 cursor-pointer" onclick="nav('view-profile')">
+                    <img src="https://i.pravatar.cc/150?u=navy" class="w-full h-full rounded-full object-cover border-2 border-black">
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-500 mb-2 block">Sistema Activo</span>
+                <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter">
+                    Protocolo <br/>
+                    <span class="text-blue-600" style="text-shadow: 0 0 20px rgba(0, 85, 255, 0.7);">Elite</span> Ops
+                </h1>
+            </div>
+
+            <section class="mb-12">
+                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
+                    
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden border-blue-500/30">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp" class="absolute inset-0 w-full h-full object-cover opacity-60 z-0">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
+                            
+                            <div class="relative z-10">
+                                <div class="flex justify-between mb-4">
+                                    <span class="px-2 py-1 rounded bg-blue-500/80 text-[9px] font-bold text-white uppercase">Día 1</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1 text-white">Leg Day <br/><span class="text-blue-400">Power</span></h4>
+                            </div>
+                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-blue-600 text-white font-bold uppercase tracking-wider text-[10px] shadow-neon flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                                <span>Comenzar</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
+                        <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden">
+                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute inset-0 w-full h-full object-cover opacity-60 z-0">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
+
+                            <div class="relative z-10">
+                                <div class="flex justify-between mb-4">
+                                    <span class="px-2 py-1 rounded bg-white/20 text-[9px] font-bold text-white uppercase">Día 2</span>
+                                </div>
+                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1 text-white">Push <br/><span class="text-gray-300">Focus</span></h4>
+                            </div>
+                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-white/20 backdrop-blur-md text-white font-bold uppercase tracking-wider text-[10px] flex items-center justify-center gap-2">
+                                <span>Ver Rutina</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="mb-10">
+                <div class="flex items-center gap-2 mb-6">
+                    <h2 class="text-xl font-black uppercase italic tracking-tighter">Rutinas <span class="text-blue-500">Pro</span></h2>
+                    <div class="h-[1px] flex-1 bg-white/10"></div>
+                </div>
+
+                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
+                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn px-5 py-2 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase shadow-neon">Full Body</button>
+                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Torso</button>
+                    <button onclick="filterBodyFocus('routine_pierna', this)" class="filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Pierna</button>
+                </div>
+
+                <div id="body-focus-list" class="flex flex-col gap-4">
+                    </div>
+            </section>
+        </main>
+
+        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
+            <nav class="nav-glass rounded-[2rem] p-2 flex justify-between items-center shadow-2xl">
+                <div class="flex flex-col items-center gap-1 cursor-pointer" onclick="nav('view-dashboard')">
+                    <div class="w-9 h-9 rounded-xl bg-blue-600 shadow-neon flex items-center justify-center text-white -translate-y-1">
+                        <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50" onclick="nav('view-dashboard')">
+                    <span class="material-symbols-outlined text-gray-400">fitness_center</span>
+                </div>
+                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50" onclick="nav('view-dashboard')">
+                    <span class="material-symbols-outlined text-gray-400">auto_awesome</span>
+                </div>
+                <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50" onclick="nav('view-profile')">
+                    <span class="material-symbols-outlined text-gray-400">person</span>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div id="view-profile" class="view">
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden; box-shadow: 0 0 30px var(--primary-accent-glow);"><img src="https://i.pravatar.cc/150?u=navy" style="width:100%; height:100%; object-fit:cover;"></div>
+            <h2 id="profile-name" style="margin:0; font-weight:900; font-size: 2rem;">USUARIO</h2>
+            <p style="opacity:0.8; font-weight: 800; color: var(--primary-accent);">Navy Elite Member</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:50px;">
+            <div class="stat-card-neon"><span>24</span><span>SESIONES</span></div>
+            <div class="stat-card-neon"><span>12k</span><span>KCAL</span></div>
+            <div class="stat-card-neon"><span>PRO</span><span>RANK</span></div>
+        </div>
+        <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer; margin-bottom: 20px;">CERRAR SESIÓN</div>
+        <button onclick="nav('view-dashboard')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 15px; font-weight: 800; cursor:pointer; width:100%;">← VOLVER AL DASHBOARD</button>
+    </div>
+
+</div>
+<script>
+   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwLVO7Ub9oAyKD29fEcAFMuKluSfJJ9bx9wLp8ucsUpRavvlyfjtqeUzF06WPdqDM7A/exec";
+   const STRIPE_LINK = "https://buy.stripe.com/test_aFa14p69Vgk53hjclXaZi01";
+   const PAYMENT_TOKEN = "AZ82_XJ91_LQ00_PRO_DIVE"; 
+
+    // --- LOGICA LOGIN ---
+    async function checkPaymentToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token === PAYMENT_TOKEN) {
+            const email = localStorage.getItem('tempUserEmail') || localStorage.getItem('cyberfit_session');
+            if (!email) return;
+            const overlay = document.getElementById('payment-verify-overlay');
+            overlay.style.display = 'flex';
+            const res = await postData('payment_confirmation', { email: email });
+            if (res.success) {
+                localStorage.setItem('cyberfit_session', email);
+                localStorage.removeItem('tempUserEmail');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                confetti({ particleCount: 200, spread: 85, origin: { y: 0.65 }, colors: ['#0055ff', '#ffffff', '#001a33'] });
+                updateUserDisplay(email);
+                nav('view-dashboard');
+            } else {
+                alert("Estatus de pago pendiente de sincronización.");
+                nav('view-payment-stripe');
+            }
+            overlay.style.display = 'none';
+        }
+    }
+
+    function openPaymentLink() { window.open(STRIPE_LINK, '_blank'); }
+    
+    function updateUserDisplay(email) {
+        if(!email) return;
+        const name = email.split('@')[0].toUpperCase();
+        // Usamos try-catch para evitar errores si el elemento no existe en ciertas vistas
+        try { document.getElementById('user-display').innerText = name; } catch(e){}
+        try { document.getElementById('profile-name').innerText = name; } catch(e){}
+    }
+
+    function nav(viewId) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        const targetView = document.getElementById(viewId);
+        if(targetView) targetView.classList.add('active');
+        
+        const authVis = document.getElementById('auth-visuals');
+        const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
+        
+        if (publicViews.includes(viewId)) {
+            if(authVis) authVis.style.display = 'block';
+        } else {
+            if(authVis) authVis.style.display = 'none';
+        }
+        window.scrollTo(0,0);
+        
+        // AUTO-CARGA DE RUTINAS (DASHBOARD)
+        if(viewId === 'view-dashboard') {
+            setTimeout(() => {
+                const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+                if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
+            }, 50); 
+        }
+    }
+
+    async function postData(action, data) {
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify({ action: action, ...data })
+            });
+            return await response.json();
+        } catch (error) { return { success: false, message: "Error de conexión con el núcleo." }; }
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+        const msg = document.getElementById('login-msg');
+        const loader = document.getElementById('login-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('login', { email, password: pass });
+        loader.style.display = 'none';
+        if (res.success) {
+            localStorage.setItem('cyberfit_session', email);
+            updateUserDisplay(email);
+            nav('view-dashboard');
+        } else {
+            if (res.message && res.message.toLowerCase().includes("pago")) {
+                localStorage.setItem('tempUserEmail', email);
+                nav('view-payment-stripe');
+            } else {
+                msg.innerText = (res.message || "Error de Identidad").toUpperCase(); msg.style.display='block';
+            }
+        }
+    }
+
+    async function handleRegister() {
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        const msg = document.getElementById('reg-msg');
+        const loader = document.getElementById('reg-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('register', { email, password: pass });
+        loader.style.display = 'none';
+        if (res.success) {
+            localStorage.setItem('tempUserEmail', email);
+            nav('view-payment-stripe');
+        } else {
+            msg.innerText = (res.message || "Falla en Registro").toUpperCase(); msg.style.display='block';
+        }
+    }
+
+    async function handleRecoverPassword() {
+        const email = document.getElementById('recover-email').value;
+        const msg = document.getElementById('recover-msg');
+        const success = document.getElementById('recover-success');
+        const loader = document.getElementById('recover-load');
+        if(!email) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('recover', { email });
+        loader.style.display = 'none';
+        if (res.success) {
+            success.style.display = 'block';
+            setTimeout(() => nav('view-login'), 3000);
+        } else {
+            msg.innerText = (res.message || "Error en Recuperación").toUpperCase(); msg.style.display='block';
+        }
+    }
+
+    function logout() { localStorage.clear(); nav('view-welcome'); }
+
+    // --- Lógica Dashboard (TUS IMÁGENES ORIGINALES) ---
+    const workoutsDB = {
+        'routine_fullbody': [
+            { title: "Total Strength", time: "45 min", ex: "8 Ejercicios", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
+            { title: "Metabolic Burn", time: "30 min", ex: "Circuitos", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" }
+        ],
+        'routine_torso': [
+            { title: "Pecho & Espalda", time: "50 min", ex: "Super-series", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" },
+            { title: "Hombros 3D", time: "35 min", ex: "12 Sets", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" }
+        ],
+        'routine_pierna': [
+            { title: "Cuádriceps Focus", time: "45 min", ex: "15 Sets", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
+            { title: "Glúteo Pump", time: "40 min", ex: "Aislamiento", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" }
+        ]
+    };
+
+    function filterBodyFocus(category, btnElement) {
+        document.querySelectorAll('#body-focus-filters .filter-btn').forEach(btn => {
+            btn.className = 'filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase transition-all';
+        });
+        if(btnElement) {
+            btnElement.className = 'filter-btn px-5 py-2 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase shadow-neon transition-all scale-105';
+        }
+        const listContainer = document.getElementById('body-focus-list');
+        if(!listContainer) return;
+        listContainer.innerHTML = ''; 
+        const routines = workoutsDB[category] || [];
+        routines.forEach((routine, index) => {
+            const itemHtml = `
+                <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 active:scale-95 transition-transform cursor-pointer animate-list-item" style="animation-delay: ${index * 0.1}s">
+                    <div class="w-16 h-16 rounded-xl overflow-hidden bg-gray-800 shrink-0">
+                        <img src="${routine.img}" class="w-full h-full object-cover opacity-90">
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-sm font-bold text-white mb-1">${routine.title}</h3>
+                        <div class="flex items-center gap-2 text-[10px] text-gray-400">
+                            <span>${routine.time}</span> <span class="w-1 h-1 rounded-full bg-gray-600"></span> <span>${routine.ex}</span>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gray-400">
+                        <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                    </div>
+                </div>
+            `;
+            listContainer.insertAdjacentHTML('beforeend', itemHtml);
+        });
+    }
+
+    // AUTO-INICIO
+    window.onload = function() {
+        checkPaymentToken();
+        const session = localStorage.getItem('cyberfit_session');
+        if (session && !new URLSearchParams(window.location.search).get('token')) {
+            updateUserDisplay(session);
+            nav('view-dashboard');
+        }
+    };
+</script>
+
+</body>
+</html>
