@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="es" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIT AI | Navy Elite COMPLETO</title>
-    
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -21,113 +10,30 @@
             },
         };
     </script>
-
     <style>
-        :root {
-            --primary-accent: #0055ff;
-            --bg-black: #000000;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp');
-        }
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-black); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; }
-        .container { width: 100%; max-width: 480px; min-height: 100vh; position: relative; display: flex; flex-direction: column; }
-        .view { display: none; opacity: 0; animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; flex-direction: column; width: 100%; min-height: 100vh; }
-        #view-welcome, #view-login, #view-register, #view-recover, #view-payment-stripe, #view-profile { padding: 30px; }
-        .view.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* ESTILOS LOGIN */
-        .auth-bg { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--auth-bg-img); background-size: cover; background-position: center; z-index: -2; filter: brightness(0.6) contrast(1.05); }
-        .auth-overlay-dark { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,10,30,0.3) 50%, rgba(0, 26, 51, 0.95) 100%); z-index: -1; }
-        .welcome-content { margin-top: auto; text-align: center; padding-bottom: 50px; }
-        .welcome-title { font-size: 3.4rem; font-weight: 900; line-height: 0.95; margin-bottom: 40px; text-transform: uppercase; text-shadow: 0 0 25px rgba(0, 85, 255, 0.4); }
-        .btn-get-started { background: rgba(10, 20, 40, 0.9); border-radius: 50px; height: 80px; display: flex; align-items: center; padding: 10px; cursor: pointer; border: 1px solid rgba(0, 85, 255, 0.2); width: 100%; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); }
-        .btn-circle { width: 60px; height: 60px; background: var(--primary-accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .btn-text { flex-grow: 1; text-align: center; font-weight: 800; font-size: 1.2rem; text-transform: uppercase; }
-        .auth-form-container { margin-top: auto; margin-bottom: 40px; }
-        input.modern { width: 100%; padding: 24px; background: rgba(0, 26, 51, 0.3); backdrop-filter: blur(20px); border: 1px solid rgba(0, 85, 255, 0.15); border-radius: 22px; color: #fff; font-size: 1rem; margin-bottom: 15px; }
-        .btn-primary { width: 100%; padding: 24px; background: var(--primary-accent); color: #fff; border: none; border-radius: 22px; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; cursor: pointer; margin-top: 10px; box-shadow: 0 10px 30px var(--primary-accent-glow); }
-        .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-transform: uppercase; }
-        
-        /* DASHBOARD UTILIDADES */
+        /* Estilos del Dashboard Nuevo */
         .dash-no-scrollbar::-webkit-scrollbar { display: none; }
         .dash-glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .nav-glass { background: rgba(10, 10, 26, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); }
         .animate-list-item { animation: listFade 0.4s ease-out forwards; }
         @keyframes listFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* ESTILOS PERFIL VIEJO */
-        .stat-card-neon { background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid rgba(0, 85, 255, 0.25); }
-        .stat-card-neon span:first-child { display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; }
-        .stat-card-neon span:last-child { font-size:0.75rem; opacity:0.6; font-weight: 800; text-transform: uppercase; }
     </style>
-</head>
-<body>
+    ```
 
-<div id="payment-verify-overlay" style="position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,5,15,0.98); z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
-    <div style="font-size:70px;">💎</div>
-    <h2 style="font-weight:900; color:var(--primary-accent);">Protocolo Navy</h2>
-</div>
+---
 
-<div id="auth-visuals">
-    <div class="auth-bg"></div>
-    <div class="auth-overlay-dark"></div>
-</div>
+### 🟡 PASO 2: El Transplante de Corazón (El Dashboard)
 
-<div class="container">
-    <div id="view-welcome" class="view active">
-        <div class="welcome-content">
-            <h1 class="welcome-title">Ascend<br>To <span style="color:var(--primary-accent)">NAVY ELITE</span></h1>
-            <button class="btn-get-started" onclick="nav('view-register')">
-                <div class="btn-circle"><span class="material-symbols-outlined" style="color:white;">arrow_forward</span></div>
-                <div class="btn-text">Empieza ahora</div>
-            </button>
-            <div style="text-align:center; margin-top:30px; color:var(--text-dim);">¿Ya eres miembro? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Acceder</span></div>
-        </div>
-    </div>
+Aquí vamos a borrar el dashboard viejo y poner el nuevo.
 
-    <div id="view-login" class="view">
-        <div style="margin-top:60px;"><h2 style="font-size:2.8rem; font-weight:900; margin-bottom:10px;">IDENTIDAD</h2><p style="color:var(--text-dim);">Protocolo de acceso seguro.</p></div>
-        <div class="auth-form-container">
-            <div id="login-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
-            <input type="email" id="login-email" class="modern" placeholder="Correo electrónico">
-            <input type="password" id="login-pass" class="modern" placeholder="Contraseña">
-            <button class="btn-primary" onclick="handleLogin()">Entrar</button>
-            <div id="login-load" class="loading">Verificando...</div>
-            <div style="text-align:center; margin-top:20px;"><span onclick="nav('view-recover')" style="cursor:pointer; color:var(--primary-accent); font-weight:700;">Recuperar Acceso</span></div>
-        </div>
-        <button onclick="nav('view-welcome')" style="background:none; border:none; color:var(--text-dim); padding:20px; font-weight:800;">← CANCELAR</button>
-    </div>
+1.  En tu código, busca la línea que dice: `<div id="view-dashboard" class="view">`.
+2.  **BORRA TODO** lo que haya dentro de ese div, hasta su cierre `</div>`.
+    *(Básicamente, borra la tarjeta de "MISION DIARIA" y "PROGRAMAS ACTIVOS" viejos)*.
+3.  El div debe quedar vacío así: `<div id="view-dashboard" class="view"></div>`.
+4.  Ahora, **DENTRO** de ese div, **PEGA ESTE BLOQUE GIGANTE**:
 
-    <div id="view-register" class="view">
-        <div style="margin-top:60px;"><h2 style="font-size:2.8rem; font-weight:900; margin-bottom:10px;">ALTA</h2><p style="color:var(--text-dim);">Inicia tu transformación.</p></div>
-        <div class="auth-form-container">
-            <div id="reg-msg" style="color:red; display:none; margin-bottom:10px;">Error</div>
-            <input type="email" id="reg-email" class="modern" placeholder="Correo electrónico">
-            <input type="password" id="reg-pass" class="modern" placeholder="Crea tu clave maestra">
-            <button class="btn-primary" onclick="handleRegister()">Crear Perfil</button>
-            <div id="reg-load" class="loading">Creando...</div>
-        </div>
-        <div style="text-align:center;">¿Ya tienes perfil? <span onclick="nav('view-login')" style="cursor:pointer; color:var(--primary-accent); font-weight:800;">Entrar</span></div>
-    </div>
-
-    <div id="view-recover" class="view">
-        <h2 style="font-size:2.8rem; font-weight:900; margin-top:60px;">RESET</h2>
-        <input type="email" id="recover-email" class="modern" placeholder="Email registrado" style="margin-top:20px;">
-        <button class="btn-primary" onclick="handleRecoverPassword()">Enviar Clave</button>
-        <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); margin-top:20px; font-weight:800;">← VOLVER</button>
-    </div>
-
-    <div id="view-payment-stripe" class="view" style="justify-content:center; text-align:center;">
-        <div style="font-size:70px;">⚡</div>
-        <h2 style="font-size:3rem; font-weight:900; color:var(--primary-accent);">UPGRADE</h2>
-        <button onclick="openPaymentLink()" class="btn-primary">ADQUIRIR ÉLITE</button>
-        <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); margin-top:20px; font-weight:800;">CERRAR SESIÓN</button>
-    </div>
-<div id="view-dashboard" class="view w-full min-h-screen bg-black text-white relative overflow-x-hidden p-0">
-        
+```html
+    <div class="w-full min-h-screen bg-black text-white relative overflow-x-hidden p-0">
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
             <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-blue-600/20 rounded-full blur-[80px]"></div>
             <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-900/20 rounded-full blur-[80px]"></div>
@@ -158,7 +64,10 @@
                         <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden border-blue-500/30">
                             <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp" class="absolute inset-0 w-full h-full object-cover opacity-60 z-0">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
-                            <div class="relative z-10"><span class="px-2 py-1 rounded bg-blue-500/80 text-[9px] font-bold text-white uppercase">Día 1</span><h4 class="text-3xl font-black italic uppercase text-white mt-4">Leg Day <br/><span class="text-blue-400">Power</span></h4></div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between mb-4"><span class="px-2 py-1 rounded bg-blue-500/80 text-[9px] font-bold text-white uppercase">Día 1</span></div>
+                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1 text-white">Leg Day <br/><span class="text-blue-400">Power</span></h4>
+                            </div>
                             <button class="relative z-10 w-full py-3.5 rounded-xl bg-blue-600 text-white font-bold uppercase tracking-wider text-[10px] shadow-neon flex items-center justify-center gap-2"><span>Comenzar</span></button>
                         </div>
                     </div>
@@ -166,40 +75,11 @@
                         <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden">
                             <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png" class="absolute inset-0 w-full h-full object-cover opacity-60 z-0">
                             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
-                            <div class="relative z-10"><span class="px-2 py-1 rounded bg-white/20 text-[9px] font-bold text-white uppercase">Día 2</span><h4 class="text-3xl font-black italic uppercase text-white mt-4">Push <br/><span class="text-gray-300">Focus</span></h4></div>
-                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-white/20 text-white font-bold uppercase tracking-wider text-[10px]"><span>Ver Rutina</span></button>
-                        </div>
-                    </div>
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[2rem] p-6 flex flex-col justify-between relative overflow-hidden">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc1.webp" class="absolute inset-0 w-full h-full object-cover opacity-60 z-0">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0"></div>
-                            <div class="relative z-10"><span class="px-2 py-1 rounded bg-white/20 text-[9px] font-bold text-white uppercase">Día 3</span><h4 class="text-3xl font-black italic uppercase text-white mt-4">Active <br/><span class="text-gray-300">Rest</span></h4></div>
-                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-white/20 text-white font-bold uppercase tracking-wider text-[10px]"><span>Ver Rutina</span></button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-10">
-                <h2 class="text-xl font-black uppercase italic tracking-tighter text-white mb-4">Rutinas <span class="text-emerald-400 dash-text-glow">Científicas</span></h2>
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 -mx-5 px-5">
-                    <div class="snap-center flex-shrink-0 w-[70%] relative">
-                        <div class="dash-glass-panel h-40 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden border-emerald-500/20">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png" class="absolute right-[-20px] bottom-0 h-[120%] object-cover z-0">
-                            <div class="relative z-10 w-[60%]">
-                                <span class="text-[9px] font-bold text-emerald-400 uppercase">Education</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mt-1">Ciencia <br/>Fitness</h3>
+                            <div class="relative z-10">
+                                <div class="flex justify-between mb-4"><span class="px-2 py-1 rounded bg-white/20 text-[9px] font-bold text-white uppercase">Día 2</span></div>
+                                <h4 class="text-3xl font-black italic uppercase leading-none mb-1 text-white">Push <br/><span class="text-gray-300">Focus</span></h4>
                             </div>
-                        </div>
-                    </div>
-                    <div class="snap-center flex-shrink-0 w-[70%] relative">
-                        <div class="dash-glass-panel h-40 rounded-2xl p-4 flex flex-col justify-center relative overflow-hidden border-blue-500/20">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute right-[-20px] bottom-0 h-[120%] object-cover z-0">
-                            <div class="relative z-10 w-[60%]">
-                                <span class="text-[9px] font-bold text-blue-400 uppercase">Hypertrophy</span>
-                                <h3 class="text-xl font-black italic text-white uppercase leading-none mt-1">Pierna <br/>Pro</h3>
-                            </div>
+                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-white/20 text-white font-bold uppercase tracking-wider text-[10px]"><span>Ver Rutina</span></button>
                         </div>
                     </div>
                 </div>
@@ -217,7 +97,7 @@
                 </div>
                 <div id="body-focus-list" class="flex flex-col gap-4"></div>
             </section>
-
+            
             <section class="mb-10">
                 <h2 class="text-xl font-black uppercase italic tracking-tighter text-white mb-4">Descubre con <span class="text-cyan-400">Navy AI</span></h2>
                 <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-4 -mx-5 px-5">
@@ -228,45 +108,11 @@
                             <button class="w-full py-2 rounded bg-white/10 text-[10px] font-bold uppercase text-white">Preguntar a IA</button>
                         </div>
                     </div>
-                    <div class="snap-center flex-shrink-0 w-[75%] relative">
-                        <div class="dash-glass-panel p-5 rounded-[1.5rem] bg-gradient-to-b from-orange-900/20 to-transparent border-orange-500/20">
-                            <span class="material-symbols-outlined text-orange-400 text-3xl mb-3">monitor_weight</span>
-                            <h3 class="font-bold text-white mb-2">Mitos Pérdida Peso</h3>
-                            <button class="w-full py-2 rounded bg-white/10 text-[10px] font-bold uppercase text-white">Preguntar a IA</button>
-                        </div>
-                    </div>
                 </div>
             </section>
-
-            <section class="mb-20">
-                <h2 class="text-xl font-black uppercase italic tracking-tighter text-white mb-4">Cardio <span class="text-red-500">Express</span></h2>
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-4 -mx-5 px-5">
-                    <div class="snap-center flex-shrink-0 w-[80%] relative">
-                        <div class="relative h-[20rem] rounded-[2rem] overflow-hidden">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc3.webp" class="absolute inset-0 w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4 text-center">
-                                <h3 class="font-black text-white text-xl uppercase italic">Box HIIT</h3>
-                                <button class="mt-2 w-full py-3 rounded-xl bg-red-600 text-white font-bold text-[10px] uppercase">Start</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="snap-center flex-shrink-0 w-[80%] relative">
-                        <div class="relative h-[20rem] rounded-[2rem] overflow-hidden">
-                            <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fitc2.webp" class="absolute inset-0 w-full h-full object-cover">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                            <div class="absolute bottom-4 left-4 right-4 text-center">
-                                <h3 class="font-black text-white text-xl uppercase italic">Run Outdoor</h3>
-                                <button class="mt-2 w-full py-3 rounded-xl bg-red-600 text-white font-bold text-[10px] uppercase">Start</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
         </main>
 
-        <div id="navbar-modern" class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
+        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
             <nav class="nav-glass rounded-[2rem] p-2 flex justify-between items-center shadow-2xl">
                 <div class="flex flex-col items-center gap-1 cursor-pointer" onclick="nav('view-dashboard')"><div class="w-9 h-9 rounded-xl bg-blue-600 shadow-neon flex items-center justify-center text-white -translate-y-1"><span class="material-symbols-outlined text-[20px]">grid_view</span></div></div>
                 <div class="flex flex-col items-center gap-1 cursor-pointer opacity-50" onclick="nav('view-dashboard')"><span class="material-symbols-outlined text-gray-400">fitness_center</span></div>
@@ -275,178 +121,21 @@
             </nav>
         </div>
     </div>
+    ```
 
-    <div id="view-profile" class="view">
-        <div style="text-align: center; margin-top: 40px;">
-            <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden;"><img src="https://i.pravatar.cc/150?u=navy" style="width:100%; height:100%; object-fit:cover;"></div>
-            <h2 id="profile-name" style="margin:0; font-weight:900; font-size: 2rem;">USUARIO</h2>
-            <p style="opacity:0.8; font-weight: 800; color: var(--primary-accent);">Navy Elite Member</p>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:50px;">
-            <div class="stat-card-neon"><span>24</span><span>SESIONES</span></div>
-            <div class="stat-card-neon"><span>12k</span><span>KCAL</span></div>
-            <div class="stat-card-neon"><span>PRO</span><span>RANK</span></div>
-        </div>
-        <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer;">CERRAR SESIÓN</div>
-        <button onclick="nav('view-dashboard')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 15px; font-weight: 800; cursor:pointer; width:100%;">← VOLVER</button>
-    </div>
+---
 
-    <nav class="bottom-nav-legacy" id="navbar-legacy" style="position:fixed; bottom:30px; left:50%; transform:translateX(-50%); width:88%; max-width:420px; background:rgba(5,10,20,0.96); backdrop-filter:blur(25px); border-radius:45px; display:none; justify-content:space-around; padding:10px; border:1px solid var(--card-border); z-index:1000;">
-        <div onclick="nav('view-dashboard')" style="color:var(--text-dim); padding:15px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
-        <div onclick="nav('view-profile')" style="color:var(--text-dim); padding:15px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>
-    </nav>
+### 🔵 PASO 3: El Cerebro (Scripts JS)
 
-</div>
-<script>
-   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwLVO7Ub9oAyKD29fEcAFMuKluSfJJ9bx9wLp8ucsUpRavvlyfjtqeUzF06WPdqDM7A/exec";
-   const STRIPE_LINK = "https://buy.stripe.com/test_aFa14p69Vgk53hjclXaZi01";
-   const PAYMENT_TOKEN = "AZ82_XJ91_LQ00_PRO_DIVE"; 
+Vamos al final del archivo.
 
-    // --- LOGICA LOGIN ---
-    async function checkPaymentToken() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token');
-        if (token === PAYMENT_TOKEN) {
-            const email = localStorage.getItem('tempUserEmail') || localStorage.getItem('cyberfit_session');
-            if (!email) return;
-            const overlay = document.getElementById('payment-verify-overlay');
-            overlay.style.display = 'flex';
-            const res = await postData('payment_confirmation', { email: email });
-            if (res.success) {
-                localStorage.setItem('cyberfit_session', email);
-                localStorage.removeItem('tempUserEmail');
-                window.history.replaceState({}, document.title, window.location.pathname);
-                confetti({ particleCount: 200, spread: 85, origin: { y: 0.65 }, colors: ['#0055ff', '#ffffff', '#001a33'] });
-                updateUserDisplay(email);
-                nav('view-dashboard');
-            } else {
-                alert("Estatus de pago pendiente de sincronización.");
-                nav('view-payment-stripe');
-            }
-            overlay.style.display = 'none';
-        }
-    }
+1.  Busca la etiqueta `<script>` que está cerca del final (después de cerrar el `</div>` del contenedor).
+2.  Ve al **FINAL** de ese script, justo **ANTES** de la etiqueta de cierre `</script>`.
+3.  Pega este bloque de código.
+    *(Esto hace que los botones de "Full Body", "Torso", etc. funcionen y carguen la lista).*
 
-    function openPaymentLink() { window.open(STRIPE_LINK, '_blank'); }
-    function updateUserDisplay(email) {
-        if(!email) return;
-        const name = email.split('@')[0].toUpperCase();
-        try { document.getElementById('user-display').innerText = name; } catch(e){}
-        try { document.getElementById('profile-name').innerText = name; } catch(e){}
-    }
-
-    // --- NAVEGACIÓN INTELIGENTE (LA CLAVE DEL ARREGLO) ---
-    function nav(viewId) {
-        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-        const targetView = document.getElementById(viewId);
-        if(targetView) targetView.classList.add('active');
-        
-        const authVis = document.getElementById('auth-visuals');
-        const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
-        
-        if (publicViews.includes(viewId)) {
-            if(authVis) authVis.style.display = 'block';
-        } else {
-            if(authVis) authVis.style.display = 'none';
-        }
-        
-        // CONTROL DE MENÚS
-        const legacyNav = document.getElementById('navbar-legacy');
-        const modernNav = document.getElementById('navbar-modern');
-
-        if(viewId === 'view-dashboard') {
-            if(legacyNav) legacyNav.style.display = 'none'; // ADIÓS BARRA VIEJA
-            if(modernNav) modernNav.style.display = 'block';
-            setTimeout(() => {
-                const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
-                if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
-            }, 50); 
-        } 
-        else if (publicViews.includes(viewId)) {
-            if(legacyNav) legacyNav.style.display = 'none';
-            if(modernNav) modernNav.style.display = 'none';
-        }
-        else {
-            if(legacyNav) legacyNav.style.display = 'flex'; // Usar barra vieja en perfil
-            if(modernNav) modernNav.style.display = 'none';
-        }
-        window.scrollTo(0,0);
-    }
-
-    async function postData(action, data) {
-        try {
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                body: JSON.stringify({ action: action, ...data })
-            });
-            return await response.json();
-        } catch (error) { return { success: false, message: "Error de conexión." }; }
-    }
-
-    async function handleLogin() {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
-        const msg = document.getElementById('login-msg');
-        const loader = document.getElementById('login-load');
-        if(!email || !pass) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('login', { email, password: pass });
-        loader.style.display = 'none';
-        if (res.success) {
-            localStorage.setItem('cyberfit_session', email);
-            updateUserDisplay(email);
-            nav('view-dashboard');
-        } else {
-            if (res.message && res.message.toLowerCase().includes("pago")) {
-                localStorage.setItem('tempUserEmail', email);
-                nav('view-payment-stripe');
-            } else {
-                msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block';
-            }
-        }
-    }
-
-    async function handleRegister() {
-        const email = document.getElementById('reg-email').value;
-        const pass = document.getElementById('reg-pass').value;
-        const msg = document.getElementById('reg-msg');
-        const loader = document.getElementById('reg-load');
-        if(!email || !pass) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('register', { email, password: pass });
-        loader.style.display = 'none';
-        if (res.success) {
-            localStorage.setItem('tempUserEmail', email);
-            nav('view-payment-stripe');
-        } else {
-            msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block';
-        }
-    }
-
-    async function handleRecoverPassword() {
-        const email = document.getElementById('recover-email').value;
-        const msg = document.getElementById('recover-msg');
-        const success = document.getElementById('recover-success');
-        const loader = document.getElementById('recover-load');
-        if(!email) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('recover', { email });
-        loader.style.display = 'none';
-        if (res.success) {
-            success.style.display = 'block';
-            setTimeout(() => nav('view-login'), 3000);
-        } else {
-            msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block';
-        }
-    }
-
-    function logout() { localStorage.clear(); nav('view-welcome'); }
-
-    // --- Lógica Dashboard ---
+```javascript
+    /* === INICIO AGREGADO MANUAL (PASO 3 - LÓGICA) === */
     const workoutsDB = {
         'routine_fullbody': [
             { title: "Total Strength", time: "45 min", ex: "8 Ejercicios", img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" },
@@ -494,16 +183,9 @@
         });
     }
 
-    // AUTO-INICIO
-    window.onload = function() {
-        checkPaymentToken();
-        const session = localStorage.getItem('cyberfit_session');
-        if (session && !new URLSearchParams(window.location.search).get('token')) {
-            updateUserDisplay(session);
-            nav('view-dashboard');
-        }
-    };
-</script>
-
-</body>
-</html>
+    // FUERZA LA CARGA DEL DASHBOARD AL INICIAR
+    setTimeout(() => {
+        const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+        if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
+    }, 500);
+    /* === FIN AGREGADO MANUAL (PASO 3) === */
