@@ -443,20 +443,7 @@
         @keyframes listFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .animate-list-item { animation: listFade 0.3s ease-out forwards; }
     </style>
-    ```
-
----
-
-### 🟡 PASO 2: El Injerto del Dashboard (Body)
-
-Ahora vamos a meter el contenido visual.
-
-1.  En tu Bloc de Notas, busca la línea: `<div id="view-dashboard" class="view">`.
-2.  **BORRA TODO** lo que hay dentro de ese div hasta su cierre `</div>`. (Borra el header, el daily challenge y los programas activos viejos).
-3.  El div debe quedar vacío: `<div id="view-dashboard" class="view"></div>`.
-4.  **DENTRO** de ese div, pega **TODO ESTE CÓDIGO** (Es el dashboard nuevo que me pasaste, adaptado para encajar):
-
-```html
+    html
     <div class="relative bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors duration-300 w-full min-h-screen">
         
         <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
@@ -568,17 +555,6 @@ Ahora vamos a meter el contenido visual.
     </div>
     ```
 
----
-
-### 🔵 PASO 3: Los Scripts (Lógica)
-
-Vamos al final del archivo.
-
-1.  Busca la etiqueta `<script>` del final.
-2.  Ve al final de ese script, **antes** de `</script>`.
-3.  **PEGA ESTE CÓDIGO** (Es la lógica para que funcionen los botones del nuevo dashboard).
-
-```javascript
     /* === INICIO SCRIPTS NUEVOS (PASO 3) === */
     const workoutsDB = {
         'routine_fullbody': [
