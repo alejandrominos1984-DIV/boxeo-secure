@@ -277,11 +277,28 @@
     </div>
 
 <script>
+   /* --- CONFIGURACIÓN --- */
    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwLVO7Ub9oAyKD29fEcAFMuKluSfJJ9bx9wLp8ucsUpRavvlyfjtqeUzF06WPdqDM7A/exec";
    const STRIPE_LINK = "https://buy.stripe.com/test_aFa14p69Vgk53hjclXaZi01";
    const PAYMENT_TOKEN = "AZ82_XJ91_LQ00_PRO_DIVE"; 
 
-    // --- LOGICA LOGIN ---
+   /* --- BASE DE DATOS DE RUTINAS (DASHBOARD NUEVO) --- */
+   const workoutsDB = {
+        'routine_fullbody': [
+            { title: "Total Body Strength", time: "45 min", ex: "8 Ejercicios", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+            { title: "Metabolic Conditioning", time: "30 min", ex: "Circuitos", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: true }
+        ],
+        'routine_torso': [
+            { title: "Pecho y Espalda", time: "50 min", ex: "Super-series", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" },
+            { title: "Hombros 3D", time: "35 min", ex: "12 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-top" }
+        ],
+        'routine_pierna': [
+            { title: "Cuádriceps Focus", time: "45 min", ex: "15 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
+            { title: "Glúteo Pump", time: "40 min", ex: "Aislamiento", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" }
+        ]
+    };
+
+    /* --- FUNCIONES DEL SISTEMA --- */
     async function checkPaymentToken() {
         const urlParams = new URLSearchParams(window.location.search);
         const token = urlParams.get('token');
@@ -289,7 +306,7 @@
             const email = localStorage.getItem('tempUserEmail') || localStorage.getItem('cyberfit_session');
             if (!email) return;
             const overlay = document.getElementById('payment-verify-overlay');
-            overlay.style.display = 'flex';
+            if(overlay) overlay.style.display = 'flex';
             const res = await postData('payment_confirmation', { email: email });
             if (res.success) {
                 localStorage.setItem('cyberfit_session', email);
@@ -302,7 +319,7 @@
                 alert("Estatus de pago pendiente de sincronización.");
                 nav('view-payment-stripe');
             }
-            overlay.style.display = 'none';
+            if(overlay) overlay.style.display = 'none';
         }
     }
 
@@ -318,16 +335,20 @@
     function updateUserDisplay(email) {
         if(!email) return;
         const name = email.split('@')[0].toUpperCase();
-        document.getElementById('user-display').innerText = name;
-        document.getElementById('profile-name').innerText = name;
+        try { document.getElementById('user-display').innerText = name; } catch(e){}
+        try { document.getElementById('profile-name').innerText = name; } catch(e){}
     }
 
-    // FUNCIÓN NAV ARREGLADA (SIN MENÚ VIEJO)
+    /* --- NAVEGACIÓN HÍBRIDA (Login Viejo <-> Dashboard Nuevo) --- */
     function nav(viewId) {
+        // 1. Ocultar todas las vistas
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        
+        // 2. Mostrar vista objetivo
         const targetView = document.getElementById(viewId);
         if(targetView) targetView.classList.add('active');
         
+        // 3. Manejar Fondos de Login
         const authVis = document.getElementById('auth-visuals');
         const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
         
@@ -336,262 +357,61 @@
         } else {
             if(authVis) authVis.style.display = 'none';
         }
+        
+        // 4. Manejar Menú Flotante (Solo en Dashboard)
+        const modernNav = document.getElementById('navbar-modern'); // Asegúrate que el HTML tenga este ID
+        const legacyNav = document.getElementById('navbar-legacy'); // Si existe el viejo
+
+        if(viewId === 'view-dashboard') {
+            if(legacyNav) legacyNav.style.display = 'none'; 
+            if(modernNav) modernNav.style.display = 'block';
+            
+            // Forzar carga de rutinas
+            setTimeout(() => {
+                const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+                if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
+            }, 50); 
+        } 
+        else if (publicViews.includes(viewId)) {
+            if(legacyNav) legacyNav.style.display = 'none';
+            if(modernNav) modernNav.style.display = 'none';
+        }
+        else {
+            // En perfil u otras vistas internas
+            if(legacyNav) legacyNav.style.display = 'flex'; 
+            if(modernNav) modernNav.style.display = 'none';
+        }
+
         window.scrollTo(0,0);
     }
 
-    async function postData(action, data) {
-        try {
-            const response = await fetch(SCRIPT_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
-                body: JSON.stringify({ action: action, ...data })
-            });
-            return await response.json();
-        } catch (error) { return { success: false, message: "Error de conexión con el núcleo." }; }
-    }
-
-    async function handleLogin() {
-        const email = document.getElementById('login-email').value;
-        const pass = document.getElementById('login-pass').value;
-        const msg = document.getElementById('login-msg');
-        const loader = document.getElementById('login-load');
-        if(!email || !pass) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('login', { email, password: pass });
-        loader.style.display = 'none';
-        if (res.success) {
-            localStorage.setItem('cyberfit_session', email);
-            updateUserDisplay(email);
-            nav('view-dashboard');
-        } else {
-            if (res.message && res.message.toLowerCase().includes("pago")) {
-                localStorage.setItem('tempUserEmail', email);
-                nav('view-payment-stripe');
-            } else {
-                msg.innerText = (res.message || "Error de Identidad").toUpperCase(); msg.style.display='block';
-            }
-        }
-    }
-
-    async function handleRegister() {
-        const email = document.getElementById('reg-email').value;
-        const pass = document.getElementById('reg-pass').value;
-        const msg = document.getElementById('reg-msg');
-        const loader = document.getElementById('reg-load');
-        if(!email || !pass) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('register', { email, password: pass });
-        loader.style.display = 'none';
-        if (res.success) {
-            localStorage.setItem('tempUserEmail', email);
-            nav('view-payment-stripe');
-        } else {
-            msg.innerText = (res.message || "Falla en Registro").toUpperCase(); msg.style.display='block';
-        }
-    }
-
-    async function handleRecoverPassword() {
-        const email = document.getElementById('recover-email').value;
-        const msg = document.getElementById('recover-msg');
-        const success = document.getElementById('recover-success');
-        const loader = document.getElementById('recover-load');
-        if(!email) return;
-        loader.style.display = 'block';
-        msg.style.display = 'none';
-        const res = await postData('recover', { email });
-        loader.style.display = 'none';
-        if (res.success) {
-            success.style.display = 'block';
-            setTimeout(() => nav('view-login'), 3000);
-        } else {
-            msg.innerText = (res.message || "Error en Recuperación").toUpperCase(); msg.style.display='block';
-        }
-    }
-
-    function logout() { localStorage.clear(); nav('view-welcome'); }
-
-    window.onload = function() {
-        checkPaymentToken();
-        const session = localStorage.getItem('cyberfit_session');
-        if (session && !new URLSearchParams(window.location.search).get('token')) {
-            updateUserDisplay(session);
-            nav('view-dashboard');
-        }
-    };
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: { primary: "#0055ff", "background-light": "#f3f4f6", "background-dark": "#050505", "navy-base": "#0a0a1a" },
-                    boxShadow: { 'neon': '0 0 20px rgba(0, 85, 255, 0.5)', 'neon-strong': '0 0 30px rgba(0, 85, 255, 0.6)' }
-                },
-            },
-        };
-    </script>
-    <style>
-        /* Estilos Dashboard Nuevo */
-        .dash-no-scrollbar::-webkit-scrollbar { display: none; }
-        .dash-glass-panel { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .nav-glass { background: rgba(10, 10, 26, 0.75); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); }
-        .pop-out-img { mask-image: linear-gradient(to bottom, black 85%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 85%, transparent 100%); }
-        @keyframes pop-icon { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
-        .animate-pop { animation: pop-icon 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes listFade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-list-item { animation: listFade 0.3s ease-out forwards; }
-    </style>
-    html
-    <div class="relative bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors duration-300 w-full min-h-screen">
-        
-        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-            <div class="absolute top-[-10%] right-[-20%] w-[300px] h-[300px] bg-primary/20 rounded-full blur-[80px] dark:bg-primary/15"></div>
-            <div class="absolute bottom-[-10%] left-[-20%] w-[300px] h-[300px] bg-purple-600/10 rounded-full blur-[80px] dark:bg-indigo-900/20"></div>
-        </div>
-
-        <main class="relative z-10 w-full px-5 pb-32 pt-6">
-            
-            <div class="flex justify-between items-center mb-8">
-                <div class="flex items-center gap-2 bg-white/50 dark:bg-white/5 backdrop-blur-md border border-gray-200 dark:border-white/5 rounded-full pl-2 pr-4 py-1.5 shadow-sm">
-                    <div class="w-2 h-2 rounded-full bg-primary shadow-neon animate-pulse ml-1"></div>
-                    <h3 class="text-[9px] font-bold tracking-[0.15em] text-gray-600 dark:text-gray-300 uppercase">Navy Elite</h3>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button class="dash-btn w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-[#1a1a1a] shadow-sm border border-gray-200 dark:border-white/5 active:scale-95 transition-transform" onclick="document.documentElement.classList.toggle('dark')">
-                        <span class="material-symbols-outlined text-gray-500 dark:text-gray-400 text-[18px]">light_mode</span>
-                    </button>
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900 p-[1.5px] relative group" onclick="nav('view-profile')">
-                        <img alt="User" class="w-full h-full rounded-full object-cover border-2 border-background-light dark:border-background-dark" src="https://i.pravatar.cc/150?img=11"/>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-8 relative z-10">
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="flex h-2.5 w-2.5 relative"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span></span>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-primary">Sistema activo • Día 12</span>
-                </div>
-                <h1 class="text-5xl font-black italic uppercase leading-[0.85] tracking-tighter text-gray-900 dark:text-white mb-2">
-                    Protocolo <br/>
-                    <span class="text-primary relative inline-block">Elite</span> 
-                    <span class="text-transparent bg-clip-text bg-gradient-to-br from-gray-800 to-gray-400 dark:from-white dark:to-gray-600">Ops</span>
-                </h1>
-            </div>
-
-            <section class="mb-12">
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 snap-x snap-mandatory -mx-5 px-5">
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden border-primary/30 shadow-neon-sm">
-                            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-100"></div>
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4"><span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-primary">Día 1</span></div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Leg Day <br/><span class="text-primary">Power</span></h4>
-                            </div>
-                            <button onclick="nav('view-dashboard')" class="relative z-10 w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] shadow-neon flex items-center justify-center gap-2"><span>Comenzar</span></button>
-                        </div>
-                    </div>
-                    <div class="snap-center flex-shrink-0 w-[85%] relative group">
-                        <div class="dash-glass-panel h-[22rem] rounded-[1.5rem] p-6 flex flex-col justify-between relative overflow-hidden">
-                            <div class="relative z-10">
-                                <div class="flex justify-between items-start mb-4"><span class="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] font-bold uppercase tracking-wider text-gray-300">Día 2</span></div>
-                                <h4 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Push <br/><span class="text-gray-400">Focus</span></h4>
-                            </div>
-                            <button class="relative z-10 w-full py-3.5 rounded-xl bg-primary text-white font-bold uppercase tracking-wider text-[10px] flex items-center justify-center gap-2"><span>Ver Rutina</span></button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-2">
-                <div class="flex flex-col mb-4 gap-2 relative z-10">
-                    <h2 class="text-3xl font-black uppercase italic tracking-tighter text-white leading-none">Rutinas <span class="text-transparent bg-clip-text bg-gradient-to-r from-[var(--primary-accent)] to-cyan-400">Científicas</span></h2>
-                </div>
-                <div class="flex gap-4 overflow-x-auto dash-no-scrollbar pb-6 pt-14 snap-x snap-mandatory -mx-5 px-5">
-                    <div class="snap-center flex-shrink-0 w-[75%] relative group cursor-pointer">
-                        <img src="https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp" class="absolute bottom-0 right-0 h-[115%] w-auto z-20 pointer-events-none object-contain pop-out-img" />
-                        <div class="dash-glass-panel h-44 rounded-[1.5rem] p-5 flex flex-col justify-center relative overflow-hidden border-blue-500/20 bg-blue-900/10">
-                            <div class="relative z-30 w-[60%]">
-                                <span class="inline-block px-1.5 py-0.5 rounded bg-blue-500/20 text-xs font-bold text-blue-300 uppercase tracking-wider mb-1.5 border border-blue-500/30">Top Pick</span>
-                                <h3 class="text-3xl font-black italic text-white uppercase leading-none mb-1">Rutina <br/><span class="text-blue-400">Piernas</span></h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="mb-10">
-                <div class="flex items-center gap-2 mb-6">
-                    <h2 class="text-xl font-black uppercase italic tracking-tighter text-white">Rutinas <span class="text-primary">Populares</span></h2>
-                    <div class="h-[1px] flex-1 bg-white/10 ml-2"></div>
-                </div>
-                <div id="body-focus-filters" class="flex gap-3 overflow-x-auto dash-no-scrollbar pb-2 mb-6 -mx-5 px-5">
-                    <button onclick="filterBodyFocus('routine_fullbody', this)" class="filter-btn active flex-shrink-0 px-5 py-2 rounded-full bg-primary text-white text-[11px] font-bold uppercase tracking-wider shadow-neon">Full Body</button>
-                    <button onclick="filterBodyFocus('routine_torso', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Torso</button>
-                    <button onclick="filterBodyFocus('routine_pierna', this)" class="filter-btn flex-shrink-0 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase">Pierna</button>
-                </div>
-                <div id="body-focus-list" class="flex flex-col gap-4"></div>
-            </section>
-
-        </main>
-
-        <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
-            <nav id="nav-bar" class="nav-glass rounded-[2rem] p-2.5 px-5 flex justify-between items-center shadow-2xl shadow-black/80">
-                <a onclick="nav('view-dashboard'); selectNav(this)" class="nav-item flex flex-col items-center gap-1 group cursor-pointer relative">
-                    <div class="icon-container w-9 h-9 rounded-xl bg-primary shadow-neon text-white -translate-y-1 flex items-center justify-center transition-all duration-300"><span class="material-symbols-outlined text-[20px]">grid_view</span></div>
-                    <span class="text-label text-[8px] font-bold text-primary uppercase tracking-wide mt-0.5 transition-colors duration-300">Inicio</span>
-                </a>
-                <a onclick="nav('view-dashboard'); selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400"><span class="material-symbols-outlined text-[20px]">fitness_center</span></div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Biblio</span>
-                </a>
-                <a onclick="nav('view-profile'); selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer">
-                    <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400"><span class="material-symbols-outlined text-[20px]">person</span></div>
-                    <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Perfil</span>
-                </a>
-            </nav>
-        </div>
-    </div>
-
-    /* === INICIO SCRIPTS NUEVOS (PASO 3) === */
-    const workoutsDB = {
-        'routine_fullbody': [
-            { title: "Total Body Strength", time: "45 min", ex: "8 Ejercicios", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" },
-            { title: "Metabolic Conditioning", time: "30 min", ex: "Circuitos", intensity: 3, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-center", grayscale: true }
-        ],
-        'routine_torso': [
-            { title: "Pecho y Espalda", time: "50 min", ex: "Super-series", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit4.png", align: "object-center" },
-            { title: "Hombros 3D", time: "35 min", ex: "12 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit2.png", align: "object-top" }
-        ],
-        'routine_pierna': [
-            { title: "Cuádriceps Focus", time: "45 min", ex: "15 Sets", intensity: 2, img: "https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1%20(2).webp", align: "object-top" }
-        ]
-    };
-
+    /* --- LOGICA DASHBOARD NUEVO (Filtros y Animaciones) --- */
     function filterBodyFocus(category, btnElement) {
         const buttons = document.querySelectorAll('#body-focus-filters .filter-btn');
         buttons.forEach(btn => {
-            btn.classList.remove('bg-primary', 'text-white', 'shadow-neon');
-            btn.classList.add('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
+            btn.className = 'filter-btn px-5 py-2 rounded-full bg-white/5 border border-white/10 text-gray-400 text-[11px] font-bold uppercase transition-all';
         });
         if(btnElement) {
-            btnElement.classList.remove('bg-white/5', 'border', 'border-white/10', 'text-gray-400', 'hover:bg-white/10');
-            btnElement.classList.add('bg-primary', 'text-white', 'shadow-neon');
+            btnElement.className = 'filter-btn px-5 py-2 rounded-full bg-blue-600 text-white text-[11px] font-bold uppercase shadow-neon transition-all scale-105';
         }
+        
         const listContainer = document.getElementById('body-focus-list');
+        if(!listContainer) return;
+        
         listContainer.innerHTML = ''; 
         const routines = workoutsDB[category] || [];
+        
         routines.forEach((routine, index) => {
             let boltsHtml = '';
             for(let i=0; i<3; i++) {
                 const colorClass = i < routine.intensity ? (routine.intensity === 3 ? 'text-red-500' : 'text-primary') : 'text-gray-700';
                 boltsHtml += `<span class="material-symbols-outlined text-[14px] ${colorClass} fill-current">bolt</span>`;
             }
+            
             const itemHtml = `
                 <div class="dash-glass-panel p-3 rounded-2xl flex items-center gap-4 group active:scale-[0.98] transition-transform cursor-pointer border-white/5 hover:border-primary/30 animate-list-item" style="animation-delay: ${index * 0.1}s">
                     <div class="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden bg-gray-800">
-                        <img src="${routine.img}" class="w-full h-full object-cover ${routine.align} opacity-90 group-hover:scale-110 transition-transform duration-500 ${routine.grayscale ? 'grayscale-[50%]' : ''}" alt="${routine.title}">
+                        <img src="${routine.img}" class="w-full h-full object-cover ${routine.align || 'object-center'} opacity-90 group-hover:scale-110 transition-transform duration-500 ${routine.grayscale ? 'grayscale-[50%]' : ''}">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -616,30 +436,129 @@
         const allNavItems = document.querySelectorAll('.nav-item');
         allNavItems.forEach(item => {
             item.classList.add('opacity-50');
-            const iconContainer = item.querySelector('.icon-container');
-            iconContainer.classList.remove('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1', 'animate-pop');
-            iconContainer.classList.add('text-gray-500', 'dark:text-gray-400');
-            const textLabel = item.querySelector('.text-label');
-            textLabel.classList.remove('text-primary');
-            textLabel.classList.add('text-gray-500', 'dark:text-gray-400');
+            const icon = item.querySelector('.icon-container');
+            const txt = item.querySelector('.text-label');
+            if(icon) {
+                icon.classList.remove('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1', 'animate-pop');
+                icon.classList.add('text-gray-500', 'dark:text-gray-400');
+            }
+            if(txt) {
+                txt.classList.remove('text-primary');
+                txt.classList.add('text-gray-500', 'dark:text-gray-400');
+            }
         });
+        
         clickedElement.classList.remove('opacity-50');
-        const activeIconContainer = clickedElement.querySelector('.icon-container');
-        activeIconContainer.classList.remove('text-gray-500', 'dark:text-gray-400');
-        activeIconContainer.classList.add('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1');
-        requestAnimationFrame(() => { activeIconContainer.classList.add('animate-pop'); });
-        const activeTextLabel = clickedElement.querySelector('.text-label');
-        activeTextLabel.classList.remove('text-gray-500', 'dark:text-gray-400');
-        activeTextLabel.classList.add('text-primary');
+        const activeIcon = clickedElement.querySelector('.icon-container');
+        const activeTxt = clickedElement.querySelector('.text-label');
+        
+        if(activeIcon) {
+            activeIcon.classList.remove('text-gray-500', 'dark:text-gray-400');
+            activeIcon.classList.add('bg-primary', 'shadow-neon', 'text-white', '-translate-y-1');
+            requestAnimationFrame(() => { activeIcon.classList.add('animate-pop'); });
+        }
+        if(activeTxt) {
+            activeTxt.classList.remove('text-gray-500', 'dark:text-gray-400');
+            activeTxt.classList.add('text-primary');
+        }
     }
 
-    // Auto-Carga
-    setTimeout(() => {
-        const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
-        if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
-    }, 500);
-    /* === FIN SCRIPTS NUEVOS === */
-</script>
+    /* --- CONEXIÓN API --- */
+    async function postData(action, data) {
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify({ action: action, ...data })
+            });
+            return await response.json();
+        } catch (error) { return { success: false, message: "Error de conexión." }; }
+    }
 
+    /* --- MANEJADORES DE EVENTOS --- */
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+        const msg = document.getElementById('login-msg');
+        const loader = document.getElementById('login-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        if(msg) msg.style.display = 'none';
+        
+        const res = await postData('login', { email, password: pass });
+        loader.style.display = 'none';
+        
+        if (res.success) {
+            localStorage.setItem('cyberfit_session', email);
+            updateUserDisplay(email);
+            nav('view-dashboard');
+        } else {
+            if (res.message && res.message.toLowerCase().includes("pago")) {
+                localStorage.setItem('tempUserEmail', email);
+                nav('view-payment-stripe');
+            } else {
+                if(msg) { msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block'; }
+            }
+        }
+    }
+
+    async function handleRegister() {
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        const msg = document.getElementById('reg-msg');
+        const loader = document.getElementById('reg-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        if(msg) msg.style.display = 'none';
+        
+        const res = await postData('register', { email, password: pass });
+        loader.style.display = 'none';
+        
+        if (res.success) {
+            localStorage.setItem('tempUserEmail', email);
+            nav('view-payment-stripe');
+        } else {
+            if(msg) { msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block'; }
+        }
+    }
+
+    async function handleRecoverPassword() {
+        const email = document.getElementById('recover-email').value;
+        const msg = document.getElementById('recover-msg');
+        const success = document.getElementById('recover-success');
+        const loader = document.getElementById('recover-load');
+        if(!email) return;
+        loader.style.display = 'block';
+        if(msg) msg.style.display = 'none';
+        
+        const res = await postData('recover', { email });
+        loader.style.display = 'none';
+        
+        if (res.success) {
+            if(success) success.style.display = 'block';
+            setTimeout(() => nav('view-login'), 3000);
+        } else {
+            if(msg) { msg.innerText = (res.message || "Error").toUpperCase(); msg.style.display='block'; }
+        }
+    }
+
+    function logout() { localStorage.clear(); nav('view-welcome'); }
+
+    /* --- INICIO AUTOMÁTICO --- */
+    window.onload = function() {
+        checkPaymentToken();
+        const session = localStorage.getItem('cyberfit_session');
+        if (session && !new URLSearchParams(window.location.search).get('token')) {
+            updateUserDisplay(session);
+            nav('view-dashboard');
+        }
+        
+        // Auto-carga de filtros si estamos en dashboard
+        setTimeout(() => {
+            const firstBtn = document.querySelector('#body-focus-filters .filter-btn');
+            if(firstBtn) filterBodyFocus('routine_fullbody', firstBtn);
+        }, 800);
+    };
+</script>
 </body>
 </html>
