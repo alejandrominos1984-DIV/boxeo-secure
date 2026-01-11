@@ -2,137 +2,171 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mini-Editor Estilo Canva</title>
+    <title>Editor Pro: Imagen a Video</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; display: flex; flex-direction: column; align-items: center; background: #f0f2f5; }
-        h1 { color: #333; }
-        
-        /* Contenedor principal */
-        .editor-container {
-            display: flex;
-            gap: 20px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        /* Barra lateral de herramientas */
-        .toolbar {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        button {
-            padding: 10px 15px;
-            border: none;
-            background-color: #7c4dff; /* Color moderno */
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: transform 0.1s;
-        }
-
-        button:hover { background-color: #651fff; }
-        button:active { transform: scale(0.98); }
-        
-        button.download { background-color: #00c853; }
-
-        /* El lienzo tiene un borde para distinguirlo */
-        canvas { border: 1px solid #ddd; }
+        /* Un poco de estilo extra para el canvas */
+        .canvas-container { margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     </style>
 </head>
-<body>
+<body class="bg-gray-900 text-white h-screen flex flex-col">
 
-    <h1>Editor Gráfico para Clientes</h1>
+    <header class="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-purple-400">Studio <span class="text-white">Editor</span></h1>
+        <button onclick="exportVideo()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full font-bold flex items-center gap-2 transition">
+            <span>●</span> Grabar Video (5s)
+        </button>
+    </header>
 
-    <div class="editor-container">
-        <div class="toolbar">
-            <button onclick="addRect()">+ Rectángulo</button>
-            <button onclick="addCircle()">+ Círculo</button>
-            <button onclick="addText()">+ Texto</button>
-            <hr style="width: 100%; border: 0.5px solid #eee;">
-            <button onclick="deleteObject()" style="background-color: #ff5252;">Eliminar</button>
-            <button onclick="downloadImage()" class="download">Descargar PNG</button>
+    <div class="flex flex-1 overflow-hidden">
+        
+        <div class="w-64 bg-gray-800 p-4 flex flex-col gap-4 border-r border-gray-700">
+            
+            <div class="p-4 border-2 border-dashed border-gray-600 rounded-lg text-center hover:border-purple-500 transition cursor-pointer relative">
+                <p class="text-sm text-gray-400">Sube tu Imagen</p>
+                <input type="file" id="imgLoader" class="opacity-0 absolute inset-0 cursor-pointer" accept="image/*">
+            </div>
+
+            <button onclick="addText()" class="bg-gray-700 hover:bg-gray-600 p-3 rounded text-left">
+                Agrega Texto
+            </button>
+            
+            <div class="mt-auto text-xs text-gray-500">
+                Selecciona un objeto para editarlo. Usa "Supr" para borrar.
+            </div>
         </div>
 
-        <div>
-            <canvas id="c" width="600" height="400"></canvas>
-        </div>
+        <div class="flex-1 bg-gray-900 flex justify-center items-center relative p-10 overflow-auto">
+            <canvas id="c" width="1080" height="1080"></canvas> </div>
+
     </div>
 
     <script>
-        // 1. Inicializar el canvas de Fabric
+        // 1. Configuración del Lienzo (Canvas)
         const canvas = new fabric.Canvas('c', {
-            backgroundColor: '#ffffff' // Fondo blanco por defecto
+            backgroundColor: '#1a1a1a', // Fondo oscuro por defecto
+            width: 500,  // Escalado visualmente para la demo
+            height: 500
         });
 
-        // 2. Función para agregar un rectángulo
-        function addRect() {
-            const rect = new fabric.Rect({
-                left: 100,
-                top: 100,
-                fill: '#ffca28', // Color amarillo
-                width: 100,
-                height: 100,
-                rx: 10, // Bordes redondeados
-                ry: 10
-            });
-            canvas.add(rect);
-            canvas.setActiveObject(rect); // Seleccionarlo automáticamente
-        }
+        // Evento: Subir Imagen
+        document.getElementById('imgLoader').addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imgObj = new Image();
+                imgObj.src = event.target.result;
+                imgObj.onload = function() {
+                    const image = new fabric.Image(imgObj);
+                    
+                    // Ajustar imagen para que quepa bien
+                    image.scaleToWidth(300);
+                    
+                    canvas.add(image);
+                    canvas.centerObject(image);
+                    canvas.setActiveObject(image);
+                }
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        });
 
-        // 3. Función para agregar un círculo
-        function addCircle() {
-            const circle = new fabric.Circle({
-                radius: 50,
-                fill: '#29b6f6',
-                left: 200,
-                top: 100
-            });
-            canvas.add(circle);
-        }
-
-        // 4. Función para agregar texto editable
+        // Función: Agregar Texto
         function addText() {
-            const text = new fabric.IText('Edítame', {
-                left: 150,
-                top: 200,
+            const text = new fabric.Textbox('Tu Texto Aquí', {
+                left: 50,
+                top: 50,
+                width: 200,
+                fontSize: 30,
                 fontFamily: 'Arial',
-                fill: '#333',
-                fontSize: 40
+                fontWeight: 'bold',
+                fill: '#ffffff',
+                textAlign: 'center',
+                borderColor: '#a855f7',
+                cornerColor: '#a855f7',
+                cornerSize: 10,
+                transparentCorners: false
             });
             canvas.add(text);
             canvas.setActiveObject(text);
         }
 
-        // 5. Eliminar objeto seleccionado
-        function deleteObject() {
-            const activeObject = canvas.getActiveObject();
-            if (activeObject) {
-                canvas.remove(activeObject);
+        // Eliminar con tecla Supr/Delete
+        document.addEventListener('keydown', function(e) {
+            if(e.key === "Delete" || e.key === "Backspace") {
+                const activeObjects = canvas.getActiveObjects();
+                if (activeObjects.length) {
+                    canvas.discardActiveObject();
+                    activeObjects.forEach(function(object) {
+                        canvas.remove(object);
+                    });
+                }
             }
+        });
+
+        // --- LÓGICA DE VIDEO (La parte mágica) ---
+        
+        async function exportVideo() {
+            const btn = document.querySelector('button[onclick="exportVideo()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = "Grabando...";
+            btn.classList.add('animate-pulse');
+
+            // 1. Capturar el stream del canvas
+            const canvasElement = document.getElementById('c');
+            const stream = canvasElement.captureStream(30); // 30 FPS
+            const mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm;codecs=vp9' // Formato web moderno
+            });
+
+            const chunks = [];
+            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+
+            mediaRecorder.onstop = (e) => {
+                // Crear el archivo de video
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                
+                // Descargar
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'mi-video-promo.webm';
+                a.click();
+                
+                // Resetear botón
+                btn.innerHTML = originalText;
+                btn.classList.remove('animate-pulse');
+            };
+
+            // 2. Iniciar grabación
+            mediaRecorder.start();
+
+            // 3. Simular una animación simple para que el video no sea estático
+            // (Aquí es donde programarías movimientos reales)
+            const objects = canvas.getObjects();
+            
+            let duration = 0;
+            const totalDuration = 5000; // 5 segundos
+            
+            function animate() {
+                if (duration < totalDuration) {
+                    // Ejemplo: Rotar ligeramente todo o hacer zoom
+                    // En un caso real, usarías GSAP o animaciones de Fabric
+                    objects.forEach(obj => {
+                        // Animación sutil de "respiración" o movimiento
+                        if(obj.type === 'image') {
+                            obj.rotate((obj.angle || 0) + 0.2); 
+                        }
+                    });
+                    canvas.renderAll();
+                    duration += 16; // ~60fps loop
+                    requestAnimationFrame(animate);
+                } else {
+                    mediaRecorder.stop(); // Parar grabación a los 5s
+                }
+            }
+            animate();
         }
 
-        // 6. Descargar el diseño como imagen
-        function downloadImage() {
-            // Convertir el canvas a URL de datos
-            const dataURL = canvas.toDataURL({
-                format: 'png',
-                quality: 1
-            });
-            
-            // Crear un enlace temporal para descargar
-            const link = document.createElement('a');
-            link.download = 'mi-diseño.png';
-            link.href = dataURL;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
     </script>
 </body>
 </html>
