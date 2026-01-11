@@ -2,171 +2,578 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Editor Pro: Imagen a Video</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIT AI | Navy Elite Training</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        /* Un poco de estilo extra para el canvas */
-        .canvas-container { margin: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        :root {
+            --primary-accent: #0055ff; /* Azul Marino Vibrante */
+            --primary-navy: #001a33;  /* Base Azul Marino */
+            --primary-accent-glow: rgba(0, 85, 255, 0.5);
+            --bg-black: #000000;
+            --card-dark: rgba(10, 15, 25, 0.85);
+            --card-border: rgba(0, 85, 255, 0.25);
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --error-red: #ff3b30;
+            --auth-bg-img: url('https://MINEGOCIO.b-cdn.net/fitness%20imagenes/fit1.webp');
+        }
+
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-black);
+            color: var(--text-main); 
+            margin: 0; padding: 0; 
+            min-height: 100vh;
+            display: flex; justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- AUTH BACKGROUND --- */
+        .auth-bg {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--auth-bg-img);
+            background-size: cover; background-position: center;
+            z-index: -2;
+            filter: brightness(0.6) contrast(1.05);
+        }
+        .auth-overlay-dark {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,10,30,0.3) 50%, rgba(0, 26, 51, 0.95) 100%);
+            z-index: -1;
+        }
+
+        /* --- VIEWS --- */
+        .view { 
+            display: none; 
+            opacity: 0; 
+            animation: fadeIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
+            flex-direction: column;
+            width: 100%;
+            padding: 30px;
+            min-height: 100vh;
+        }
+        .view.active { display: flex; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- WELCOME VIEW (NAVY NEON STYLE) --- */
+        .welcome-content {
+            margin-top: auto;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+        .welcome-title {
+            font-size: 3.4rem;
+            font-weight: 900;
+            line-height: 0.95;
+            margin-bottom: 40px;
+            letter-spacing: -2px;
+            text-transform: uppercase;
+            text-shadow: 0 0 25px rgba(0, 85, 255, 0.4);
+        }
+        
+        .btn-get-started {
+            background: rgba(10, 20, 40, 0.9);
+            border-radius: 50px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            text-decoration: none;
+            width: 100%;
+            border: 1px solid rgba(0, 85, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+        }
+        .btn-get-started:hover {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 25px var(--primary-accent-glow);
+            transform: translateY(-2px);
+        }
+        .btn-get-started:active { transform: scale(0.96); }
+        .btn-circle {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--primary-accent-glow);
+        }
+        .btn-circle svg { width: 26px; height: 26px; color: #fff; }
+        .btn-text {
+            flex-grow: 1;
+            text-align: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-right: 45px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+        .btn-arrows {
+            position: absolute;
+            right: 30px;
+            display: flex;
+            gap: 3px;
+            opacity: 0.7;
+            color: var(--primary-accent);
+        }
+
+        .login-link-container {
+            margin-top: 30px;
+            font-size: 1rem;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+        .login-link-container span {
+            color: var(--primary-accent);
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+            text-shadow: 0 0 10px var(--primary-accent-glow);
+        }
+
+        /* --- AUTH FORMS --- */
+        .auth-form-container {
+            margin-top: auto;
+            margin-bottom: 40px;
+        }
+        input.modern {
+            width: 100%;
+            padding: 24px;
+            background: rgba(0, 26, 51, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 85, 255, 0.15);
+            border-radius: 22px;
+            color: #fff;
+            font-size: 1rem;
+            transition: 0.3s;
+            margin-bottom: 15px;
+        }
+        input.modern:focus {
+            border-color: var(--primary-accent);
+            background: rgba(0, 85, 255, 0.05);
+            box-shadow: 0 0 20px rgba(0, 85, 255, 0.2);
+        }
+        .password-wrap { position: relative; }
+        .eye-btn {
+            position: absolute; right: 22px; top: 28px;
+            background: none; border: none; color: var(--text-dim); cursor: pointer;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 24px;
+            background: var(--primary-accent);
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            font-weight: 900;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px var(--primary-accent-glow);
+            letter-spacing: 1px;
+        }
+        .btn-primary:active { transform: scale(0.97); filter: brightness(1.2); }
+
+        /* --- DASHBOARD ELEMENTS --- */
+        #view-dashboard, #view-coach, #view-profile { 
+            padding-bottom: 120px; 
+            background: var(--bg-black);
+        }
+        .header-profile { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; border: 2px solid var(--primary-accent); box-shadow: 0 0 15px var(--primary-accent-glow); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .daily-challenge {
+            background: linear-gradient(135deg, #001a33, #0055ff);
+            border-radius: 32px; padding: 28px; color: #fff;
+            position: relative; overflow: hidden; margin-bottom: 24px;
+            min-height: 200px; display: flex; flex-direction: column; justify-content: center;
+            box-shadow: 0 15px 40px rgba(0, 85, 255, 0.25);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .daily-challenge h2 { font-size: 2.4rem; margin: 0; line-height: 1; font-weight: 900; letter-spacing: -1px; }
+        .daily-challenge .hero-img { position: absolute; right: -15px; bottom: 0; height: 110%; opacity: 1; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
+
+        .program-card {
+            height: 210px; border-radius: 28px; overflow: hidden; position: relative; 
+            border: 1px solid var(--card-border); transition: 0.4s;
+            background: #0a0f19;
+        }
+        .program-card:hover {
+            border-color: var(--primary-accent);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px var(--primary-accent-glow);
+        }
+        .program-card img { width:100%; height:100%; object-fit:cover; opacity:0.4; transition: 0.4s; }
+        .program-card:hover img { opacity: 0.7; scale: 1.05; }
+        .tag-neon { background: var(--primary-accent); color: #fff; padding:5px 12px; border-radius:10px; font-size:0.75rem; font-weight:900; box-shadow: 0 0 15px var(--primary-accent-glow); text-transform: uppercase; }
+
+        /* --- NAVIGATION ELIMINADO --- */
+
+        .loading { color: var(--primary-accent); text-align: center; font-size: 0.95rem; margin-top: 20px; display: none; font-weight: 800; text-shadow: 0 0 10px var(--primary-accent-glow); text-transform: uppercase; letter-spacing: 1.5px; }
+        .error { color: var(--error-red); font-size: 0.85rem; padding: 12px; text-align: center; display: none; margin-bottom: 12px; font-weight: 700; border: 1px solid rgba(255, 59, 48, 0.4); border-radius: 14px; background: rgba(255, 59, 48, 0.08); }
+
+        /* PAYMENT OVERLAY */
+        #payment-verify-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,5,15,0.98);
+            backdrop-filter: blur(25px);
+            z-index: 9999; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 40px;
+        }
+        .diamond-neon { font-size: 70px; filter: drop-shadow(0 0 30px var(--primary-accent)); animation: float 3.5s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+
+        .stat-card-neon { background: rgba(0, 85, 255, 0.04); padding:22px; border-radius:24px; text-align:center; border: 1px solid var(--card-border); }
+        .stat-card-neon span:first-child { display:block; font-weight:900; color: var(--primary-accent); font-size: 1.6rem; text-shadow: 0 0 15px var(--primary-accent-glow); }
+        .stat-card-neon span:last-child { font-size:0.75rem; opacity:0.6; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+
+        .link-text-neon { color: var(--primary-accent); font-weight: 700; text-decoration: none; text-shadow: 0 0 8px var(--primary-accent-glow); transition: 0.3s; }
+        .link-text-neon:hover { opacity: 0.7; filter: brightness(1.2); }
     </style>
 </head>
-<body class="bg-gray-900 text-white h-screen flex flex-col">
+<body>
 
-    <header class="bg-gray-800 p-4 border-b border-gray-700 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-purple-400">Studio <span class="text-white">Editor</span></h1>
-        <button onclick="exportVideo()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-full font-bold flex items-center gap-2 transition">
-            <span>●</span> Grabar Video (5s)
-        </button>
-    </header>
+<div id="payment-verify-overlay">
+    <div class="diamond-neon">💎</div>
+    <h2 style="font-weight: 900; margin-bottom: 12px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: 2px;">Protocolo Navy Pro</h2>
+    <p style="opacity: 0.7; letter-spacing: 1.5px; font-weight: 500;">Sincronizando acceso de élite...</p>
+</div>
 
-    <div class="flex flex-1 overflow-hidden">
-        
-        <div class="w-64 bg-gray-800 p-4 flex flex-col gap-4 border-r border-gray-700">
+<div id="auth-visuals">
+    <div class="auth-bg"></div>
+    <div class="auth-overlay-dark"></div>
+</div>
+
+<div class="container">
+
+    <div id="view-welcome" class="view active">
+        <div class="welcome-content">
+            <h1 class="welcome-title">Ascend<br>To <span style="color:var(--primary-accent)">NAVY ELITE</span></h1>
             
-            <div class="p-4 border-2 border-dashed border-gray-600 rounded-lg text-center hover:border-purple-500 transition cursor-pointer relative">
-                <p class="text-sm text-gray-400">Sube tu Imagen</p>
-                <input type="file" id="imgLoader" class="opacity-0 absolute inset-0 cursor-pointer" accept="image/*">
-            </div>
-
-            <button onclick="addText()" class="bg-gray-700 hover:bg-gray-600 p-3 rounded text-left">
-                Agrega Texto
+            <button class="btn-get-started" onclick="nav('view-register')">
+                <div class="btn-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </div>
+                <div class="btn-text">Empieza ahora</div>
+                <div class="btn-arrows">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>
+                </div>
             </button>
-            
-            <div class="mt-auto text-xs text-gray-500">
-                Selecciona un objeto para editarlo. Usa "Supr" para borrar.
+
+            <div class="login-link-container">
+                ¿Ya eres miembro? <span onclick="nav('view-login')">Acceder</span>
             </div>
         </div>
-
-        <div class="flex-1 bg-gray-900 flex justify-center items-center relative p-10 overflow-auto">
-            <canvas id="c" width="1080" height="1080"></canvas> </div>
-
     </div>
 
-    <script>
-        // 1. Configuración del Lienzo (Canvas)
-        const canvas = new fabric.Canvas('c', {
-            backgroundColor: '#1a1a1a', // Fondo oscuro por defecto
-            width: 500,  // Escalado visualmente para la demo
-            height: 500
-        });
+    <div id="view-login" class="view">
+        <div style="margin-top: 60px;">
+            <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">IDENTIDAD</h2>
+            <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600; letter-spacing: 0.5px;">Protocolo de acceso seguro.</p>
+        </div>
 
-        // Evento: Subir Imagen
-        document.getElementById('imgLoader').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const imgObj = new Image();
-                imgObj.src = event.target.result;
-                imgObj.onload = function() {
-                    const image = new fabric.Image(imgObj);
-                    
-                    // Ajustar imagen para que quepa bien
-                    image.scaleToWidth(300);
-                    
-                    canvas.add(image);
-                    canvas.centerObject(image);
-                    canvas.setActiveObject(image);
-                }
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        });
+        <div class="auth-form-container">
+            <div id="login-msg" class="error"></div>
+            <input type="email" id="login-email" class="modern" placeholder="Correo electrónico">
+            <div class="password-wrap">
+                <input type="password" id="login-pass" class="modern" placeholder="Contraseña">
+                <button class="eye-btn" onclick="togglePassword('login-pass', this)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+            </div>
+            <button class="btn-primary" onclick="handleLogin()">Entrar al Sistema</button>
+            <div id="login-load" class="loading">Verificando Credenciales...</div>
+            <div style="text-align: center; margin-top: 30px;">
+                <span class="link-text-neon" style="cursor:pointer; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;" onclick="nav('view-recover')">Recuperar Acceso</span>
+            </div>
+        </div>
+        <button onclick="nav('view-welcome')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase; letter-spacing: 2px;">← CANCELAR</button>
+    </div>
 
-        // Función: Agregar Texto
-        function addText() {
-            const text = new fabric.Textbox('Tu Texto Aquí', {
-                left: 50,
-                top: 50,
-                width: 200,
-                fontSize: 30,
-                fontFamily: 'Arial',
-                fontWeight: 'bold',
-                fill: '#ffffff',
-                textAlign: 'center',
-                borderColor: '#a855f7',
-                cornerColor: '#a855f7',
-                cornerSize: 10,
-                transparentCorners: false
-            });
-            canvas.add(text);
-            canvas.setActiveObject(text);
-        }
+    <div id="view-register" class="view">
+        <div style="margin-top: 60px;">
+            <h2 style="font-size: 2.8rem; font-weight: 900; margin-bottom: 10px; letter-spacing: -1px; text-transform: uppercase;">ALTA</h2>
+            <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600; letter-spacing: 0.5px;">Inicia tu transformación Navy.</p>
+        </div>
 
-        // Eliminar con tecla Supr/Delete
-        document.addEventListener('keydown', function(e) {
-            if(e.key === "Delete" || e.key === "Backspace") {
-                const activeObjects = canvas.getActiveObjects();
-                if (activeObjects.length) {
-                    canvas.discardActiveObject();
-                    activeObjects.forEach(function(object) {
-                        canvas.remove(object);
-                    });
-                }
-            }
-        });
+        <div class="auth-form-container">
+            <div id="reg-msg" class="error"></div>
+            <input type="email" id="reg-email" class="modern" placeholder="Correo electrónico">
+            <div class="password-wrap">
+                <input type="password" id="reg-pass" class="modern" placeholder="Crea tu clave maestra">
+                <button class="eye-btn" onclick="togglePassword('reg-pass', this)">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+            </div>
+            <button class="btn-primary" onclick="handleRegister()">Crear Perfil Pro</button>
+            <div id="reg-load" class="loading">Iniciando Sincronización...</div>
+        </div>
+        <div class="login-link-container" style="text-align:center;">
+            ¿Ya tienes perfil? <span onclick="nav('view-login')">Entrar</span>
+        </div>
+    </div>
 
-        // --- LÓGICA DE VIDEO (La parte mágica) ---
+    <div id="view-recover" class="view">
+        <h2 style="font-size: 2.8rem; font-weight: 900; margin-top: 60px; margin-bottom: 10px; text-transform: uppercase;">RESET</h2>
+        <p style="color: var(--text-dim); margin-bottom: 45px; font-weight: 600;">Restablece tu conexión Navy.</p>
+        <div class="auth-form-container">
+            <div id="recover-msg" class="error"></div>
+            <div id="recover-success" style="color:var(--primary-accent); text-align:center; display:none; margin-bottom:20px; font-weight: 800; text-transform: uppercase;">¡Protocolo de envío completado!</div>
+            <input type="email" id="recover-email" class="modern" placeholder="Email registrado">
+            <button class="btn-primary" onclick="handleRecoverPassword()">Enviar Clave</button>
+            <div id="recover-load" class="loading">Procesando Solicitud...</div>
+        </div>
+        <button onclick="nav('view-login')" style="background:none; border:none; color:var(--text-dim); text-align:center; padding: 25px; font-weight: 800; cursor:pointer; text-transform: uppercase;">← VOLVER</button>
+    </div>
+
+    <div id="view-payment-stripe" class="view" style="justify-content: center; text-align: center;">
+        <div class="diamond-neon">⚡</div>
+        <h2 style="font-size: 3rem; font-weight: 900; margin-bottom: 10px; color: var(--primary-accent); text-transform: uppercase; letter-spacing: -1px;">UPGRADE</h2>
+        <p style="opacity: 0.7; margin-bottom: 45px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">Desbloquea el Potencial Navy IA.</p>
+        <div style="background: rgba(0, 85, 255, 0.05); padding: 35px; border-radius: 35px; border: 1px solid var(--card-border); margin-bottom: 35px; box-shadow: 0 0 30px rgba(0, 85, 255, 0.15);">
+            <ul style="text-align: left; list-style: none; padding: 0; margin-bottom: 35px; font-size: 1.15rem; font-weight: 600;">
+                <li style="margin-bottom: 18px;">🔱 <span style="color: var(--primary-accent)">NAVY COACH IA</span> Personalizado</li>
+                <li style="margin-bottom: 18px;">🔱 PROTOCOLO DE <span style="color: var(--primary-accent)">FUERZA</span></li>
+                <li style="margin-bottom: 18px;">🔱 <span style="color: var(--primary-accent)">TRACKING</span> BIOMÉTRICO</li>
+            </ul>
+            <button onclick="openPaymentLink()" class="btn-primary" style="padding: 26px; font-size: 1.25rem;">ADQUIRIR ÉLITE</button>
+        </div>
+        <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">CERRAR SESIÓN</button>
+    </div>
+
+    <div id="view-dashboard" class="view">
+        <div class="header-profile">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="avatar"><img src="https://i.pravatar.cc/100?u=fit" alt="avatar"></div>
+                <div>
+                    <p style="font-size: 0.85rem; margin: 0; opacity: 0.6; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;">ESTATUS NAVY:</p>
+                    <p style="font-size: 1.3rem; margin: 0; font-weight: 900; color: var(--primary-accent); letter-spacing: -0.5px;" id="user-display">USUARIO</p>
+                </div>
+            </div>
+            <div style="background: rgba(0, 85, 255, 0.12); padding: 14px; border-radius: 50%; border: 1px solid var(--card-border);"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--primary-accent)" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
+        </div>
         
-        async function exportVideo() {
-            const btn = document.querySelector('button[onclick="exportVideo()"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = "Grabando...";
-            btn.classList.add('animate-pulse');
+        <div class="daily-challenge">
+            <h2 style="letter-spacing: -2px; text-transform: uppercase;">MISION<br>DIARIA</h2>
+            <p style="font-weight: 700; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;">¿Preparado para superar límites?</p>
+            <img src="https://images.unsplash.com/photo-1594381898411-846e7d193883?fit=crop&w=300&h=500&q=80" class="hero-img">
+        </div>
 
-            // 1. Capturar el stream del canvas
-            const canvasElement = document.getElementById('c');
-            const stream = canvasElement.captureStream(30); // 30 FPS
-            const mediaRecorder = new MediaRecorder(stream, {
-                mimeType: 'video/webm;codecs=vp9' // Formato web moderno
-            });
+        <h3 style="margin: 35px 0 20px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase; font-size: 1rem; color: var(--text-dim); border-left: 3px solid var(--primary-accent); padding-left: 15px;">PROGRAMAS ACTIVOS</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+            <div class="program-card">
+                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400">
+                <div style="position:absolute; bottom:18px; left:18px;">
+                    <span class="tag-neon">FUERZA</span>
+                    <h4 style="margin:10px 0 0; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px;">Power Press</h4>
+                </div>
+            </div>
+            <div class="program-card">
+                <img src="https://images.unsplash.com/photo-1581009146145-b5ef03a7403f?w=400">
+                <div style="position:absolute; bottom:18px; left:18px;">
+                    <span class="tag-neon">BRAZOS</span>
+                    <h4 style="margin:10px 0 0; font-weight: 900; text-transform: uppercase; letter-spacing: -0.5px;">Bicep Burn</h4>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            const chunks = [];
-            mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+    <div id="view-profile" class="view">
+        <div style="text-align: center; margin-top: 40px;">
+            <div style="width:130px; height:130px; border-radius:50%; border:4px solid var(--primary-accent); margin: 0 auto 20px; overflow:hidden; box-shadow: 0 0 30px var(--primary-accent-glow);"><img src="https://i.pravatar.cc/150?u=fit" style="width:100%; height:100%; object-fit:cover;"></div>
+            <h2 id="profile-name" style="margin:0; font-weight:900; font-size: 2rem; letter-spacing: -1px; text-transform: uppercase;">USUARIO</h2>
+            <p style="opacity:0.8; font-weight: 800; color: var(--primary-accent); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 3px; margin-top: 8px;">Navy Elite Member</p>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:50px;">
+            <div class="stat-card-neon"><span>24</span><span>SESIONES</span></div>
+            <div class="stat-card-neon"><span>12k</span><span>KCAL</span></div>
+            <div class="stat-card-neon"><span>PRO</span><span>RANK</span></div>
+        </div>
+        <div class="logout-btn" onclick="logout()" style="margin-top:auto; background:rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.25); color:#ff3b30; padding:22px; border-radius:24px; text-align:center; font-weight:900; cursor:pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;">CERRAR SESIÓN NAVY</div>
+    </div>
 
-            mediaRecorder.onstop = (e) => {
-                // Crear el archivo de video
-                const blob = new Blob(chunks, { type: 'video/webm' });
-                const url = URL.createObjectURL(blob);
-                
-                // Descargar
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'mi-video-promo.webm';
-                a.click();
-                
-                // Resetear botón
-                btn.innerHTML = originalText;
-                btn.classList.remove('animate-pulse');
-            };
+</div>
 
-            // 2. Iniciar grabación
-            mediaRecorder.start();
+<script>
+/* =========================================
+   🎛️ PANEL DE CONTROL DEL DUEÑO (EDITA AQUÍ TUS DATOS)
+   ========================================= */
 
-            // 3. Simular una animación simple para que el video no sea estático
-            // (Aquí es donde programarías movimientos reales)
-            const objects = canvas.getObjects();
-            
-            let duration = 0;
-            const totalDuration = 5000; // 5 segundos
-            
-            function animate() {
-                if (duration < totalDuration) {
-                    // Ejemplo: Rotar ligeramente todo o hacer zoom
-                    // En un caso real, usarías GSAP o animaciones de Fabric
-                    objects.forEach(obj => {
-                        // Animación sutil de "respiración" o movimiento
-                        if(obj.type === 'image') {
-                            obj.rotate((obj.angle || 0) + 0.2); 
-                        }
-                    });
-                    canvas.renderAll();
-                    duration += 16; // ~60fps loop
-                    requestAnimationFrame(animate);
-                } else {
-                    mediaRecorder.stop(); // Parar grabación a los 5s
-                }
+   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxSwLVO7Ub9oAyKD29fEcAFMuKluSfJJ9bx9wLp8ucsUpRavvlyfjtqeUzF06WPdqDM7A/exec";
+   const STRIPE_LINK = "https://buy.stripe.com/test_aFa14p69Vgk53hjclXaZi01";
+   const PAYMENT_TOKEN = "AZ82_XJ91_LQ00_PRO_DIVE"; 
+
+/* =========================================
+   ⛔ NO TOQUES NADA DEBAJO DE ESTA LÍNEA (LÓGICA DEL SISTEMA)
+   ========================================= */
+
+    async function checkPaymentToken() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token === PAYMENT_TOKEN) {
+            const email = localStorage.getItem('tempUserEmail') || localStorage.getItem('cyberfit_session');
+            if (!email) return;
+            const overlay = document.getElementById('payment-verify-overlay');
+            overlay.style.display = 'flex';
+            const res = await postData('payment_confirmation', { email: email });
+            if (res.success) {
+                localStorage.setItem('cyberfit_session', email);
+                localStorage.removeItem('tempUserEmail');
+                window.history.replaceState({}, document.title, window.location.pathname);
+                confetti({ 
+                    particleCount: 200, 
+                    spread: 85, 
+                    origin: { y: 0.65 },
+                    colors: ['#0055ff', '#ffffff', '#001a33']
+                });
+                updateUserDisplay(email);
+                nav('view-dashboard');
+            } else {
+                alert("Estatus de pago pendiente de sincronización.");
+                nav('view-payment-stripe');
             }
-            animate();
+            overlay.style.display = 'none';
+        }
+    }
+
+    function openPaymentLink() { window.open(STRIPE_LINK, '_blank'); }
+
+    function togglePassword(inputId, el) {
+        const input = document.getElementById(inputId);
+        const isPass = input.getAttribute('type') === 'password';
+        input.setAttribute('type', isPass ? 'text' : 'password');
+        el.style.color = isPass ? 'var(--primary-accent)' : 'var(--text-dim)';
+    }
+
+    function updateUserDisplay(email) {
+        if(!email) return;
+        const name = email.split('@')[0].toUpperCase();
+        document.getElementById('user-display').innerText = name;
+        document.getElementById('profile-name').innerText = name;
+    }
+
+    function nav(viewId) {
+        document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        const targetView = document.getElementById(viewId);
+        if(targetView) targetView.classList.add('active');
+        
+        const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
+        const authVis = document.getElementById('auth-visuals');
+
+        if (publicViews.includes(viewId)) {
+            if(authVis) authVis.style.display = 'block';
+        } else {
+            if(authVis) authVis.style.display = 'none';
         }
 
-    </script>
+        window.scrollTo(0,0);
+    }
+
+    async function postData(action, data) {
+        try {
+            const response = await fetch(SCRIPT_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify({ action: action, ...data })
+            });
+            return await response.json();
+        } catch (error) { return { success: false, message: "Error de conexión con el núcleo." }; }
+    }
+
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const pass = document.getElementById('login-pass').value;
+        const msg = document.getElementById('login-msg');
+        const loader = document.getElementById('login-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('login', { email, password: pass });
+        loader.style.display = 'none';
+        if (res.success) {
+            localStorage.setItem('cyberfit_session', email);
+            updateUserDisplay(email);
+            nav('view-dashboard');
+        } else {
+            if (res.message && res.message.toLowerCase().includes("pago")) {
+                localStorage.setItem('tempUserEmail', email);
+                nav('view-payment-stripe');
+            } else {
+                msg.innerText = (res.message || "Error de Identidad").toUpperCase(); msg.style.display='block';
+            }
+        }
+    }
+
+    async function handleRegister() {
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        const msg = document.getElementById('reg-msg');
+        const loader = document.getElementById('reg-load');
+        if(!email || !pass) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('register', { email, password: pass });
+        loader.style.display = 'none';
+        if (res.success) {
+            localStorage.setItem('tempUserEmail', email);
+            nav('view-payment-stripe');
+        } else {
+            msg.innerText = (res.message || "Falla en Registro").toUpperCase(); msg.style.display='block';
+        }
+    }
+
+    async function handleRecoverPassword() {
+        const email = document.getElementById('recover-email').value;
+        const msg = document.getElementById('recover-msg');
+        const success = document.getElementById('recover-success');
+        const loader = document.getElementById('recover-load');
+        if(!email) return;
+        loader.style.display = 'block';
+        msg.style.display = 'none';
+        const res = await postData('recover', { email });
+        loader.style.display = 'none';
+        if (res.success) {
+            success.style.display = 'block';
+            setTimeout(() => nav('view-login'), 3000);
+        } else {
+            msg.innerText = (res.message || "Error en Recuperación").toUpperCase(); msg.style.display='block';
+        }
+    }
+
+    function logout() { localStorage.clear(); nav('view-welcome'); }
+
+    window.onload = function() {
+        checkPaymentToken();
+        const session = localStorage.getItem('cyberfit_session');
+        if (session && !new URLSearchParams(window.location.search).get('token')) {
+            updateUserDisplay(session);
+            nav('view-dashboard');
+        }
+    };
+</script>
+
 </body>
 </html>
