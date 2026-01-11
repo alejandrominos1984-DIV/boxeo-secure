@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIT AI | Navy Elite Training</title>
     
-    <!-- FUENTES Y DEPENDENCIAS (CODE A + CODE B) -->
+    <!-- FUENTES Y DEPENDENCIAS -->
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <!-- CONFIGURACIÓN TAILWIND (CODE B) -->
+    <!-- CONFIGURACIÓN TAILWIND -->
     <script>
         tailwind.config = {
             darkMode: "class",
@@ -42,7 +42,7 @@
 
     <!-- ESTILOS COMBINADOS -->
     <style>
-        /* --- ESTILOS CODE A (BASE AUTH) --- */
+        /* --- ESTILOS BASE AUTH --- */
         :root {
             --primary-accent: #0055ff;
             --primary-navy: #001a33;
@@ -154,7 +154,7 @@
         .link-text-neon { color: var(--primary-accent); font-weight: 700; text-decoration: none; text-shadow: 0 0 8px var(--primary-accent-glow); transition: 0.3s; }
         .link-text-neon:hover { opacity: 0.7; filter: brightness(1.2); }
 
-        /* --- ESTILOS CODE B (DASHBOARD VISUALS) --- */
+        /* --- ESTILOS DASHBOARD VISUALS --- */
         .dash-no-scrollbar::-webkit-scrollbar { display: none; }
         .dash-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -315,10 +315,10 @@
         <button onclick="logout()" style="background:none; border:none; color:var(--text-dim); cursor:pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;">CERRAR SESIÓN</button>
     </div>
 
-    <!-- 6. DASHBOARD (REEMPLAZADO COMPLETAMENTE CON CODE B) -->
+    <!-- 6. DASHBOARD -->
     <div id="view-dashboard" class="view">
         
-        <!-- WRAPPER INTERNO DASHBOARD (CODE B) -->
+        <!-- WRAPPER INTERNO DASHBOARD -->
         <div class="relative bg-background-light dark:bg-background-dark text-gray-900 dark:text-white transition-colors duration-300 w-full min-h-screen">
         
             <!-- Background Effects -->
@@ -893,55 +893,55 @@
                     </div>
                 </section>
             </main>
-
-            <!-- Bottom Navigation (Fixed and centered) -->
-            <div class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
-                <nav id="nav-bar" class="nav-glass rounded-[2rem] p-2.5 px-5 flex justify-between items-center shadow-2xl shadow-black/80">
-                    
-                    <!-- Nav Item 1: Inicio -->
-                    <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group cursor-pointer relative" href="#">
-                        <div class="absolute -top-1 right-0 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#1a1a1a] z-10"></div>
-                        <div class="icon-container w-9 h-9 rounded-xl bg-primary shadow-neon text-white -translate-y-1 flex items-center justify-center transition-all duration-300">
-                            <span class="material-symbols-outlined text-[20px]">grid_view</span>
-                        </div>
-                        <span class="text-label text-[8px] font-bold text-primary uppercase tracking-wide mt-0.5 transition-colors duration-300">Inicio</span>
-                    </a>
-                    
-                    <!-- Nav Item 2: Biblioteca -->
-                    <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                        <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                            <span class="material-symbols-outlined text-[20px]">fitness_center</span>
-                        </div>
-                        <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Biblio</span>
-                    </a>
-                    
-                    <!-- Nav Item 3: Creador -->
-                    <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                        <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                            <span class="material-symbols-outlined text-[20px]">add_circle</span>
-                        </div>
-                        <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Crear</span>
-                    </a>
-                    
-                    <!-- Nav Item 4: Progreso -->
-                    <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                        <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                            <span class="material-symbols-outlined text-[20px]">bar_chart</span>
-                        </div>
-                        <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Datos</span>
-                    </a>
-                    
-                    <!-- Nav Item 5: IA Coach -->
-                    <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
-                        <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
-                            <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
-                        </div>
-                        <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">IA</span>
-                    </a>
-
-                </nav>
-            </div>
         </div>
+    </div>
+
+    <!-- Bottom Navigation (MOVED OUTSIDE DASHBOARD, FIXED AT BOTTOM OF BODY) -->
+    <div id="navbar-modern" style="display:none;" class="fixed bottom-6 left-0 right-0 mx-auto w-full max-w-[480px] px-4 z-50">
+        <nav id="nav-bar" class="nav-glass rounded-[2rem] p-2.5 px-5 flex justify-between items-center shadow-2xl shadow-black/80">
+            
+            <!-- Nav Item 1: Inicio -->
+            <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group cursor-pointer relative" href="#">
+                <div class="absolute -top-1 right-0 w-1.5 h-1.5 bg-red-500 rounded-full border border-[#1a1a1a] z-10"></div>
+                <div class="icon-container w-9 h-9 rounded-xl bg-primary shadow-neon text-white -translate-y-1 flex items-center justify-center transition-all duration-300">
+                    <span class="material-symbols-outlined text-[20px]">grid_view</span>
+                </div>
+                <span class="text-label text-[8px] font-bold text-primary uppercase tracking-wide mt-0.5 transition-colors duration-300">Inicio</span>
+            </a>
+            
+            <!-- Nav Item 2: Biblioteca -->
+            <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined text-[20px]">fitness_center</span>
+                </div>
+                <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Biblio</span>
+            </a>
+            
+            <!-- Nav Item 3: Creador -->
+            <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                </div>
+                <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Crear</span>
+            </a>
+            
+            <!-- Nav Item 4: Progreso -->
+            <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined text-[20px]">bar_chart</span>
+                </div>
+                <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">Datos</span>
+            </a>
+            
+            <!-- Nav Item 5: IA Coach -->
+            <a onclick="selectNav(this)" class="nav-item flex flex-col items-center gap-1 group opacity-50 active:opacity-100 transition-opacity cursor-pointer" href="#">
+                <div class="icon-container w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 text-gray-500 dark:text-gray-400">
+                    <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+                </div>
+                <span class="text-label text-[8px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mt-0.5 transition-colors duration-300">IA</span>
+            </a>
+
+        </nav>
     </div>
 
 </div>
@@ -997,10 +997,24 @@
     }
 
     function nav(viewId) {
+        // Ocultar todas las vistas
         document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
+        
+        // Mostrar la vista objetivo
         const targetView = document.getElementById(viewId);
         if(targetView) targetView.classList.add('active');
         
+        // Controlar visibilidad del Navbar Moderno (CORRECCIÓN APLICADA AQUÍ)
+        const navbarModern = document.getElementById('navbar-modern');
+        if (navbarModern) {
+            if (viewId === 'view-dashboard') {
+                navbarModern.style.display = 'block';
+            } else {
+                navbarModern.style.display = 'none';
+            }
+        }
+        
+        // Controlar visuales de autenticación
         const publicViews = ['view-welcome', 'view-login', 'view-register', 'view-payment-stripe', 'view-recover'];
         const authVis = document.getElementById('auth-visuals');
 
