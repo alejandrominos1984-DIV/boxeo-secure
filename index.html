@@ -21,23 +21,6 @@
         .hero-video-section { width: 100%; background: #000; position: relative; }
         .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 
-        /* --- ESCUDO SUPERIOR CON CAPÍTULOS --- */
-        .top-nav-shield {
-            position: absolute; top: 0; left: 0; width: 100%; height: 60px;
-            background: #FFFFFF; z-index: 10; display: flex; align-items: center; 
-            justify-content: center; gap: 10px; padding: 0 15px; box-sizing: border-box;
-            transition: opacity 0.6s ease; border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .top-nav-shield.force-hide { opacity: 0; pointer-events: none; }
-
-        .chapter-btn {
-            background: #F0F7FF; color: var(--brand-blue); border: none;
-            padding: 8px 10px; border-radius: 6px; font-size: 0.65rem;
-            font-weight: 800; cursor: pointer; transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .chapter-btn:hover { background: var(--brand-blue); color: #fff; }
-
         /* --- FEEDBACK VISUAL --- */
         .tap-feedback {
             position: absolute; top: 0; height: 100%; width: 50%;
@@ -51,7 +34,7 @@
         .tap-feedback.animate { opacity: 1; }
         .tap-feedback.animate .tap-icon { transform: scale(1.1); }
 
-        /* --- BOTÓN INICIO (MODIFICADO: AZUL Y RECTANGULAR SIN ESQUINAS) --- */
+        /* --- BOTÓN INICIO MODIFICADO: ESQUINAS REDONDEADAS Y MÁS ESTÉTICO --- */
         .start-screen-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: transparent; display: flex; align-items: center; justify-content: center;
@@ -67,8 +50,14 @@
             align-items: center; 
             justify-content: center; 
             box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-            border-radius: 0; /* Sin esquinas redondeadas */
+            border-radius: 12px; /* Esquinas redondeadas para mejor estética */
             border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .big-play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.5);
         }
         
         .big-play-btn svg {
@@ -90,16 +79,46 @@
         }
         .premium-banner.force-hide { opacity: 0; pointer-events: none; }
 
-        /* --- CONTROLES Y TIEMPO --- */
-        .plyr__controls { background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; padding: 10px 15px !important; }
-        .plyr__progress { flex: 0 0 auto !important; width: 80px !important; margin-left: 10px !important; }
-        .plyr__time--duration {
-            display: block !important; visibility: visible !important;
-            font-size: 0.75rem !important; font-weight: 700 !important;
-            margin-left: auto !important; 
-            margin-right: 145px !important; /* POSICIÓN OPTIMIZADA */
+        /* --- CONTROLES SIMPLIFICADOS - SIN BARRA DE PROGRESO --- */
+        .plyr__controls { 
+            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; 
+            padding: 10px 15px !important; 
+            min-height: 50px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
-        .plyr__time--current { display: none !important; }
+        
+        /* Ocultamos completamente la barra de progreso */
+        .plyr__progress {
+            display: none !important;
+        }
+        
+        /* Mantenemos la duración pero la centramos */
+        .plyr__time--duration {
+            display: block !important; 
+            visibility: visible !important;
+            font-size: 0.75rem !important; 
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            margin: 0 !important;
+            text-align: center;
+        }
+        
+        /* Ocultamos el tiempo actual */
+        .plyr__time--current { 
+            display: none !important; 
+        }
+        
+        /* Botón de play de Plyr oculto (usamos el nuestro) */
+        .plyr__control--play {
+            display: none !important;
+        }
+        
+        /* Ocultar cualquier otro control que pueda aparecer */
+        .plyr__controls__item:not(.plyr__time--duration) {
+            display: none !important;
+        }
 
         .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
         .lesson-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
@@ -110,14 +129,6 @@
 
     <div class="hero-video-section">
         <div class="video-box" id="videoWrapper">
-            
-            <div class="top-nav-shield" id="topNav">
-                <button class="chapter-btn" onclick="goToTime(0)">0:00 INTRO</button>
-                <button class="chapter-btn" onclick="goToTime(59)">0:59 YO SOY</button>
-                <button class="chapter-btn" onclick="goToTime(85)">1:25 PREGUNTAS</button>
-                <button class="chapter-btn" onclick="goToTime(154)">2:34 RESPUESTAS</button>
-                <button class="chapter-btn" onclick="goToTime(178)">2:58 NEGATIVO</button>
-            </div>
 
             <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg></div></div>
             <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg></div></div>
@@ -135,53 +146,46 @@
                 <span>RECURSOS PDF</span>
             </a>
             
-            <!-- VIDEO CAMBIADO: mTIWMBfo2o8 por VKbvx2QU6jw -->
             <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="VKbvx2QU6jw"></div>
         </div>
     </div>
 
     <div class="content-container">
         <h1 class="lesson-title">Lección 1: Yo soy / No soy</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Domina la gramática básica del japonés. Usa el doble toque lateral para repasar fragmentos o los capítulos de arriba para saltar secciones.</p>
+        <p style="line-height: 1.7; color: #4A5568;">Domina la gramática básica del japonés. Usa el doble toque lateral para repasar fragmentos.</p>
         <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
     </div>
 
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
         const player = new Plyr('#player', {
-            controls: ['play', 'progress', 'duration'], 
+            controls: ['play', 'duration'], // Quitamos 'progress' para eliminar la barra
             fullscreen: { enabled: false },
             youtube: { noCookie: true, rel: 0, modestbranding: 1 }
         });
 
         const banner = document.getElementById('bannerMaterial');
-        const topNav = document.getElementById('topNav');
         const startScreen = document.getElementById('startScreen');
         const wrapper = document.getElementById('videoWrapper');
         let hideTimer;
         let lastTapTime = 0;
         let hasStarted = false;
 
-        window.goToTime = (seconds) => { player.currentTime = seconds; player.play(); };
-
-        startScreen.addEventListener('click', () => { if (!hasStarted) player.play(); });
         player.on('playing', () => { if (!hasStarted) { startScreen.classList.add('hidden'); hasStarted = true; } });
 
         player.on('controlsshown', () => { 
             clearTimeout(hideTimer); 
-            banner.classList.remove('force-hide'); 
-            topNav.classList.remove('force-hide');
+            banner.classList.remove('force-hide');
         });
 
         player.on('controlshidden', () => { 
             hideTimer = setTimeout(() => { 
-                banner.classList.add('force-hide'); 
-                topNav.classList.add('force-hide');
+                banner.classList.add('force-hide');
             }, 2000); 
         });
 
         const handleDoubleAction = (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner') || e.target.closest('.top-nav-shield')) return;
+            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
             const now = Date.now();
             if (now - lastTapTime < 300) {
                 e.preventDefault();
