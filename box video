@@ -2,333 +2,369 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Divélun | Japonés Lección 1</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divélun Pro - Boxing Analytics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-dark': '#050505',
+                        'brand-panel': '#121212',
+                        'brand-red': '#ff1f1f', /* Rojo Láser */
+                        'brand-gray': '#2a2a2a',
+                    },
+                    fontFamily: {
+                        sans: ['Oswald', 'sans-serif'],
+                        tech: ['Chakra Petch', 'monospace'], // Fuente técnica para números
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23222\" fill-opacity=\"0.4\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"/%3E%3C/g%3E%3C/svg%3E')",
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
-        :root {
-            --brand-blue: #0066FF;
-            --brand-dark: #1A202C;
-            --brand-gray: #718096;
-            --plyr-color-main: var(--brand-blue);
+        body { background-color: #050505; color: white; }
+        
+        /* Ocultar scrollbar */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* Efecto Glitch sutil para botón activo */
+        .btn-active {
+            box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
+            border-color: #ff1f1f;
         }
 
-        body { margin: 0; padding: 0; background: #FFFFFF; font-family: 'Inter', sans-serif; color: var(--brand-dark); overflow-x: hidden; }
-
-        /* --- VIDEO HERO --- */
-        .hero-video-section { width: 100%; background: #000; position: relative; }
-        .video-box { position: relative; width: 100%; overflow: hidden; line-height: 0; z-index: 0; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
-
-        /* --- FEEDBACK VISUAL --- */
-        .tap-feedback {
-            position: absolute; top: 0; height: 100%; width: 50%;
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0, 102, 255, 0.1); opacity: 0; pointer-events: none; z-index: 5;
-            transition: opacity 0.3s ease;
-        }
-        .tap-feedback.left { left: 0; border-radius: 0 50% 50% 0; }
-        .tap-feedback.right { right: 0; border-radius: 50% 0 0 50%; }
-        .tap-icon { color: white; transform: scale(0.7); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .tap-feedback.animate { opacity: 1; }
-        .tap-feedback.animate .tap-icon { transform: scale(1.1); }
-
-        /* --- BOTÓN INICIO MODIFICADO: ESQUINAS REDONDEADAS Y MÁS ESTÉTICO --- */
-        .start-screen-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; display: flex; align-items: center; justify-content: center;
-            z-index: 20; cursor: pointer; transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        .start-screen-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        
-        .big-play-btn { 
-            width: 120px; 
-            height: 60px; 
-            background: var(--brand-blue); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            box-shadow: 0 12px 30px rgba(0, 102, 255, 0.4);
-            border-radius: 12px; /* Esquinas redondeadas para mejor estética */
-            border: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .big-play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.5);
-        }
-        
-        .big-play-btn svg {
-            width: 30px;
-            height: 30px;
-            fill: white;
-        }
-
-        /* --- BANNER DE RECURSOS ROBUSTO (MODIFICADO: AZUL) --- */
-        .premium-banner {
-            position: absolute; bottom: 12px; right: 12px;
-            background: var(--brand-blue); /* Cambiado a azul */
-            color: #ffffff;
-            padding: 12px 22px; display: flex; align-items: center; gap: 10px;
-            text-decoration: none; z-index: 15; border-radius: 4px; 
-            opacity: 1; transition: opacity 0.6s ease;
-            box-shadow: 0 6px 20px rgba(0, 102, 255, 0.4);
-            font-weight: 800; font-size: 0.8rem;
-        }
-        .premium-banner.force-hide { opacity: 0; pointer-events: none; }
-
-        /* --- CONTROLES SIMPLIFICADOS - SIN BARRA DE PROGRESO --- */
-        .plyr__controls { 
-            background: linear-gradient(transparent, rgba(0,0,0,0.9)) !important; 
-            padding: 10px 15px !important; 
-            min-height: 50px !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-        }
-        
-        /* Ocultamos completamente la barra de progreso */
-        .plyr__progress {
-            display: none !important;
-        }
-        
-        /* Mantenemos la duración pero la centramos */
-        .plyr__time--duration {
-            display: block !important; 
-            visibility: visible !important;
-            font-size: 0.75rem !important; 
-            font-weight: 700 !important;
-            color: #ffffff !important;
-            margin: 0 !important;
-            text-align: center;
-        }
-        
-        /* Ocultamos el tiempo actual */
-        .plyr__time--current { 
-            display: none !important; 
-        }
-        
-        /* Botón de play de Plyr oculto (usamos el nuestro) */
-        .plyr__control--play {
-            display: none !important;
-        }
-        
-        /* Ocultar cualquier otro control que pueda aparecer */
-        .plyr__controls__item:not(.plyr__time--duration) {
-            display: none !important;
-        }
-
-        /* --- INDICADOR DE BUCLE DE 5 SEGUNDOS --- */
-        .loop-indicator {
+        /* Gradiente ambiental */
+        .ambient-light {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--brand-blue);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,31,31,0.1) 0%, rgba(0,0,0,0) 70%);
+            border-radius: 50%;
             pointer-events: none;
+            z-index: 0;
         }
-        
-        .loop-indicator svg {
-            width: 14px;
-            height: 14px;
-            fill: var(--brand-blue);
-        }
-
-        .content-container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
-        .lesson-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 10px; }
-        .next-lesson-btn { display: inline-block; background: var(--brand-blue); color: white; padding: 16px 32px; border-radius: 12px; font-weight: 700; text-decoration: none; margin-top: 20px; }
     </style>
 </head>
-<body>
+<body class="bg-brand-dark min-h-screen flex flex-col items-center justify-start sm:justify-center p-0 font-sans relative">
 
-    <div class="hero-video-section">
-        <div class="video-box" id="videoWrapper">
+    <!-- Fondo con patrón y luz -->
+    <div class="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
+    <div class="ambient-light top-[-100px] left-[-100px]"></div>
+    
+    <!-- Contenedor Principal -->
+    <div class="w-full max-w-md bg-brand-panel min-h-screen sm:min-h-0 sm:h-auto sm:rounded-[32px] border border-white/5 shadow-2xl flex flex-col relative overflow-hidden z-10 backdrop-blur-sm">
 
-            <!-- Indicador de bucle de 5 segundos -->
-            <div class="loop-indicator" id="loopIndicator">
-                <svg viewBox="0 0 24 24">
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                </svg>
-                <span>BUCLE: 5 SEGUNDOS</span>
+        <!-- 1. HEADER (Más compacto) -->
+        <div class="px-5 py-3 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent z-20 absolute top-0 w-full">
+            <div class="flex items-center gap-3">
+                <div class="flex flex-col">
+                    <h1 class="text-lg font-bold italic tracking-wide leading-none">DIVÉLUN <span class="text-brand-red">AI</span></h1>
+                    <span class="text-[8px] text-gray-400 tracking-[0.2em] uppercase">Boxing Analytics</span>
+                </div>
             </div>
+            <!-- Badge de Nivel -->
+            <div class="flex items-center gap-2 bg-white/5 backdrop-blur px-2 py-0.5 rounded-full border border-white/10">
+                <div class="w-1 h-1 rounded-full bg-green-500"></div>
+                <span class="text-[9px] text-gray-300 font-bold uppercase tracking-wider">Nivel Básico</span>
+            </div>
+        </div>
 
-            <div class="tap-feedback left" id="feedbackLeft"><div class="tap-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/></svg></div></div>
-            <div class="tap-feedback right" id="feedbackRight"><div class="tap-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg></div></div>
+        <!-- 2. VIDEO PLAYER (Hero Section) -->
+        <div class="relative w-full aspect-video bg-black shadow-2xl z-10 group">
+            <video id="exerciseVideo" 
+                   class="w-full h-full object-contain opacity-90 transition-opacity duration-500" 
+                   autoplay muted playsinline loop>
+                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
+            </video>
+            
+            <!-- Overlay Gradiente -->
+            <div class="absolute inset-0 bg-gradient-to-t from-brand-panel via-transparent to-black/40 pointer-events-none"></div>
 
-            <div class="start-screen-overlay" id="startScreen">
-                <div class="big-play-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
+            <!-- Título Flotante (Reducido significativamente) -->
+            <div class="absolute bottom-3 left-4 z-20">
+                <h2 class="text-xl font-bold italic text-white drop-shadow-lg leading-none">JAB <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-orange-600">MASTER</span></h2>
+                <p class="text-[9px] text-gray-400 font-tech mt-0.5 uppercase tracking-wider">Drill #01 • Fundamentals</p>
+            </div>
+        </div>
+
+        <!-- 3. DASHBOARD DE CONTROL -->
+        <div class="flex-1 px-5 pb-6 pt-3 flex flex-col gap-4 relative z-20 -mt-3 bg-brand-panel rounded-t-2xl border-t border-white/5">
+            
+            <!-- Decorador Central -->
+            <div class="w-10 h-1 bg-gray-800 rounded-full mx-auto mb-1 opacity-50"></div>
+
+            <!-- BOTÓN DE INSTRUCCIONES: Versión Negra Estética -->
+            <button onclick="playInstructionsOnly()" class="w-full py-4 bg-black border border-white/10 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 hover:border-brand-red/30 hover:shadow-[0_0_10px_rgba(255,31,31,0.1)] group active:scale-[0.98] relative overflow-hidden">
+                
+                <!-- Fondo sutil rojo al hover -->
+                <div class="absolute inset-0 bg-brand-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                <div class="p-1.5 rounded-full bg-white/5 text-gray-400 group-hover:text-brand-red group-hover:bg-white/10 transition-colors relative z-10">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                </div>
+                <span class="text-[10px] font-bold text-gray-400 group-hover:text-white tracking-[0.15em] uppercase transition-colors relative z-10">Escuchar Instrucciones de Técnica</span>
+            </button>
+
+            <!-- Grid de Métricas -->
+            <div class="grid grid-cols-2 gap-3">
+                
+                <!-- Tarjeta Cronómetro (Hero) -->
+                <div class="col-span-2 bg-gradient-to-br from-brand-gray/50 to-brand-panel border border-white/5 rounded-xl p-4 flex flex-col items-center relative shadow-lg">
+                    <span class="text-[9px] text-gray-500 uppercase tracking-[0.2em] mb-1">Tiempo Restante</span>
+                    
+                    <div class="flex items-center gap-4 w-full justify-center">
+                        <!-- Botón Restar -->
+                        <button onclick="adjustTime(-10)" class="w-8 h-8 rounded-full bg-black/40 border border-white/10 flex items-center justify-center hover:border-brand-red/50 hover:text-brand-red transition-all active:scale-95 group">
+                            <span class="text-[9px] font-tech font-bold">-10</span>
+                        </button>
+
+                        <!-- Display Tiempo (Reducido de 6xl a 5xl) -->
+                        <div class="text-5xl font-tech font-bold text-white tracking-tighter tabular-nums drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]" id="timerDisplay">01:00</div>
+
+                        <!-- Botón Sumar -->
+                        <button onclick="adjustTime(30)" class="w-8 h-8 rounded-full bg-brand-red/10 border border-brand-red/30 flex items-center justify-center hover:bg-brand-red hover:text-white transition-all active:scale-95 text-brand-red group">
+                            <span class="text-[9px] font-tech font-bold">+30</span>
+                        </button>
+                    </div>
+
+                    <!-- Estado Texto -->
+                    <p id="statusText" class="mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500">Listo</p>
+                </div>
+
+                <!-- Tarjeta Calorías (Compacta) -->
+                <div class="bg-black/30 border border-white/5 rounded-lg p-3 flex flex-col items-center justify-center">
+                    <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-0.5">Quema Est.</span>
+                    <div class="flex items-baseline gap-1">
+                        <span class="text-xl font-tech font-bold text-brand-red">45</span>
+                        <span class="text-[9px] text-gray-400 font-bold">KCAL</span>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Info Adicional (Compacta) -->
+                <div class="bg-black/30 border border-white/5 rounded-lg p-3 flex flex-col items-center justify-center">
+                    <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-0.5">Intensidad</span>
+                    <div class="flex items-center gap-1">
+                        <div class="w-1.5 h-3 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
+                        <div class="w-1.5 h-3 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
+                        <div class="w-1.5 h-3 bg-gray-700 rounded-sm skew-x-[-10deg]"></div>
+                        <span class="text-[10px] text-white ml-1 font-bold">ALTA</span>
+                    </div>
                 </div>
             </div>
 
-            <a href="material-japones.pdf" download class="premium-banner" id="bannerMaterial">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>RECURSOS PDF</span>
-            </a>
-            
-            <div id="player" data-plyr-provider="youtube" data-plyr-embed-id="VKbvx2QU6jw"></div>
+            <!-- BOTÓN DE ACCIÓN PRINCIPAL -->
+            <div class="mt-1">
+                <button id="mainBtn" onclick="toggleTimer()" class="w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50">
+                    
+                    <!-- Efecto brillo hover -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
+                    
+                    <span id="btnIcon">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    </span>
+                    <span id="btnText" class="text-white font-bold text-base tracking-[0.15em] uppercase italic">INICIAR ASALTO</span>
+                </button>
+            </div>
+
+            <!-- Navegación Inferior -->
+            <div class="mt-auto pt-2 flex gap-3">
+                <button class="flex-1 py-2.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 text-[9px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
+                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    Anterior
+                </button>
+                <button class="flex-1 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-[9px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
+                    Siguiente
+                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div class="content-container">
-        <h1 class="lesson-title">Lección 1: Yo soy / No soy</h1>
-        <p style="line-height: 1.7; color: #4A5568;">Domina la gramática básica del japonés. Usa el doble toque lateral para repasar fragmentos. <strong>Modo bucle activado: se repite un segmento de 5 segundos.</strong></p>
-        <a href="#" class="next-lesson-btn">Siguiente Lección →</a>
-    </div>
-
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
     <script>
-        const player = new Plyr('#player', {
-            controls: ['play', 'duration'],
-            fullscreen: { enabled: false },
-            youtube: { noCookie: true, rel: 0, modestbranding: 1 }
-        });
-
-        const banner = document.getElementById('bannerMaterial');
-        const startScreen = document.getElementById('startScreen');
-        const wrapper = document.getElementById('videoWrapper');
-        const loopIndicator = document.getElementById('loopIndicator');
-        let hideTimer;
-        let lastTapTime = 0;
-        let hasStarted = false;
+        // --- CONFIGURACIÓN ---
+        const DRILL_TIME = 60; // 60 segundos
         
-        // Configuración del bucle de 5 segundos
-        const loopStart = 30; // Segundo inicial del bucle (ajusta este valor)
-        const loopEnd = 35;   // Segundo final del bucle (5 segundos después)
-        let isLooping = true; // Control del bucle
-        
-        // Iniciar bucle cuando el video comience
-        player.on('playing', () => { 
-            if (!hasStarted) { 
-                startScreen.classList.add('hidden'); 
-                hasStarted = true; 
-            }
-            
-            // Si estamos en modo bucle, ajustar el tiempo inicial
-            if (isLooping && player.currentTime < loopStart) {
-                player.currentTime = loopStart;
-            }
-        });
+        const coachScript = "¡Guardia arriba! Vamos a pulir ese Jab. Pies firmes. Dispara ese brazo delantero recto como una flecha. Gira el puño al final para cortar. Exhala fuerte al golpear. ¡Shhh! Y regresa la mano rápido a la cara. ¡Vamos, con fuerza!";
+        const finishScript = "¡Terminó el tiempo! ¿Quieren agregar más tiempo o continuar a la siguiente lección?";
 
-        // Controlar el bucle durante la reproducción
-        player.on('timeupdate', () => {
-            if (!isLooping || !player.playing) return;
-            
-            // Si llegamos al final del segmento, volver al inicio
-            if (player.currentTime >= loopEnd) {
-                player.currentTime = loopStart;
-            }
-            
-            // También asegurarnos de no salirnos del segmento por navegación manual
-            if (player.currentTime < loopStart) {
-                player.currentTime = loopStart;
-            }
-        });
+        // DOM Elements
+        const timerDisplay = document.getElementById('timerDisplay');
+        const mainBtn = document.getElementById('mainBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const statusText = document.getElementById('statusText');
+        const video = document.getElementById('exerciseVideo');
 
-        // Manejar cuando el video se pausa
-        player.on('pause', () => {
-            // Si estamos en modo bucle y el video se pausa al final, mostrar botón de play
-            if (isLooping && player.currentTime >= loopEnd - 0.5) {
-                startScreen.classList.remove('hidden');
-            }
-        });
+        // Estado
+        let timeLeft = DRILL_TIME;
+        let isRunning = false;
+        let isFinished = false; 
+        let timerInterval;
+        let synth = window.speechSynthesis;
+        let utterance = null;
 
-        // Controlar visibilidad del banner
-        player.on('controlsshown', () => { 
-            clearTimeout(hideTimer); 
-            banner.classList.remove('force-hide');
-        });
+        // Iconos SVG
+        const iconPlay = '<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+        const iconPause = '<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+        const iconReset = '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
 
-        player.on('controlshidden', () => { 
-            hideTimer = setTimeout(() => { 
-                banner.classList.add('force-hide');
-            }, 2000); 
-        });
-
-        // Función para manejar el doble toque
-        const handleDoubleAction = (e) => {
-            if (e.target.closest('.plyr__controls') || e.target.closest('.premium-banner')) return;
-            const now = Date.now();
-            if (now - lastTapTime < 300) {
-                e.preventDefault();
-                const rect = wrapper.getBoundingClientRect();
-                const x = (e.clientX || e.changedTouches[0].clientX) - rect.left;
-                if (x < rect.width / 2) { 
-                    // En modo bucle, ajustamos el retroceso para mantenernos en el segmento
-                    let newTime = player.currentTime - 10;
-                    if (isLooping && newTime < loopStart) {
-                        newTime = loopStart;
-                    }
-                    player.currentTime = Math.max(0, newTime);
-                    showFeedback(document.getElementById('feedbackLeft')); 
-                } else { 
-                    // En modo bucle, ajustamos el avance para mantenernos en el segmento
-                    let newTime = player.currentTime + 10;
-                    if (isLooping && newTime > loopEnd) {
-                        newTime = loopEnd - 0.1; // Un poco antes del final para no disparar el bucle inmediatamente
-                    }
-                    player.currentTime = Math.min(player.duration || Infinity, newTime);
-                    showFeedback(document.getElementById('feedbackRight')); 
-                }
-            }
-            lastTapTime = now;
+        // Asegurar autoplay
+        window.onload = function() {
+            video.play().catch(e => console.log("Autoplay handled by browser/user interaction"));
         };
 
-        const showFeedback = (el) => {
-            el.classList.remove('animate'); void el.offsetWidth;
-            el.classList.add('animate');
-            setTimeout(() => el.classList.remove('animate'), 500);
-        };
-
-        wrapper.addEventListener('click', handleDoubleAction);
-        wrapper.addEventListener('dblclick', (e) => e.preventDefault(), true);
-        
-        // Activar/desactivar bucle al hacer clic en el indicador
-        loopIndicator.addEventListener('click', () => {
-            isLooping = !isLooping;
-            if (isLooping) {
-                loopIndicator.innerHTML = `
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                    </svg>
-                    <span>BUCLE: 5 SEGUNDOS</span>`;
-                loopIndicator.style.pointerEvents = 'auto';
-                loopIndicator.style.cursor = 'pointer';
-                
-                // Si el video está reproduciéndose, ajustar al segmento
-                if (player.playing && (player.currentTime < loopStart || player.currentTime > loopEnd)) {
-                    player.currentTime = loopStart;
-                }
+        // 1. INSTRUCCIONES
+        function playInstructionsOnly() {
+            if (synth.speaking) {
+                synth.cancel();
             } else {
-                loopIndicator.innerHTML = `
-                    <svg viewBox="0 0 24 24" style="opacity:0.5;">
-                        <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
-                    </svg>
-                    <span style="opacity:0.5;">BUCLE DESACTIVADO</span>`;
+                speak(coachScript);
             }
-        });
-        
-        // Permitir interacción con el indicador
-        loopIndicator.style.pointerEvents = 'auto';
-        loopIndicator.style.cursor = 'pointer';
-        
-        // Ajustar el bucle cuando el video esté listo
-        player.on('ready', () => {
-            // Mostrar el tiempo del segmento en la consola para referencia
-            console.log(`Bucle configurado: ${loopStart}s a ${loopEnd}s (${loopEnd-loopStart} segundos)`);
-        });
+        }
+
+        // 2. AJUSTAR TIEMPO
+        function adjustTime(seconds) {
+            timeLeft += seconds;
+            if (timeLeft < 0) timeLeft = 0;
+            
+            updateTimerUI();
+
+            if (isFinished && timeLeft > 0) {
+                isFinished = false;
+                btnText.innerText = "REANUDAR";
+                btnIcon.innerHTML = iconPlay;
+                statusText.innerText = "Tiempo añadido";
+                statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
+                
+                mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
+            }
+        }
+
+        // 3. CONTROL DEL CRONÓMETRO
+        function toggleTimer() {
+            if (timeLeft <= 0 && isFinished) {
+                resetTimer();
+                return;
+            }
+
+            if (isRunning) {
+                pauseTimer();
+            } else {
+                if (timeLeft > 0) {
+                    startTimer();
+                } else {
+                    resetTimer();
+                }
+            }
+        }
+
+        function startTimer() {
+            isRunning = true;
+            isFinished = false;
+            
+            // UI Update
+            btnText.innerText = "PAUSAR";
+            btnIcon.innerHTML = iconPause;
+            statusText.innerText = "Cronómetro corriendo";
+            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-brand-red animate-pulse";
+            
+            // Botón Estilo Activo (Dark)
+            mainBtn.className = "w-full py-4 bg-gray-900 border border-gray-700 hover:bg-gray-800 active:scale-[0.98] transition-all duration-200 rounded-lg flex items-center justify-center gap-2 group relative overflow-hidden";
+
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timeLeft--;
+                    updateTimerUI();
+                } else {
+                    finishTimer();
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            isRunning = false;
+            clearInterval(timerInterval);
+
+            // UI Update
+            btnText.innerText = "REANUDAR";
+            btnIcon.innerHTML = iconPlay;
+            statusText.innerText = "Pausado";
+            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
+            
+            mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
+        }
+
+        function finishTimer() {
+            pauseTimer(); 
+            timeLeft = 0;
+            isFinished = true;
+            updateTimerUI();
+            
+            // UI Final
+            btnText.innerText = "REINICIAR";
+            btnIcon.innerHTML = iconReset;
+            statusText.innerText = "¡Entrenamiento Completado!";
+            statusText.className = "mt-1 text-[9px] font-bold uppercase tracking-widest text-green-500";
+            
+            // Botón Verde
+            mainBtn.className = "w-full py-4 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-green-500/50";
+
+            speak(finishScript);
+        }
+
+        function resetTimer() {
+            timeLeft = DRILL_TIME;
+            isFinished = false;
+            updateTimerUI();
+            
+            mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
+            btnText.innerText = "INICIAR ASALTO";
+            btnIcon.innerHTML = iconPlay;
+
+            statusText.innerText = "Listo para comenzar";
+            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
+            
+            startTimer();
+        }
+
+        // 4. ACTUALIZAR UI
+        function updateTimerUI() {
+            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const s = (timeLeft % 60).toString().padStart(2, '0');
+            timerDisplay.innerText = `${m}:${s}`;
+            
+            if (timeLeft < 10 && timeLeft > 0) {
+                timerDisplay.classList.add('text-brand-red');
+            } else {
+                timerDisplay.classList.remove('text-brand-red');
+            }
+        }
+
+        // 5. MOTOR DE VOZ
+        function speak(text) {
+            if (synth.speaking) synth.cancel();
+            utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'es-MX';
+            utterance.rate = 1.1;
+            
+            const voices = synth.getVoices();
+            const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
+            if (googleVoice) utterance.voice = googleVoice;
+
+            synth.speak(utterance);
+        }
+
+        window.speechSynthesis.onvoiceschanged = () => {};
+
     </script>
 </body>
 </html>
