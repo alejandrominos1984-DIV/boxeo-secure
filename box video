@@ -2,369 +2,428 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Divélun Pro - Boxing Analytics</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Editor Video Móvil Final</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-dark': '#050505',
-                        'brand-panel': '#121212',
-                        'brand-red': '#ff1f1f', /* Rojo Láser */
-                        'brand-gray': '#2a2a2a',
-                    },
-                    fontFamily: {
-                        sans: ['Oswald', 'sans-serif'],
-                        tech: ['Chakra Petch', 'monospace'], // Fuente técnica para números
-                    },
-                    backgroundImage: {
-                        'grid-pattern': "url('data:image/svg+xml,%3Csvg width=\"40\" height=\"40\" viewBox=\"0 0 40 40\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"%23222\" fill-opacity=\"0.4\" fill-rule=\"evenodd\"%3E%3Cpath d=\"M0 40L40 0H20L0 20M40 40V20L20 40\"/%3E%3C/g%3E%3C/svg%3E')",
-                    }
-                }
-            }
-        }
-    </script>
-    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        body { background-color: #050505; color: white; }
+        /* Reset y ajustes para móvil */
+        * { -webkit-tap-highlight-color: transparent; }
+        body { 
+            overscroll-behavior: none; touch-action: none; background-color: #000;
+            height: 100dvh; /* Altura dinámica real del móvil */
+            display: flex; flex-direction: column; overflow: hidden;
+        }
         
-        /* Ocultar scrollbar */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-
-        /* Efecto Glitch sutil para botón activo */
-        .btn-active {
-            box-shadow: 0 0 15px rgba(255, 31, 31, 0.5);
-            border-color: #ff1f1f;
+        /* Contenedor principal del canvas */
+        .canvas-container-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            overflow: hidden;
+            width: 100%;
         }
 
-        /* Gradiente ambiental */
-        .ambient-light {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255,31,31,0.1) 0%, rgba(0,0,0,0) 70%);
-            border-radius: 50%;
+        /* El video fuente real. 
+           TRUCO: Está detrás del canvas (z-index -1) pero NO tiene 'display:none'.
+           Esto es crucial para que el iPhone lo procese. */
+        #sourceVideo {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: contain;
+            z-index: -1; 
             pointer-events: none;
-            z-index: 0;
+            opacity: 0; /* Invisible al ojo, visible al navegador */
         }
+
+        /* Botones de herramientas */
+        .tool-btn {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%; color: #9ca3af; font-size: 0.7rem; transition: all 0.2s;
+        }
+        .tool-btn:active { color: #818cf8; transform: scale(0.9); }
+        .tool-btn i { font-size: 1.4rem; margin-bottom: 5px; }
+
+        /* Animación de grabación */
+        .rec-dot {
+            width: 12px; height: 12px; background-color: #ef4444;
+            border-radius: 50%; display: inline-block; margin-right: 8px;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
     </style>
 </head>
-<body class="bg-brand-dark min-h-screen flex flex-col items-center justify-start sm:justify-center p-0 font-sans relative">
+<body class="text-white font-['Roboto']">
 
-    <!-- Fondo con patrón y luz -->
-    <div class="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none"></div>
-    <div class="ambient-light top-[-100px] left-[-100px]"></div>
-    
-    <!-- Contenedor Principal -->
-    <div class="w-full max-w-md bg-brand-panel min-h-screen sm:min-h-0 sm:h-auto sm:rounded-[32px] border border-white/5 shadow-2xl flex flex-col relative overflow-hidden z-10 backdrop-blur-sm">
+    <header class="h-14 bg-gray-900 flex justify-between items-center px-4 border-b border-gray-800 shrink-0 relative z-20">
+        <div class="font-bold text-lg">Social<span class="text-indigo-500">Editor</span></div>
+        
+        <div class="flex gap-3">
+            <label id="uploadBtn" class="bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 cursor-pointer active:bg-gray-700 transition">
+                <i class="fa-solid fa-plus"></i> <span id="btnText">Video</span>
+                <input type="file" id="videoInput" class="hidden" accept="video/mp4,video/webm">
+            </label>
 
-        <!-- 1. HEADER (Más compacto) -->
-        <div class="px-5 py-3 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent z-20 absolute top-0 w-full">
-            <div class="flex items-center gap-3">
-                <div class="flex flex-col">
-                    <h1 class="text-lg font-bold italic tracking-wide leading-none">DIVÉLUN <span class="text-brand-red">AI</span></h1>
-                    <span class="text-[8px] text-gray-400 tracking-[0.2em] uppercase">Boxing Analytics</span>
-                </div>
-            </div>
-            <!-- Badge de Nivel -->
-            <div class="flex items-center gap-2 bg-white/5 backdrop-blur px-2 py-0.5 rounded-full border border-white/10">
-                <div class="w-1 h-1 rounded-full bg-green-500"></div>
-                <span class="text-[9px] text-gray-300 font-bold uppercase tracking-wider">Nivel Básico</span>
-            </div>
-        </div>
-
-        <!-- 2. VIDEO PLAYER (Hero Section) -->
-        <div class="relative w-full aspect-video bg-black shadow-2xl z-10 group">
-            <video id="exerciseVideo" 
-                   class="w-full h-full object-contain opacity-90 transition-opacity duration-500" 
-                   autoplay muted playsinline loop>
-                <source src="v-x9z2-sh01-div.mp4" type="video/mp4">
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-boxing-training-in-a-gym-4833-large.mp4" type="video/mp4">
-            </video>
-            
-            <!-- Overlay Gradiente -->
-            <div class="absolute inset-0 bg-gradient-to-t from-brand-panel via-transparent to-black/40 pointer-events-none"></div>
-
-            <!-- Título Flotante (Reducido significativamente) -->
-            <div class="absolute bottom-3 left-4 z-20">
-                <h2 class="text-xl font-bold italic text-white drop-shadow-lg leading-none">JAB <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-red to-orange-600">MASTER</span></h2>
-                <p class="text-[9px] text-gray-400 font-tech mt-0.5 uppercase tracking-wider">Drill #01 • Fundamentals</p>
-            </div>
-        </div>
-
-        <!-- 3. DASHBOARD DE CONTROL -->
-        <div class="flex-1 px-5 pb-6 pt-3 flex flex-col gap-4 relative z-20 -mt-3 bg-brand-panel rounded-t-2xl border-t border-white/5">
-            
-            <!-- Decorador Central -->
-            <div class="w-10 h-1 bg-gray-800 rounded-full mx-auto mb-1 opacity-50"></div>
-
-            <!-- BOTÓN DE INSTRUCCIONES: Versión Negra Estética -->
-            <button onclick="playInstructionsOnly()" class="w-full py-4 bg-black border border-white/10 rounded-xl flex items-center justify-center gap-3 transition-all duration-300 hover:border-brand-red/30 hover:shadow-[0_0_10px_rgba(255,31,31,0.1)] group active:scale-[0.98] relative overflow-hidden">
-                
-                <!-- Fondo sutil rojo al hover -->
-                <div class="absolute inset-0 bg-brand-red/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                <div class="p-1.5 rounded-full bg-white/5 text-gray-400 group-hover:text-brand-red group-hover:bg-white/10 transition-colors relative z-10">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
-                </div>
-                <span class="text-[10px] font-bold text-gray-400 group-hover:text-white tracking-[0.15em] uppercase transition-colors relative z-10">Escuchar Instrucciones de Técnica</span>
+            <button id="saveBtn" onclick="startRecordingProcess()" class="bg-indigo-600 active:bg-indigo-700 px-4 py-1.5 rounded-full text-xs font-bold hidden flex items-center gap-2 transition shadow-lg shadow-indigo-500/20">
+                <i class="fa-solid fa-download"></i> Guardar Video
             </button>
+        </div>
+    </header>
 
-            <!-- Grid de Métricas -->
-            <div class="grid grid-cols-2 gap-3">
-                
-                <!-- Tarjeta Cronómetro (Hero) -->
-                <div class="col-span-2 bg-gradient-to-br from-brand-gray/50 to-brand-panel border border-white/5 rounded-xl p-4 flex flex-col items-center relative shadow-lg">
-                    <span class="text-[9px] text-gray-500 uppercase tracking-[0.2em] mb-1">Tiempo Restante</span>
-                    
-                    <div class="flex items-center gap-4 w-full justify-center">
-                        <!-- Botón Restar -->
-                        <button onclick="adjustTime(-10)" class="w-8 h-8 rounded-full bg-black/40 border border-white/10 flex items-center justify-center hover:border-brand-red/50 hover:text-brand-red transition-all active:scale-95 group">
-                            <span class="text-[9px] font-tech font-bold">-10</span>
-                        </button>
+    <main class="canvas-container-wrapper">
+        
+        <div id="welcomeMsg" class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-gray-900/90 backdrop-blur-sm">
+            <i class="fa-solid fa-clapperboard text-5xl text-indigo-500 mb-4 animate-bounce"></i>
+            <h2 class="text-xl font-bold mb-2">Crea tu Video Viral</h2>
+            <p class="text-gray-400 text-sm mb-6 max-w-[250px]">Sube un video corto (5s a 40s) para empezar a editar.</p>
+            <div class="text-xs text-indigo-400 font-medium">↑ Toca "Video" arriba</div>
+        </div>
 
-                        <!-- Display Tiempo (Reducido de 6xl a 5xl) -->
-                        <div class="text-5xl font-tech font-bold text-white tracking-tighter tabular-nums drop-shadow-[0_0_10px_rgba(255,255,255,0.1)]" id="timerDisplay">01:00</div>
+        <canvas id="c"></canvas>
+        
+        <video id="sourceVideo" playsinline webkit-playsinline crossorigin="anonymous"></video>
+    </main>
 
-                        <!-- Botón Sumar -->
-                        <button onclick="adjustTime(30)" class="w-8 h-8 rounded-full bg-brand-red/10 border border-brand-red/30 flex items-center justify-center hover:bg-brand-red hover:text-white transition-all active:scale-95 text-brand-red group">
-                            <span class="text-[9px] font-tech font-bold">+30</span>
-                        </button>
-                    </div>
+    <footer id="toolsFooter" class="h-20 bg-gray-900 border-t border-gray-800 grid grid-cols-4 shrink-0 hidden pb-[env(safe-area-inset-bottom)]">
+        <button onclick="addText()" class="tool-btn"><i class="fa-solid fa-font"></i> Texto</button>
+        <button onclick="addTemplate()" class="tool-btn"><i class="fa-solid fa-wand-magic-sparkles"></i> Plantilla</button>
+        <button onclick="addEmoji()" class="tool-btn"><i class="fa-regular fa-face-smile-wink"></i> Emoji</button>
+        <button onclick="deleteActive()" class="tool-btn text-red-400"><i class="fa-solid fa-trash-can"></i> Borrar</button>
+    </footer>
 
-                    <!-- Estado Texto -->
-                    <p id="statusText" class="mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500">Listo</p>
-                </div>
-
-                <!-- Tarjeta Calorías (Compacta) -->
-                <div class="bg-black/30 border border-white/5 rounded-lg p-3 flex flex-col items-center justify-center">
-                    <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-0.5">Quema Est.</span>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-xl font-tech font-bold text-brand-red">45</span>
-                        <span class="text-[9px] text-gray-400 font-bold">KCAL</span>
-                    </div>
-                </div>
-
-                <!-- Tarjeta Info Adicional (Compacta) -->
-                <div class="bg-black/30 border border-white/5 rounded-lg p-3 flex flex-col items-center justify-center">
-                    <span class="text-[8px] text-gray-500 uppercase tracking-widest mb-0.5">Intensidad</span>
-                    <div class="flex items-center gap-1">
-                        <div class="w-1.5 h-3 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
-                        <div class="w-1.5 h-3 bg-brand-red rounded-sm skew-x-[-10deg]"></div>
-                        <div class="w-1.5 h-3 bg-gray-700 rounded-sm skew-x-[-10deg]"></div>
-                        <span class="text-[10px] text-white ml-1 font-bold">ALTA</span>
-                    </div>
-                </div>
+    <div id="editPanel" class="fixed bottom-0 left-0 right-0 bg-gray-800 p-5 rounded-t-[2rem] transform translate-y-full transition-transform duration-300 z-40 shadow-[0_-10px_40px_rgba(0,0,0,0.6)] pb-10">
+        <div class="flex justify-between items-center mb-5">
+            <span class="font-bold text-xs text-gray-400 uppercase tracking-widest pl-2">Estilo</span>
+            <button onclick="closeEditPanel()" class="w-9 h-9 bg-gray-700/50 rounded-full flex items-center justify-center active:bg-gray-600 transition"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="mb-6 pl-1">
+             <div class="flex gap-3 overflow-x-auto pb-2 no-scrollbar snap-x">
+                <div onclick="setColor('#ffffff')" class="w-11 h-11 rounded-full bg-white border-2 border-gray-700 shadow-sm shrink-0 snap-start relative"><div class="absolute inset-0 rounded-full shadow-inner"></div></div>
+                <div onclick="setColor('#000000')" class="w-11 h-11 rounded-full bg-black border-2 border-gray-700 shadow-sm shrink-0 snap-start relative"><div class="absolute inset-0 rounded-full shadow-inner"></div></div>
+                <div onclick="setColor('#F59E0B')" class="w-11 h-11 rounded-full bg-amber-500 shadow-sm shrink-0 snap-start"></div>
+                <div onclick="setColor('#EF4444')" class="w-11 h-11 rounded-full bg-red-500 shadow-sm shrink-0 snap-start"></div>
+                <div onclick="setColor('#3B82F6')" class="w-11 h-11 rounded-full bg-blue-500 shadow-sm shrink-0 snap-start"></div>
+                <div onclick="setColor('#10B981')" class="w-11 h-11 rounded-full bg-emerald-500 shadow-sm shrink-0 snap-start"></div>
             </div>
+        </div>
+        <div class="bg-gray-900/50 rounded-2xl p-4 flex items-center gap-4 border border-gray-700/50 mx-1">
+            <i class="fa-solid fa-text-height text-gray-400 text-sm"></i>
+            <input type="range" id="sizeSlider" min="0.5" max="2.0" step="0.1" value="1" class="w-full h-1.5 bg-gray-700 rounded-full appearance-none accent-indigo-500">
+            <i class="fa-solid fa-text-height text-white text-xl"></i>
+        </div>
+    </div>
 
-            <!-- BOTÓN DE ACCIÓN PRINCIPAL -->
-            <div class="mt-1">
-                <button id="mainBtn" onclick="toggleTimer()" class="w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50">
-                    
-                    <!-- Efecto brillo hover -->
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
-                    
-                    <span id="btnIcon">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    </span>
-                    <span id="btnText" class="text-white font-bold text-base tracking-[0.15em] uppercase italic">INICIAR ASALTO</span>
-                </button>
-            </div>
-
-            <!-- Navegación Inferior -->
-            <div class="mt-auto pt-2 flex gap-3">
-                <button class="flex-1 py-2.5 rounded-lg border border-white/10 text-gray-400 hover:text-white hover:bg-white/5 text-[9px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
-                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    Anterior
-                </button>
-                <button class="flex-1 py-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-white text-[9px] uppercase tracking-widest font-bold transition-colors flex items-center justify-center gap-2">
-                    Siguiente
-                    <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-            </div>
+    <div id="recordingOverlay" class="fixed inset-0 bg-black/95 z-[100] hidden flex-col items-center justify-start pt-20 text-center px-6 backdrop-blur-md">
+        <div class="bg-red-500/20 text-red-500 px-4 py-2 rounded-full font-bold flex items-center mb-8 animate-pulse">
+            <span class="rec-dot"></span> GRABANDO EN VIVO
+        </div>
+        <h3 class="text-2xl font-bold text-white mb-4">Mira tu video final...</h3>
+        <p class="text-sm text-gray-300 max-w-xs mx-auto leading-relaxed">
+            Por favor, <strong class="text-white">no cierres esta pantalla</strong> ni cambies de pestaña. El video se descargará automáticamente al terminar la reproducción.
+        </p>
+        <div class="w-64 h-1.5 bg-gray-800 rounded-full mt-10 overflow-hidden">
+            <div id="recProgress" class="h-full bg-red-500 w-0 transition-all duration-100 ease-linear"></div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURACIÓN ---
-        const DRILL_TIME = 60; // 60 segundos
+        // --- INICIALIZACIÓN ---
+        // Configuración crucial de FabricJS para video
+        fabric.Object.prototype.transparentCorners = false;
+        fabric.Object.prototype.cornerColor = '#6366f1';
+        fabric.Object.prototype.cornerStyle = 'circle';
+
+        const canvas = new fabric.Canvas('c', { 
+            selection: false, // Mejor para móvil
+            preserveObjectStacking: true // Mantiene el orden de capas
+        });
         
-        const coachScript = "¡Guardia arriba! Vamos a pulir ese Jab. Pies firmes. Dispara ese brazo delantero recto como una flecha. Gira el puño al final para cortar. Exhala fuerte al golpear. ¡Shhh! Y regresa la mano rápido a la cara. ¡Vamos, con fuerza!";
-        const finishScript = "¡Terminó el tiempo! ¿Quieren agregar más tiempo o continuar a la siguiente lección?";
+        const videoEl = document.getElementById('sourceVideo');
+        const editPanel = document.getElementById('editPanel');
+        let fabricVideoObj; 
+        let isRecordingMode = false;
+        let audioCtx; // Contexto de audio global
 
-        // DOM Elements
-        const timerDisplay = document.getElementById('timerDisplay');
-        const mainBtn = document.getElementById('mainBtn');
-        const btnText = document.getElementById('btnText');
-        const btnIcon = document.getElementById('btnIcon');
-        const statusText = document.getElementById('statusText');
-        const video = document.getElementById('exerciseVideo');
-
-        // Estado
-        let timeLeft = DRILL_TIME;
-        let isRunning = false;
-        let isFinished = false; 
-        let timerInterval;
-        let synth = window.speechSynthesis;
-        let utterance = null;
-
-        // Iconos SVG
-        const iconPlay = '<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-        const iconPause = '<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-        const iconReset = '<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>';
-
-        // Asegurar autoplay
-        window.onload = function() {
-            video.play().catch(e => console.log("Autoplay handled by browser/user interaction"));
-        };
-
-        // 1. INSTRUCCIONES
-        function playInstructionsOnly() {
-            if (synth.speaking) {
-                synth.cancel();
-            } else {
-                speak(coachScript);
-            }
+        // Ajustar canvas al tamaño de la ventana
+        const resizeCanvas = () => {
+            const wrapper = document.querySelector('.canvas-container-wrapper');
+            canvas.setWidth(wrapper.clientWidth);
+            canvas.setHeight(wrapper.clientHeight);
+            if(fabricVideoObj) scaleVideoToCanvas();
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Primer ajuste
 
-        // 2. AJUSTAR TIEMPO
-        function adjustTime(seconds) {
-            timeLeft += seconds;
-            if (timeLeft < 0) timeLeft = 0;
-            
-            updateTimerUI();
+        // --- 1. CARGA DE VIDEO (Validación y Setup) ---
+        document.getElementById('videoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-            if (isFinished && timeLeft > 0) {
-                isFinished = false;
-                btnText.innerText = "REANUDAR";
-                btnIcon.innerHTML = iconPlay;
-                statusText.innerText = "Tiempo añadido";
-                statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
+            // Resetear UI por si cargan otro
+            resetUI();
+
+            const url = URL.createObjectURL(file);
+            videoEl.src = url;
+            // Muteado inicial obligatorio para que los navegadores permitan el autoplay
+            videoEl.muted = true; 
+
+            videoEl.onloadedmetadata = function() {
+                // Validación de duración (requisito del cliente)
+                if (videoEl.duration < 5) { alert("⚠️ Video muy corto. Mínimo 5 segundos."); return; }
+                if (videoEl.duration > 40) { alert("⚠️ Video muy largo. Máximo 40 segundos."); return; }
+
+                // Activar interfaz de edición
+                document.getElementById('welcomeMsg').classList.add('hidden');
+                document.getElementById('toolsFooter').classList.remove('hidden');
+                document.getElementById('toolsFooter').classList.add('grid');
+                document.getElementById('saveBtn').classList.remove('hidden');
+                document.getElementById('btnText').innerText = "Cambiar";
                 
-                mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
-            }
+                setupCanvasWithVideo();
+            };
+        });
+
+        function setupCanvasWithVideo() {
+            // Creamos el objeto de video para Fabric
+            fabricVideoObj = new fabric.Image(videoEl, {
+                left: 0, top: 0,
+                selectable: false, evented: false, // No se puede mover
+                objectCaching: false // ¡CRUCIAL! Obliga a redibujar cada frame
+            });
+
+            canvas.clear();
+            canvas.add(fabricVideoObj);
+            canvas.sendToBack(fabricVideoObj);
+            
+            scaleVideoToCanvas();
+
+            // Reproducir en bucle para editar
+            videoEl.loop = true;
+            videoEl.play().catch(e => console.error("Error autoplay:", e));
+            
+            // Iniciar el Bucle de Renderizado (El corazón del sistema)
+            renderLoop();
         }
 
-        // 3. CONTROL DEL CRONÓMETRO
-        function toggleTimer() {
-            if (timeLeft <= 0 && isFinished) {
-                resetTimer();
+        function scaleVideoToCanvas() {
+             if(!fabricVideoObj || !videoEl.videoWidth) return;
+             
+             const canvasW = canvas.getWidth();
+             const canvasH = canvas.getHeight();
+             const videoRatio = videoEl.videoWidth / videoEl.videoHeight;
+             const canvasRatio = canvasW / canvasH;
+
+             // Lógica "Contain" (ver todo el video sin cortar)
+             let scaleFactor;
+             if (videoRatio > canvasRatio) {
+                 scaleFactor = canvasW / videoEl.videoWidth; // Ajustar al ancho
+             } else {
+                 scaleFactor = canvasH / videoEl.videoHeight; // Ajustar al alto
+             }
+
+             fabricVideoObj.set({
+                 scaleX: scaleFactor,
+                 scaleY: scaleFactor
+             });
+             canvas.centerObject(fabricVideoObj);
+             canvas.renderAll();
+        }
+
+        // Bucle que redibuja el canvas constantemente
+        function renderLoop() {
+            if (videoEl.readyState >= 2 && !isRecordingMode) {
+                canvas.renderAll();
+            }
+            requestAnimationFrame(renderLoop);
+        }
+
+
+        // --- 2. HERRAMIENTAS (Texto, Emojis) ---
+        function addText() {
+            const t = new fabric.IText('Toca 2 veces', {
+                left: canvas.width/2, top: canvas.height/2, originX: 'center', originY: 'center',
+                fontFamily: 'Montserrat', fontSize: 32, fill: '#fff', fontWeight: 'bold',
+                shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.6)', blur: 10, offsetX: 0, offsetY: 4 })
+            });
+            canvas.add(t); canvas.setActiveObject(t);
+        }
+
+        function addTemplate() {
+            const rect = new fabric.Rect({
+                fill: '#ffffff', width: 240, height: 55, rx: 27.5, ry: 27.5,
+                originX: 'center', originY: 'center', shadow: new fabric.Shadow({ color: 'rgba(0,0,0,0.3)', blur: 15, offsetY: 5 })
+            });
+            const t = new fabric.IText('TU TEXTO', {
+                fontFamily: 'Montserrat', fontSize: 22, fill: '#000',
+                originX: 'center', originY: 'center', fontWeight: '800', top: 1
+            });
+            const g = new fabric.Group([rect, t], { left: canvas.width/2, top: canvas.height/2 });
+            canvas.add(g); canvas.setActiveObject(g);
+        }
+
+        function addEmoji() {
+            const e = new fabric.IText('🤩', {
+                fontSize: 65, left: canvas.width/2, top: canvas.height/2, originX:'center', originY:'center'
+            });
+            canvas.add(e); canvas.setActiveObject(e);
+        }
+
+        function deleteActive() {
+            const a = canvas.getActiveObject(); if(a) canvas.remove(a); closeEditPanel();
+        }
+
+        // --- 3. PANEL DE EDICIÓN (UX Móvil) ---
+        canvas.on('selection:created', openPanel);
+        canvas.on('selection:updated', openPanel);
+        canvas.on('selection:cleared', closeEditPanel);
+
+        function openPanel() { editPanel.classList.remove('translate-y-full'); }
+        function closeEditPanel() { 
+            editPanel.classList.add('translate-y-full'); 
+            canvas.discardActiveObject(); canvas.renderAll();
+        }
+
+        function setColor(hex) {
+            const act = canvas.getActiveObject(); if(!act) return;
+            if(act.type === 'group') {
+                act.getObjects().forEach(o => {
+                    if(o.type === 'rect') o.set('fill', hex);
+                    if(o.type === 'i-text') o.set('fill', hex === '#ffffff' ? '#000000' : '#ffffff');
+                });
+            } else { act.set('fill', hex); }
+            canvas.renderAll();
+        }
+        document.getElementById('sizeSlider').addEventListener('input', (e) => {
+            const act = canvas.getActiveObject();
+            if(act) { act.scale(parseFloat(e.target.value)); canvas.renderAll(); }
+        });
+
+
+        // --- 4. EL FIX DEFINITIVO: GRABACIÓN "EN VIVO" ---
+        
+        // Inicializar audio con interacción del usuario (necesario en iOS)
+        document.body.addEventListener('click', () => {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }, { once: true });
+
+        async function startRecordingProcess() {
+            // 1. Bloquear UI y mostrar Overlay
+            isRecordingMode = true;
+            document.getElementById('recordingOverlay').classList.remove('hidden');
+            document.getElementById('recordingOverlay').classList.add('flex');
+            closeEditPanel();
+
+            // 2. Preparar el video fuente
+            videoEl.pause();
+            videoEl.currentTime = 0;
+            videoEl.loop = false; // Importante: que se detenga al final
+            // ¡AQUÍ ESTÁ LA CLAVE! Activamos el sonido.
+            videoEl.muted = false; 
+
+            // 3. Configurar la captura (Video + Audio)
+            const canvasStream = canvas.getElement().captureStream(30); // 30 FPS
+
+            // Conectar el audio del video al grabador
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const dest = audioCtx.createMediaStreamDestination();
+            try {
+                // Intentamos conectar el nodo de audio. Si ya existe, fallará, lo ignoramos.
+                const source = audioCtx.createMediaElementSource(videoEl);
+                source.connect(dest);
+                // Conectar también a la salida (parlantes) para que el usuario lo escuche
+                source.connect(audioCtx.destination); 
+            } catch (e) { /* Ya estaba conectado */ }
+
+            // Mezclar video del canvas y audio del elemento video
+            const combinedStream = new MediaStream([
+                ...canvasStream.getVideoTracks(),
+                ...dest.stream.getAudioTracks()
+            ]);
+
+            // 4. Iniciar la grabadora
+            const chunks = [];
+            // Preferir códecs modernos (VP9/Opus), fallback a estándar
+            let options = { mimeType: 'video/webm;codecs=vp9,opus' };
+            if (!MediaRecorder.isTypeSupported(options.mimeType)) options = { mimeType: 'video/webm' };
+            
+            const recorder = new MediaRecorder(combinedStream, options);
+
+            recorder.ondataavailable = e => { if(e.data.size > 0) chunks.push(e.data); };
+            
+            recorder.onstop = () => {
+                finish Recording(chunks);
+            };
+
+            // 5. ¡ACCIÓN! Iniciar todo sincronizado
+            recorder.start();
+            
+            // Bucle de renderizado manual durante la grabación
+            // Forzamos a Fabric a dibujar en cada actualización de tiempo del video
+            const manualRender = () => canvas.renderAll();
+            videoEl.addEventListener('timeupdate', manualRender);
+
+            try {
+                // Reproducir el video (el usuario lo verá y escuchará)
+                await videoEl.play();
+            } catch (err) {
+                alert("Error al reproducir. Toca la pantalla e intenta de nuevo.");
+                resetUI();
                 return;
             }
 
-            if (isRunning) {
-                pauseTimer();
-            } else {
-                if (timeLeft > 0) {
-                    startTimer();
-                } else {
-                    resetTimer();
-                }
-            }
+            // Barra de progreso visual
+            const progressInterval = setInterval(() => {
+                const pct = (videoEl.currentTime / videoEl.duration) * 100;
+                document.getElementById('recProgress').style.width = `${pct}%`;
+                if (videoEl.ended) clearInterval(progressInterval);
+            }, 100);
+
+            // Cuando el video termina, detenemos la grabación
+            videoEl.onended = () => {
+                recorder.stop();
+                videoEl.removeEventListener('timeupdate', manualRender);
+            };
         }
 
-        function startTimer() {
-            isRunning = true;
-            isFinished = false;
+        function finishRecording(chunks) {
+            // Crear y descargar el archivo
+            const blob = new Blob(chunks, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            // Nombre de archivo con fecha
+            const timestamp = new Date().toISOString().slice(0,19).replace(/[-T:]/g,"");
+            a.download = `video-social-${timestamp}.webm`;
+            document.body.appendChild(a);
+            a.click();
             
-            // UI Update
-            btnText.innerText = "PAUSAR";
-            btnIcon.innerHTML = iconPause;
-            statusText.innerText = "Cronómetro corriendo";
-            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-brand-red animate-pulse";
-            
-            // Botón Estilo Activo (Dark)
-            mainBtn.className = "w-full py-4 bg-gray-900 border border-gray-700 hover:bg-gray-800 active:scale-[0.98] transition-all duration-200 rounded-lg flex items-center justify-center gap-2 group relative overflow-hidden";
-
-            timerInterval = setInterval(() => {
-                if (timeLeft > 0) {
-                    timeLeft--;
-                    updateTimerUI();
-                } else {
-                    finishTimer();
-                }
+            // Limpieza y restauración de UI
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                resetUI();
             }, 1000);
         }
 
-        function pauseTimer() {
-            isRunning = false;
-            clearInterval(timerInterval);
-
-            // UI Update
-            btnText.innerText = "REANUDAR";
-            btnIcon.innerHTML = iconPlay;
-            statusText.innerText = "Pausado";
-            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
-            
-            mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
+        function resetUI() {
+            // Volver al estado de edición normal
+            document.getElementById('recordingOverlay').classList.add('hidden');
+            document.getElementById('recordingOverlay').classList.remove('flex');
+            document.getElementById('recProgress').style.width = '0%';
+            isRecordingMode = false;
+            videoEl.muted = true;
+            videoEl.loop = true;
+            videoEl.currentTime = 0;
+            videoEl.play().catch(()=>{});
         }
-
-        function finishTimer() {
-            pauseTimer(); 
-            timeLeft = 0;
-            isFinished = true;
-            updateTimerUI();
-            
-            // UI Final
-            btnText.innerText = "REINICIAR";
-            btnIcon.innerHTML = iconReset;
-            statusText.innerText = "¡Entrenamiento Completado!";
-            statusText.className = "mt-1 text-[9px] font-bold uppercase tracking-widest text-green-500";
-            
-            // Botón Verde
-            mainBtn.className = "w-full py-4 bg-green-600 hover:bg-green-700 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(34,197,94,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-green-500/50";
-
-            speak(finishScript);
-        }
-
-        function resetTimer() {
-            timeLeft = DRILL_TIME;
-            isFinished = false;
-            updateTimerUI();
-            
-            mainBtn.className = "w-full py-4 bg-brand-red hover:bg-red-600 active:scale-[0.98] transition-all duration-200 rounded-lg shadow-[0_0_20px_rgba(255,31,31,0.3)] flex items-center justify-center gap-2 group relative overflow-hidden border border-red-500/50";
-            btnText.innerText = "INICIAR ASALTO";
-            btnIcon.innerHTML = iconPlay;
-
-            statusText.innerText = "Listo para comenzar";
-            statusText.className = "mt-1 text-[9px] font-mono uppercase tracking-widest text-gray-500";
-            
-            startTimer();
-        }
-
-        // 4. ACTUALIZAR UI
-        function updateTimerUI() {
-            const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
-            const s = (timeLeft % 60).toString().padStart(2, '0');
-            timerDisplay.innerText = `${m}:${s}`;
-            
-            if (timeLeft < 10 && timeLeft > 0) {
-                timerDisplay.classList.add('text-brand-red');
-            } else {
-                timerDisplay.classList.remove('text-brand-red');
-            }
-        }
-
-        // 5. MOTOR DE VOZ
-        function speak(text) {
-            if (synth.speaking) synth.cancel();
-            utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'es-MX';
-            utterance.rate = 1.1;
-            
-            const voices = synth.getVoices();
-            const googleVoice = voices.find(v => v.name.includes('Google') && v.lang.includes('es'));
-            if (googleVoice) utterance.voice = googleVoice;
-
-            synth.speak(utterance);
-        }
-
-        window.speechSynthesis.onvoiceschanged = () => {};
-
     </script>
 </body>
 </html>
